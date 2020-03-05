@@ -119,7 +119,7 @@ class UserInvoiceController extends AbstractController
 
             $month = $year->getOrAddMonth($statRow['month']);
             $user = $month->getOrAddUser($statRow['ualias']);
-            $user->addStats($statRow['duration'], $statRow['duration'], is_null($statRow['fees'])?0.0:$statRow['fees']);
+            $user->addStats($statRow['duration'], $statRow['rate'], is_null($statRow['fees'])?0.0:$statRow['fees']);
 
         }
 
