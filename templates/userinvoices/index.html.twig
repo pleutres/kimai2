@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% import "macros/datatables.html.twig" as tables %}
+{% import "macros/widgets.html.twig" as widgets %}
+{% import "macros/toolbar.html.twig" as toolbar %}
+{% import "user/actions.html.twig" as actions %}
+
+
+{% block main %}
+
+
+
+    {% for yearStat in years %}
+        <table class="table">
+            <thead>
+                <th class="col-md-1">Year<th>
+                <th class="col-md-1">Month</th>
+                <th class="col-md-5">User</th>
+                <td class="col-md-1 text-nowrap text-right">Consumed days</td>
+                <td class="col-md-2 text-nowrap text-right">Total rate</td>
+                <td class="col-md-2 text-nowrap text-right">Fees</td>
+            </thead>
+            {% for month in yearStat.months %}
+                {% for user in month.users %}
+                <tr>
+                    <th class="col-md-1">{{ yearStat.year }}<th>
+                    <th class="col-md-1">{{  month.month }}</th>
+                    <th class="col-md-5">{{ user.userId }}</th>
+                    <td class="col-md-1 text-nowrap text-right">{{  (user.totalDuration / 3600 / 8)|number_format(2, '.', '') }}</td>
+                    <td class="col-md-2 text-nowrap text-right">{{  (user.totalRate) }} €</td>
+                    <td class="col-md-2 text-nowrap text-right">{{  (user.fees) }} €</td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+
+    {% endfor %}
+
+{% endblock %}
