@@ -67,7 +67,7 @@ class UserInvoiceController extends AbstractController
     {
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
 
-        $qb->select('SUM(t.rate) as rate, SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, user.title as utitle, SUM(meta.value) as fees')
+        $qb->select('SUM(t.rate) as rate, SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, user.alias as ualias, SUM(meta.value) as fees')
             ->from(Timesheet::class, 't')
             ->leftJoin('t.user', 'user')
             ->leftJoin('t.meta', 'meta')
@@ -97,11 +97,11 @@ class UserInvoiceController extends AbstractController
         $qb
             ->orderBy('year', 'DESC')
             ->addOrderBy('month', 'ASC')
-            ->addOrderBy('utitle', 'ASC')
+            ->addOrderBy('ualias', 'ASC')
 
             ->groupBy('year')
             ->addGroupBy('month')
-            ->addGroupBy('utitle')
+            ->addGroupBy('ualias')
         ;
 
         $years = [];
@@ -118,7 +118,7 @@ class UserInvoiceController extends AbstractController
             }
 
             $month = $year->getOrAddMonth($statRow['month']);
-            $user = $month->getOrAddUser($statRow['utitle']);
+            $user = $month->getOrAddUser($statRow['ualias']);
             $user->addStats($statRow['duration'], $statRow['duration'], is_null($statRow['fees'])?0.0:$statRow['fees']);
 
         }
