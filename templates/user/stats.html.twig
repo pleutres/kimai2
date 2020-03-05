@@ -73,13 +73,13 @@
                                     borderColor: '{{ kimai_context.chart.border_color }}',
                                     data: [
                                         {% for month in yearStat.months %}
-                                        {{ (month.totalDuration / 3600)|number_format(2, '.', '') }}
+                                        {{ (month.totalDuration / 3600 / 8)|number_format(2, '.', '') }}
                                         {% if not loop.last %},{% endif %}
                                         {% endfor %}
                                     ],
                                     realData        : [
                                         {% for month in yearStat.months %}
-                                        '{{ month.totalDuration|duration }}'
+                                        ' {{ (month.totalDuration / 3600 / 8)|number_format(2, '.', '') }}'
                                         {% if not loop.last %},{% endif %}
                                         {% endfor %}
                                     ]
