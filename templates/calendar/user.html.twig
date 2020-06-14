@@ -239,6 +239,7 @@
                     start: '{{ config.businessTimeBegin }}',
                     end: '{{ config.businessTimeEnd }}'
                 },
+<<<<<<< HEAD
                 slotDuration: '{{ config.slotDuration }}',
                 slotLabelInterval: '{{ config.slotDuration }}',
                 minTime: '{{ config.timeframeBegin }}',
@@ -343,11 +344,13 @@
                 ],
                 eventRender: function(eventObj, $el, view) {
                     console.log(eventObj);
+=======
+                eventRender: function(eventObj, $el) {
+>>>>>>> b4e86bad (Remove logs)
                     if (eventObj.end != null || eventObj.end != null) {
                         var duration = moment.duration(eventObj.end.diff(eventObj.start));
                         var hours = duration.asHours()
                         $el[0].childNodes[0].childNodes[0].childNodes[0].data = hours + "h";
-                        console.log($el[0].childNodes[0].childNodes[2]);
                         //
                         $el[0].childNodes[0].childNodes[2].innerHTML = "<span style='display:block'><i>" + eventObj.project + "</i><br>" + eventObj.activity + "</span>";
 
