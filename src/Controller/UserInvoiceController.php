@@ -11,10 +11,12 @@ namespace App\Controller;
 
 use App\Entity\Timesheet;
 use App\Entity\User;
-use App\Event\TimesheetMetaDisplayEvent;
+use App\Export\ServiceExport;
 use App\Model\Invoice\Month;
 use App\Model\Invoice\Year;
+use App\Repository\TimesheetRepository;
 use App\Repository\UserInvoiceRepository;
+use App\Export\UserInvoice\XlsxRenderer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,28 +24,31 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(path="/admin/userinvoice")
- * @Security("is_granted('view_other_timesheet')")
+ * @Security("is_granted('role_permissions')")
  */
 class UserInvoiceController extends AbstractController
 {
 
+    private $renderer;
+
+    /**
+     * @param TimesheetRepository $timesheet
+     * @param ServiceExport $export
+     */
+    public function __construct(XlsxRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
 
     /**
      * @Route(path="/", defaults={"page": 1}, name="invoice_user_admin", methods={"GET"})
      * @Security("is_granted('view_other_timesheet')")
      *
-     * @param int $page
      * @param Request $request
      * @return Response
      */
-    public function indexAction($page, Request $request)
+    public function index($page, Request $request)
     {
-        return $this->index($page, $request, 'userinvoices/index.html.twig', TimesheetMetaDisplayEvent::TEAM_TIMESHEET);
-    }
-
-    protected function index($page, Request $request, string $renderTemplate, string $location): Response
-    {
-
 
         $monthlyStats = $this->getMonthlyStatsWithFees();
 
@@ -51,7 +56,21 @@ class UserInvoiceController extends AbstractController
             'years' => $monthlyStats,
         ];
 
-        return $this->render($renderTemplate, $viewVars);
+        return $this->render('userinvoices/index.html.twig', $viewVars);
+    }
+
+    /**
+     * @Route(path="/export", name="invoice_user_admin_export", methods={"GET"})
+     * @Security("is_granted('view_other_timesheet')")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function export(Request $request)
+    {
+        $monthlyStats = $this->getMonthlyStatsWithFees();
+
+        return $this->renderer->renderUserInvoice($monthlyStats, null);
     }
 
 
@@ -96,7 +115,7 @@ class UserInvoiceController extends AbstractController
 
         $qb
             ->orderBy('year', 'DESC')
-            ->addOrderBy('month', 'ASC')
+            ->addOrderBy('month', 'DESC')
             ->addOrderBy('ualias', 'ASC')
 
             ->groupBy('year')
@@ -110,7 +129,7 @@ class UserInvoiceController extends AbstractController
 
             if (!isset($years[$curYear])) {
                 $year = new Year($curYear);
-                for ($i = 1; $i < 13; $i++) {
+                for ($i = 12; $i > 0 ; $i--) {
                     $month = $i < 10 ? '0' . $i : (string) $i;
                     $year->setMonth(new Month($month));
                 }

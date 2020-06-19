@@ -137,7 +137,7 @@
                     if (eventObj.end != null || eventObj.end != null) {
                         var duration = moment.duration(eventObj.end.diff(eventObj.start));
                         var hours = duration.asHours()
-                        $el[0].childNodes[0].childNodes[0].childNodes[0].data = hours + "h";
+                            $el[0].childNodes[0].childNodes[0].childNodes[0].data = $el[0].childNodes[0].childNodes[0].childNodes[0].data + "&nbsp;&nbsp;&nbsp;&nbsp;" + hours + "h";
                         //
                         $el[0].childNodes[0].childNodes[2].innerHTML = "<span style='display:block'><i>" + eventObj.project + "</i><br>" + eventObj.activity + "</span>";
 
