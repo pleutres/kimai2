@@ -60,7 +60,7 @@ final class XlsxRenderer extends BaseXlsxRenderer
                     $sheet->setCellValueByColumnAndRow($column, $row, $monthStat->getMonth()); $column++;
                     $sheet->setCellValueByColumnAndRow($column, $row, $userStat->getUserId()); $column++;
                     $this->setDuration($sheet, $column, $row, $userStat->getTotalDuration());$column++;
-                    $sheet->setCellValueByColumnAndRow($column, $row, round($userStat->getTotalDuration() / 3600 / 8)); $column++;
+                    $sheet->setCellValueByColumnAndRow($column, $row, round($userStat->getTotalDuration() / 3600 / 8, 2)); $column++;
                     $this->setRate($sheet, $column, $row, $userStat->getTotalRate(), 'EUR');$column++;
                     $this->setRate($sheet, $column, $row, $userStat->getFees(),'EUR');
                  }
