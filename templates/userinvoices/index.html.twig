@@ -19,6 +19,7 @@
                 <th class="col-md-5">User</th>
                 <td class="col-md-1 text-nowrap text-right">Consumed hours</td>
                 <td class="col-md-1 text-nowrap text-right">Consumed days</td>
+                <td class="col-md-1 text-nowrap text-right">Working days</td>
                 <td class="col-md-2 text-nowrap text-right">Total rate</td>
                 <td class="col-md-2 text-nowrap text-right">Fees</td>
             </thead>
@@ -30,6 +31,7 @@
                     <th class="col-md-5">{{ user.userId }}</th>
                     <td class="col-md-1 text-nowrap text-right">{{  (user.totalDuration / 3600) | round(0, 'floor') }}:{{ (user.totalDuration % 3600 / 60) |format_number({min_integer_digit:2,rounding_mode: 'floor'})}}</td>
                     <td class="col-md-1 text-nowrap text-right">{{  (user.totalDuration / 3600 / 8)|number_format(2, '.', '') }}</td>
+                    <td class="col-md-1 text-nowrap text-right">{{  month.getWorkingDays() |number_format(2, '.', '') }}</td>
                     <td class="col-md-2 text-nowrap text-right">{{  (user.totalRate) }} €</td>
                     <td class="col-md-2 text-nowrap text-right">{{  (user.fees) }} €</td>
                 </tr>

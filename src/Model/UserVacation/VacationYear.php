@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Model\Invoice;
+namespace App\Model\UserVacation;
 
 /**
  * Yearly statistics
  */
-class Year
+class VacationYear
 {
     /**
      * @var string
@@ -22,6 +22,10 @@ class Year
      * @var Month[]
      */
     protected $months = [];
+    /**
+     * @var Month[]
+     */
+    protected $users = [];
 
     /**
      * @param string $year
@@ -39,25 +43,36 @@ class Year
         return $this->year;
     }
 
-    public function setMonth(Month $month): Year
+    public function setMonth(VacationMonth $month): VacationYear
     {
         $this->months[(int) $month->getMonth()] = $month;
 
         return $this;
     }
 
-    public function getOrAddMonth(int $month): ?Month
+    public function getOrAddMonth(int $month, $couldAdd): ?VacationMonth
     {
         if (isset($this->months[$month])) {
             return $this->months[$month];
         }
-        else {
+        else if ($couldAdd) {
             $monthObject = new Month($month);
             $this->months[$month] = $monthObject;
             return $monthObject;
         }
     }
 
+    public function sumVacationForUser($userId, $vacation)
+    {
+        if (!isset($this->users[$userId])) {
+            $curUser = new VacationUser($userId);
+            $this->users[$userId] = $curUser;
+        }
+        else {
+            $curUser = $this->users[$userId];
+        }
+        $curUser->sumVacation($vacation);
+    }
 
 
     /**
@@ -67,4 +82,14 @@ class Year
     {
         return array_values($this->months);
     }
+
+    /**
+     * @return Month[]
+     */
+    public function getUsers(): array
+    {
+        return $this->users;
+    }
+
+
 }

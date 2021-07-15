@@ -9,7 +9,7 @@ use App\Utils\MenuItemModel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class MenuInvoiceSubscriber implements EventSubscriberInterface
+class MenuUserInvoiceSubscriber implements EventSubscriberInterface
 {
 
     /**

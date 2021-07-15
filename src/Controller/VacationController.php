@@ -12,8 +12,8 @@ namespace App\Controller;
 use App\Entity\Timesheet;
 use App\Entity\User;
 use App\Export\ServiceExport;
-use App\Model\UserInvoice\Month;
-use App\Model\UserInvoice\Year;
+use App\Model\UserVacation\VacationMonth;
+use App\Model\UserVacation\VacationYear;
 use App\Repository\TimesheetRepository;
 use App\Repository\UserInvoiceRepository;
 use App\Export\UserInvoice\XlsxRenderer;
@@ -24,10 +24,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route(path="/admin/userinvoice")
+ * @Route(path="/admin/uservacation")
  * @Security("is_granted('role_permissions')")
  */
-class UserInvoiceController extends AbstractController
+class VacationController extends AbstractController
 {
 
     private $renderer;
@@ -44,7 +44,7 @@ class UserInvoiceController extends AbstractController
     }
 
     /**
-     * @Route(path="/", defaults={"page": 1}, name="invoice_user_admin", methods={"GET"})
+     * @Route(path="/", defaults={"page": 1}, name="vacation_user_admin", methods={"GET"})
      * @Security("is_granted('view_other_timesheet')")
      *
      * @param Request $request
@@ -52,30 +52,17 @@ class UserInvoiceController extends AbstractController
      */
     public function index($page, Request $request)
     {
-
-        $monthlyStats = $this->getMonthlyStatsWithFees();
+        $years = [];
+        $this->getMonthlyActivity($years, 'vacation', $activity = 'Vacation');
+        $this->getMonthlyActivity($years, 'nonpaid', $activity = 'Non paid vacation');
+        $this->getMonthlyActivity($years, 'total');
 
         $viewVars = [
-            'years' => $monthlyStats,
+            'years' => $years,
         ];
 
-        return $this->render('userinvoices/index.html.twig', $viewVars);
+        return $this->render('uservacations/index.html.twig', $viewVars);
     }
-
-    /**
-     * @Route(path="/export", name="invoice_user_admin_export", methods={"GET"})
-     * @Security("is_granted('view_other_timesheet')")
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function export(Request $request)
-    {
-        $monthlyStats = $this->getMonthlyStatsWithFees();
-
-        return $this->renderer->renderUserInvoice($monthlyStats, null);
-    }
-
 
     /**
      * Returns an array of Year statistics.
@@ -85,17 +72,23 @@ class UserInvoiceController extends AbstractController
      * @param DateTime|null $end
      * @return Year[]
      */
-    public function getMonthlyStatsWithFees(User $user = null, ?DateTime $begin = null, ?DateTime $end = null)
+    public function getMonthlyActivity(&$years, $setter, $activity = null, User $user = null, ?DateTime $begin = null, ?DateTime $end = null)
     {
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
 
-        $qb->select('SUM(t.rate) as rate, SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, user.alias as ualias, SUM(meta.value) as fees')
+        $qb->select('SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, user.alias as ualias')
             ->from(Timesheet::class, 't')
             ->leftJoin('t.user', 'user')
-            ->leftJoin('t.meta', 'meta')
+            ->leftJoin('t.activity', 'activity')
+            ->leftJoin('t.project', 'project')
         ;
 
-        $qb->expr()->eq('meta.name', 'fees');
+//         $qb->andWhere()->eq('', 'Vacation');
+//         $qb->andWhere()->eq('project.name', ('Vacation');
+        if ($activity != null) {
+        $qb->andWhere('activity.name = :activity')->setParameter('activity', $activity);
+        $qb->andWhere('project.name = :project')->setParameter('project', $activity);
+        }
 
         if (!empty($begin)) {
             $qb->andWhere($qb->expr()->gte($this->getDatetimeFieldSql('t.begin'), ':from'))
@@ -126,26 +119,50 @@ class UserInvoiceController extends AbstractController
             ->addGroupBy('ualias')
         ;
 
-        $years = [];
+        $couldadd = ($activity != null);
 
         foreach ($qb->getQuery()->execute() as $statRow) {
             $curYear = $statRow['year'];
 
-            if (!isset($years[$curYear])) {
-                $year = new Year($curYear);
-                for ($i = 12; $i > 0 ; $i--) {
-                    $month = $i < 10 ? '0' . $i : (string) $i;
-                    $year->setMonth(new Month($month, $curYear));
+            $year = $this->getYear($years, $curYear, $couldadd);
+
+            if ($year != null) {
+                $month = $year->getOrAddMonth($statRow['month'], $couldadd);
+                if ($month != null) {
+                    $user = $month->getOrAddUser($statRow['ualias'], $couldadd);
+                    if ($user != null) {
+                        $func = "set" . ucwords($setter);
+                        $user->$func($statRow['duration']);
+                        if ($activity == 'Vacation') {
+                        $year->sumVacationForUser($statRow['ualias'], $statRow['duration']);
+                        }
+                    }
                 }
-                $years[$curYear] = $year;
             }
-
-            $month = $year->getOrAddMonth($statRow['month']);
-            $user = $month->getOrAddUser($statRow['ualias']);
-            $user->addStats($statRow['rate'], $statRow['duration'], is_null($statRow['fees'])?0.0:$statRow['fees']);
-
         }
 
-        return $years;
+    }
+
+    /**
+     * @param $years
+     * @param $curYear
+     * @param $activity
+     * @return array
+     */
+    public function getYear(&$years, $curYear, $couldadd): ?VacationYear
+    {
+        if (isset($years[$curYear])) {
+            return $years[$curYear];
+        }
+        if ($couldadd) {
+            $year = new VacationYear($curYear);
+            for ($i = 12; $i > 0; $i--) {
+                $month = $i < 10 ? '0' . $i : (string)$i;
+                $year->setMonth(new VacationMonth($month, $curYear));
+            }
+            $years[$curYear] = $year;
+            return $year;
+        }
+        return null;
     }
 }
