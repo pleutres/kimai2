@@ -86,9 +86,10 @@ class VacationController extends AbstractController
 //         $qb->andWhere()->eq('', 'Vacation');
 //         $qb->andWhere()->eq('project.name', ('Vacation');
         if ($activity != null) {
-        $qb->andWhere('activity.name = :activity')->setParameter('activity', $activity);
-        $qb->andWhere('project.name = :project')->setParameter('project', $activity);
+            $qb->andWhere('activity.name = :activity')->setParameter('activity', $activity);
+            $qb->andWhere('project.name = :project')->setParameter('project', $activity);
         }
+        $qb->andWhere('activity.name <> :publichd')->setParameter('publichd', 'Public holiday');
 
         if (!empty($begin)) {
             $qb->andWhere($qb->expr()->gte($this->getDatetimeFieldSql('t.begin'), ':from'))
