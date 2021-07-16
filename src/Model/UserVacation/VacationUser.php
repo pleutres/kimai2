@@ -88,8 +88,8 @@ class VacationUser
         $this->total = $total;
     }
 
-    public function getWorkedDay() {
-        return $this->total - $this->vacation - $this->nonpaid;
+    public function getWorkedDay($monthWorkday) {
+        return $monthWorkday - $this->vacation - $this->nonpaid;
     }
 
     public function sumVacation($vacation)
