@@ -1,11 +1,5 @@
 <?php
 
-/*
- * This file is part of the Kimai time-tracking app.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace App\Controller;
 
@@ -17,6 +11,8 @@ use App\Model\UserVacation\VacationYear;
 use App\Repository\TimesheetRepository;
 use App\Repository\UserInvoiceRepository;
 use App\Export\UserInvoice\XlsxRenderer;
+use App\Repository\UserRepository;
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,15 +28,17 @@ class VacationController extends AbstractController
 
     private $renderer;
     private $logger;
+    private $userRepository;
 
     /**
      * @param TimesheetRepository $timesheet
      * @param ServiceExport $export
      */
-    public function __construct(XlsxRenderer $renderer, LoggerInterface $logger = null)
+    public function __construct(XlsxRenderer $renderer, LoggerInterface $logger = null, UserRepository $repository)
     {
         $this->renderer = $renderer;
         $this->logger = $logger;
+        $this->userRepository = $repository;
     }
 
     /**
@@ -53,9 +51,11 @@ class VacationController extends AbstractController
     public function index($page, Request $request)
     {
         $years = [];
-        $this->getMonthlyActivity($years, 'vacation', $activity = 'Vacation');
-        $this->getMonthlyActivity($years, 'nonpaid', $activity = 'Non paid vacation');
-        $this->getMonthlyActivity($years, 'total');
+        $startDate = DateTime::createFromFormat('Y-m-d H:i:s', '2021-06-29 00:00:00');
+        $user = $this->userRepository->loadUserbyUsername('simon');
+        $this->getMonthlyActivity($years, 'vacation', 'Vacation', $user, $startDate);
+        $this->getMonthlyActivity($years, 'nonpaid', 'Non paid vacation', $user, $startDate);
+        $this->getMonthlyActivity($years, 'total', null, $user, $startDate);
 
         $viewVars = [
             'years' => $years,
@@ -92,7 +92,7 @@ class VacationController extends AbstractController
         $qb->andWhere('activity.name <> :publichd')->setParameter('publichd', 'Public holiday');
 
         if (!empty($begin)) {
-            $qb->andWhere($qb->expr()->gte($this->getDatetimeFieldSql('t.begin'), ':from'))
+            $qb->andWhere($qb->expr()->gte('t.begin', ':from'))
                 ->setParameter('from', $begin);
         } else {
             $qb->andWhere($qb->expr()->isNotNull('t.begin'));
@@ -120,7 +120,7 @@ class VacationController extends AbstractController
             ->addGroupBy('ualias')
         ;
 
-        $couldadd = ($activity != null);
+        $couldadd = true; // ($activity != null);
 
         foreach ($qb->getQuery()->execute() as $statRow) {
             $curYear = $statRow['year'];
