@@ -31,11 +31,11 @@
                 <th class="col-md-1">Year<th>
                 <th class="col-md-1">Month</th>
                 <th class="col-md-4">User</th>
-                <td class="col-md-1 text-nowrap text-right"><i>User activity (information)</i></td>
                 <td class="col-md-1 text-nowrap text-right">Vacation days</td>
                 <td class="col-md-1 text-nowrap text-right">Nonpaid days</td>
                 <td class="col-md-1 text-nowrap text-right">User workdays</td>
                 <td class="col-md-2 text-nowrap text-right">Month workdays</td>
+                <td class="col-md-1 text-nowrap text-right"><i>User activity (information)</i></td>
             </thead>
             {% for month in yearStat.months %}
                 {% for user in month.users %}
@@ -43,11 +43,11 @@
                     <th class="col-md-1">{{ yearStat.year }}<th>
                     <th class="col-md-1">{{ month.month }}</th>
                     <th class="col-md-5">{{ user.userId }}</th>
-                    <td class="col-md-1 text-nowrap text-right"><i>{{  (user.total / 3600 / 8)|number_format(2, '.', '') }}</i></td>
                     <td class="col-md-1 text-nowrap text-right"><b>{{  (user.vacation / 3600 / 8)|number_format(2, '.', '') }}</b></td>
                     <td class="col-md-1 text-nowrap text-right"><b>{{  (user.nonpaid / 3600 / 8)|number_format(2, '.', '') }}</b></td>
                     <td class="col-md-1 text-nowrap text-right"><b>{{  (user.getWorkedDay(month.getWorkingDays()*8*3600) / 3600 / 8)|number_format(2, '.', '') }}</td>
                     <td class="col-md-1 text-nowrap text-right">{{  month.getWorkingDays() |number_format(2, '.', '') }}</td>
+                    <td class="col-md-1 text-nowrap text-right"><i>{{  (user.total / 3600 / 8)|number_format(2, '.', '') }}</i></td>
                 </tr>
                 {% endfor %}
             {% endfor %}
