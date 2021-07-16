@@ -342,7 +342,7 @@
                     {% endif %}
                 ],
                 eventRender: function(eventObj, $el, view) {
-                    if (eventObj.end != null || eventObj.end != null) {
+                    if (eventObj.end != null && view.name == 'month') {
                         var duration = moment.duration(eventObj.end.diff(eventObj.start));
                         var hours = duration.asHours()
                             $el[0].childNodes[0].childNodes[0].childNodes[0].data = $el[0].childNodes[0].childNodes[0].childNodes[0].data + " || " + hours + "h";
@@ -390,7 +390,7 @@
                 eventAfterRender: function(event, element, view) {
                     {# allowed in agendaWeek and agendaDay #}
                     if (view.name === 'month') {
-                        return;
+                    //    return;
                     }
 
                     {# TODO calculate duration for running entries #}
