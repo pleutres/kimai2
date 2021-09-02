@@ -84,7 +84,7 @@ class AbstractMonth
         //print_r($arr_bank_holidays);
         $nb_days_open = 0;
         // Mettre <= si on souhaite prendre en compte le dernier jour dans le décompte
-        while ($date_start < $date_stop) {
+        while ($date_start <= $date_stop) {
             // Si le jour suivant n'est ni un dimanche (0) ou un samedi (6), ni un jour férié, on incrémente les jours ouvrés
             if (!in_array(date('w', $date_start), array(0, 6))
             && !in_array(date('j_n_'.date('Y', $date_start), $date_start), $arr_bank_holidays)) {
