@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(path="/admin/userinvoice")
- * @Security("is_granted('role_permissions')")
+ * @Security("is_granted('view_activity')")
  */
 class UserInvoiceController extends AbstractController
 {

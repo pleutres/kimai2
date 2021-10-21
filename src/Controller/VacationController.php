@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(path="/admin/uservacation")
- * @Security("is_granted('role_permissions')")
+ * @Security("is_granted('view_activity')")
  */
 class VacationController extends AbstractController
 {
