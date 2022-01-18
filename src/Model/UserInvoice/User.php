@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Model\Invoice;
+namespace App\Model\UserInvoice;
 
 class User
 {
