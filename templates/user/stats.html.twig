@@ -51,6 +51,47 @@
                     {% set dataset = dataset|merge([{'value': month.duration|chart_duration, 'tooltip': month.duration|duration, 'footer': ('label.billable'|trans ~ ': ' ~ month.billableDuration|duration), 'month': monthDate|report_date}]) %}
                 {% endfor %}
                 {{ charts.bar_chart('userProfileChart'~year, month_names(), [dataset], {}) }}
+
+                <div class="chart">
+                    <canvas id="userProfileChart{{ year }}" style="height: {{ kimai_context.chart.height }}px;"></canvas>
+                </div>
+                <script type="text/javascript">
+                    document.addEventListener('kimai.initialized', function() {
+                        var userProfileChartData{{ year }} = {
+                            labels: moment.months(),
+                            datasets: [
+                                {
+                                    label: '{{ year }}',
+                                    backgroundColor: '{{ kimai_context.chart.background_color }}',
+                                    borderColor: '{{ kimai_context.chart.border_color }}',
+                                    data: [
+                                        {% for month in yearStat.months %}
+                                        {{ (month.totalDuration / 3600)|number_format(2, '.', '') }}
+                                        {% if not loop.last %},{% endif %}
+                                        {% endfor %}
+                                    ],
+                                    realData        : [
+                                        {% for month in yearStat.months %}
+                                        '{{ month.totalDuration|duration }}'
+                                        {% if not loop.last %},{% endif %}
+                                        {% endfor %}
+                                    ]
+                                }
+                            ]
+                        };
+
+                        var userProfileChartCanvas{{ year }} = $("#userProfileChart{{ year }}").get(0).getContext("2d");
+
+                        var userProfileChart{{ year }} = new Chart(
+                            userProfileChartCanvas{{ year }}, {
+                                type: 'bar',
+                                data: userProfileChartData{{ year }},
+                                options: userProfileChartOptions()
+                            }
+                        );
+                    });
+                </script>
+
             {% endblock %}
         {% endembed %}
     {% endfor %}
