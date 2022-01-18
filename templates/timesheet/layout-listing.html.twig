@@ -4,7 +4,7 @@
 {% import "macros/search.html.twig" as search %}
 
 {% if not showSummary is defined %}
-    {% set showSummary = false %}
+    {% set showSummary = true %}
 {% endif %}
 {% if not showStartEndTime is defined %}
     {% set showStartEndTime = true %}
@@ -55,7 +55,9 @@
 {% endblock %}
 
 {% block main %}
-
+{% block testSGL %}
+Total
+{% endblock %}
     {% if entries.count == 0 %}
         {{ widgets.nothing_found('kimai.timesheetUpdate') }}
     {% else %}
@@ -183,9 +185,7 @@
             {% set lastEntry = entry %}
         {% endfor %}
 
-        {% if showSummary %}
-            {{ _self.summary(day, dayDuration, dayRate, columns, canSeeRate, canSeeUsername, showStartEndTime, tableName, metaColumns) }}
-        {% endif %}
+        {{ _self.summary(day, dayDuration, dayRate, columns, canSeeRate, canSeeUsername, showStartEndTime, tableName, metaColumns) }}
 
         {{ tables.data_table_footer(entries, paginationRoute, multiUpdateForm) }}
     {% endif %}
