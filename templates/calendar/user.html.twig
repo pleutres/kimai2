@@ -239,7 +239,6 @@
                     start: '{{ config.businessTimeBegin }}',
                     end: '{{ config.businessTimeEnd }}'
                 },
-<<<<<<< HEAD
                 slotDuration: '{{ config.slotDuration }}',
                 slotLabelInterval: '{{ config.slotDuration }}',
                 minTime: '{{ config.timeframeBegin }}',
@@ -343,10 +342,6 @@
                     {% endif %}
                 ],
                 eventRender: function(eventObj, $el, view) {
-                    console.log(eventObj);
-=======
-                eventRender: function(eventObj, $el) {
->>>>>>> b4e86bad (Remove logs)
                     if (eventObj.end != null || eventObj.end != null) {
                         var duration = moment.duration(eventObj.end.diff(eventObj.start));
                         var hours = duration.asHours()
