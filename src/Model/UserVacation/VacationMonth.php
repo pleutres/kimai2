@@ -15,36 +15,40 @@ namespace App\Model\UserVacation;
 class VacationMonth extends AbstractMonth
 {
 
-        /**
+    /**
+     * @var string
+     */
+    protected $days = [];
+
+    /**
      * @var User[]
      */
     protected $users = [];
 
-    public function setUsers(VacationUser $user): VacationMonth
+    public function setDays(VacationDay $day): VacationMonth
     {
-        $this->users[(int) $user->getUserId()] = $user;
-
+        $this->days[(int) $day->getDay()] = $day;
         return $this;
     }
 
-    public function getUser(int $userId): ?User
+    public function getDay(int $dayId): ?User
     {
-        if (isset($this->users[$userId])) {
-            return $this->users[$userId];
+        if (isset($this->days[$dayId])) {
+            return $this->days[$dayId];
         }
 
         return null;
     }
 
-    public function getOrAddUser(string $user, $couldadd): ?VacationUser
+    public function getOrAddDay(string $dayId, $couldadd): ?VacationDay
     {
-        if (isset($this->users[$user])) {
-            return $this->users[$user];
+        if (isset($this->days[$dayId])) {
+            return $this->days[$dayId];
         }
         else if ($couldadd) {
-            $userObject = new VacationUser($user);
-            $this->users[$user] = $userObject;
-            return $userObject;
+            $dayObject = new VacationDay($dayId);
+            $this->days[$dayId] = $dayObject;
+            return $dayObject;
         }
         return null;
     }
@@ -52,8 +56,30 @@ class VacationMonth extends AbstractMonth
     /**
      * @return User[]
      */
+    public function getDays(): array
+    {
+        return array_values($this->days);
+    }
+
+    public function sumVacationForUser($userId, $vacationDuration)
+    {
+        if (!isset($this->users[$userId])) {
+            $curUser = new VacationUser($userId);
+            $this->users[$userId] = $curUser;
+        }
+        else {
+            $curUser = $this->users[$userId];
+        }
+        $curUser->sumVacation($vacationDuration);
+    }
+
+    /**
+     * @return User[]
+     */
     public function getUsers(): array
     {
-        return array_values($this->users);
+        return $this->users;
     }
+
+
 }

@@ -53,12 +53,15 @@ class VacationController extends AbstractController
         $years = [];
         $startDate = DateTime::createFromFormat('Y-m-d H:i:s', '2021-06-29 00:00:00');
         $user = $this->userRepository->loadUserbyUsername('simon');
-        $this->getMonthlyActivity($years, 'vacation', 'Vacation', $user, $startDate);
-        $this->getMonthlyActivity($years, 'nonpaid', 'Non paid vacation', $user, $startDate);
-        $this->getMonthlyActivity($years, 'total', null, $user, $startDate);
+        $this->getMonthlyActivity($years, 'vacation', 'Vacation', 'Vacation', $user, $startDate);
+        $this->getMonthlyActivity($years, 'rtt', 'Vacation','RTT', $user, $startDate);
+
+        $yearsGlobal = [];
+        $this->getMonthlyActivity($yearsGlobal, 'total', null, null, $user, $startDate);
 
         $viewVars = [
             'years' => $years,
+            'yearsGlobal' => $years,
         ];
 
         return $this->render('uservacations/index.html.twig', $viewVars);
@@ -72,11 +75,11 @@ class VacationController extends AbstractController
      * @param DateTime|null $end
      * @return Year[]
      */
-    public function getMonthlyActivity(&$years, $setter, $activity = null, User $user = null, ?DateTime $begin = null, ?DateTime $end = null)
+    public function getMonthlyActivity(&$years, $setter, $project = null, $activity = null, User $user = null, ?DateTime $begin = null, ?DateTime $end = null)
     {
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
 
-        $qb->select('SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, user.alias as ualias')
+        $qb->select('SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, DAY(t.begin) as day, user.alias as ualias')
             ->from(Timesheet::class, 't')
             ->leftJoin('t.user', 'user')
             ->leftJoin('t.activity', 'activity')
@@ -87,9 +90,10 @@ class VacationController extends AbstractController
 //         $qb->andWhere()->eq('project.name', ('Vacation');
         if ($activity != null) {
             $qb->andWhere('activity.name = :activity')->setParameter('activity', $activity);
-            $qb->andWhere('project.name = :project')->setParameter('project', $activity);
+            $qb->andWhere('project.name = :project')->setParameter('project', $project);
         }
         $qb->andWhere('activity.name <> :publichd')->setParameter('publichd', 'Public holiday');
+        $qb->andWhere('t.duration > 0');
 
         if (!empty($begin)) {
             $qb->andWhere($qb->expr()->gte('t.begin', ':from'))
@@ -113,12 +117,16 @@ class VacationController extends AbstractController
         $qb
             ->orderBy('year', 'DESC')
             ->addOrderBy('month', 'DESC')
+            ->addOrderBy('day', 'DESC')
             ->addOrderBy('ualias', 'ASC')
 
             ->groupBy('year')
             ->addGroupBy('month')
+            ->addGroupBy('day')
             ->addGroupBy('ualias')
         ;
+
+
 
         $couldadd = true; // ($activity != null);
 
@@ -127,17 +135,24 @@ class VacationController extends AbstractController
 
             $year = $this->getYear($years, $curYear, $couldadd);
 
-            if ($year != null) {
-                $month = $year->getOrAddMonth($statRow['month'], $couldadd);
-                if ($month != null) {
-                    $user = $month->getOrAddUser($statRow['ualias'], $couldadd);
-                    if ($user != null) {
-                        $func = "set" . ucwords($setter);
-                        $user->$func($statRow['duration']);
-                        if ($activity == 'Vacation') {
-                        $year->sumVacationForUser($statRow['ualias'], $statRow['duration']);
-                        }
-                    }
+            if ($year == null) {
+                continue;
+            }
+            $month = $year->getOrAddMonth($statRow['month'], $couldadd);
+            if ($month == null) {
+                continue;
+            }
+            $day = $month->getOrAddDay($statRow['day'], $couldadd);
+            if ($day == null) {
+                continue;
+            }
+            $user = $day->getOrAddUser($statRow['ualias'], $couldadd);
+            if ($user != null) {
+                $func = "set" . ucwords($setter);
+                $user->$func($statRow['duration']);
+                if ($activity == 'Vacation' || $activity == 'RTT') {
+                    $year->sumVacationForUser($statRow['ualias'], $statRow['duration']);
+                    $month->sumVacationForUser($statRow['ualias'], $statRow['duration']);
                 }
             }
         }

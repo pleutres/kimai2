@@ -21,6 +21,11 @@ class VacationUser
      */
     protected $nonpaid = 0;
 
+    /**
+     * @var int
+     */
+    protected $rtt = 0;
+
     protected $total = 0;
 
     /**
@@ -92,9 +97,25 @@ class VacationUser
         return $monthWorkday - $this->vacation - $this->nonpaid;
     }
 
-    public function sumVacation($vacation)
+    public function sumVacation($vacationDuration)
     {
-        $this->vacation += $vacation;
+        $this->vacation += $vacationDuration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRtt(): int
+    {
+        return $this->rtt;
+    }
+
+    /**
+     * @param int $rtt
+     */
+    public function setRtt(int $rtt): void
+    {
+        $this->rtt = $rtt;
     }
 
 
