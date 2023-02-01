@@ -18,37 +18,30 @@ use Doctrine\ORM\Events;
 /**
  * A listener to make sure all Timesheet entries will have a proper duration.
  */
-class TimesheetSubscriber implements EventSubscriber
+final class TimesheetSubscriber implements EventSubscriber
 {
     /**
      * @var CalculatorInterface[]
      */
-    protected $calculator;
+    private ?array $sorted = null;
 
     /**
      * @param CalculatorInterface[] $calculators
      */
-    public function __construct(iterable $calculators)
+    public function __construct(private iterable $calculators)
     {
-        $this->calculator = $calculators;
     }
 
-    /**
-     * @return array
-     */
-    public function getSubscribedEvents()
+    public function getSubscribedEvents(): array
     {
         return [
             Events::onFlush,
         ];
     }
 
-    /**
-     * @param OnFlushEventArgs $args
-     */
-    public function onFlush(OnFlushEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args): void
     {
-        $em = $args->getEntityManager();
+        $em = $args->getObjectManager();
         $uow = $em->getUnitOfWork();
         $meta = $em->getClassMetadata(Timesheet::class);
 
@@ -57,7 +50,7 @@ class TimesheetSubscriber implements EventSubscriber
                 continue;
             }
 
-            $this->calculateFields($entity);
+            $this->calculateFields($entity, $uow->getEntityChangeSet($entity));
             $uow->recomputeSingleEntityChangeSet($meta, $entity);
         }
 
@@ -71,13 +64,27 @@ class TimesheetSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     * @param Timesheet $entity
-     */
-    protected function calculateFields(Timesheet $entity)
+    private function calculateFields(Timesheet $entity, array $changes = []): void
     {
-        foreach ($this->calculator as $calculator) {
-            $calculator->calculate($entity);
+        if ($this->sorted === null) {
+            $this->sorted = [];
+
+            foreach ($this->calculators as $calculator) {
+                $i = 0;
+                $prio = $calculator->getPriority();
+
+                do {
+                    $key = $prio + $i++;
+                } while (\array_key_exists($key, $this->sorted));
+
+                $this->sorted[$key] = $calculator;
+            }
+
+            ksort($this->sorted);
+        }
+
+        foreach ($this->sorted as $calculator) {
+            $calculator->calculate($entity, $changes);
         }
     }
 }

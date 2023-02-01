@@ -10,6 +10,7 @@
 namespace App\Validator\Constraints;
 
 use App\Activity\ActivityStatisticService;
+use App\Configuration\LocaleService;
 use App\Configuration\SystemConfiguration;
 use App\Customer\CustomerStatisticService;
 use App\Entity\Timesheet;
@@ -18,36 +19,32 @@ use App\Project\ProjectStatisticService;
 use App\Repository\TimesheetRepository;
 use App\Timesheet\RateServiceInterface;
 use App\Utils\Duration;
-use App\Utils\LocaleHelper;
+use App\Utils\LocaleFormatter;
 use DateTime;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 final class TimesheetBudgetUsedValidator extends ConstraintValidator
 {
-    private $customerStatisticService;
-    private $projectStatisticService;
-    private $activityStatisticService;
-    private $timesheetRepository;
-    private $rateService;
-    private $configuration;
-
-    public function __construct(SystemConfiguration $configuration, CustomerStatisticService $customerStatisticService, ProjectStatisticService $projectStatisticService, ActivityStatisticService $activityStatisticService, TimesheetRepository $timesheetRepository, RateServiceInterface $rateService)
-    {
-        $this->configuration = $configuration;
-        $this->customerStatisticService = $customerStatisticService;
-        $this->projectStatisticService = $projectStatisticService;
-        $this->activityStatisticService = $activityStatisticService;
-        $this->timesheetRepository = $timesheetRepository;
-        $this->rateService = $rateService;
+    public function __construct(
+        private SystemConfiguration $configuration,
+        private CustomerStatisticService $customerStatisticService,
+        private ProjectStatisticService $projectStatisticService,
+        private ActivityStatisticService $activityStatisticService,
+        private TimesheetRepository $timesheetRepository,
+        private RateServiceInterface $rateService,
+        private AuthorizationCheckerInterface $security,
+        private LocaleService $localeService
+    ) {
     }
 
     /**
      * @param Timesheet $timesheet
      * @param Constraint $constraint
      */
-    public function validate($timesheet, Constraint $constraint)
+    public function validate(mixed $timesheet, Constraint $constraint): void
     {
         if (!($constraint instanceof TimesheetBudgetUsed)) {
             throw new UnexpectedTypeException($constraint, TimesheetBudgetUsed::class);
@@ -71,15 +68,15 @@ final class TimesheetBudgetUsedValidator extends ConstraintValidator
             return;
         }
 
-        $duration = $timesheet->getDuration();
-        if (null === $duration || 0 === $duration) {
-            $duration = $timesheet->getEnd()->getTimestamp() - $timesheet->getBegin()->getTimestamp();
-        }
-
         // this validator needs a project to calculate the rates
         if ($timesheet->getProject() === null) {
             return;
         }
+
+        // when changing the date via the calendar and/or the API, the duration will not be reset by the
+        // duration calculator (which runs after validation!) so we manually reset the duration before
+        $timesheet->setDuration(null);
+        $duration = $timesheet->getDuration();
 
         $timeRate = $this->rateService->calculate($timesheet);
         $rate = $timeRate->getRate();
@@ -90,21 +87,28 @@ final class TimesheetBudgetUsedValidator extends ConstraintValidator
         $projectRate = $rate;
         $customerDuration = $duration;
         $customerRate = $rate;
+        $monthWasChanged = false;
 
         if ($timesheet->getId() !== null) {
             $rawData = $this->timesheetRepository->getRawData($timesheet);
 
-            // if an existing entry was updated, but "duration", "rate" and "billable" were not changed:
-            // do not validate! this could for example happen when export flag is changed OR if "prevent overbooking"
-            // config was recently activated and this is an old entry
-            if ($duration === $rawData['duration'] && $rate === $rawData['rate'] && $timesheet->isBillable() === $rawData['billable'] && $timesheet->getBegin()->format('Y.m.d') === $rawData['begin']->format('Y.m.d')) {
+            $activityId = (int) $rawData['activity'];
+            $projectId = (int) $rawData['project'];
+            $customerId = (int) $rawData['customer'];
+
+            // if an existing entry was updated, but the relevant fields for budget calculation were not touched: do not validate!
+            // this could for example happen when export flag is changed OR if "prevent overbooking"  config was recently activated and this is an old entry
+            if ($duration === $rawData['duration'] &&
+                $rate === $rawData['rate'] &&
+                $timesheet->isBillable() === $rawData['billable'] &&
+                $timesheet->getBegin()->format('Y.m.d') === $rawData['begin']->format('Y.m.d') &&
+                $timesheet->getProject()->getId() === $projectId &&
+                ($timesheet->getActivity() === null || $timesheet->getActivity()->getId() === $activityId)
+            ) {
                 return;
             }
 
             // the duration of an existing entry could be increased or lowered
-            $activityId = (int) $rawData['activity'];
-            $projectId = (int) $rawData['project'];
-            $customerId = (int) $rawData['customer'];
 
             // only subtract the previously logged data in case the record was billable
             // if it wasn't billable, then its values are not included in the statistic models used later on
@@ -126,6 +130,8 @@ final class TimesheetBudgetUsedValidator extends ConstraintValidator
                     }
                 }
             }
+
+            $monthWasChanged = $timesheet->getBegin()->format('Y.m') !== $rawData['begin']->format('Y.m');
         }
 
         $now = new DateTime('now', $timesheet->getBegin()->getTimezone());
@@ -133,6 +139,9 @@ final class TimesheetBudgetUsedValidator extends ConstraintValidator
 
         if (null !== ($activity = $timesheet->getActivity()) && $activity->hasBudgets()) {
             $dateTime = $activity->isMonthlyBudget() ? $recordDate : $now;
+            if ($activity->isMonthlyBudget() && $monthWasChanged) {
+                $activityDuration = $duration;
+            }
             $stat = $this->activityStatisticService->getBudgetStatisticModel($activity, $dateTime);
             $this->checkBudgets($constraint, $stat, $timesheet, $activityDuration, $activityRate, 'activity');
         }
@@ -140,11 +149,17 @@ final class TimesheetBudgetUsedValidator extends ConstraintValidator
         if (null !== ($project = $timesheet->getProject())) {
             if ($project->hasBudgets()) {
                 $dateTime = $project->isMonthlyBudget() ? $recordDate : $now;
+                if ($project->isMonthlyBudget() && $monthWasChanged) {
+                    $projectDuration = $duration;
+                }
                 $stat = $this->projectStatisticService->getBudgetStatisticModel($project, $dateTime);
                 $this->checkBudgets($constraint, $stat, $timesheet, $projectDuration, $projectRate, 'project');
             }
             if (null !== ($customer = $project->getCustomer()) && $customer->hasBudgets()) {
                 $dateTime = $customer->isMonthlyBudget() ? $recordDate : $now;
+                if ($customer->isMonthlyBudget() && $monthWasChanged) {
+                    $customerDuration = $duration;
+                }
                 $stat = $this->customerStatisticService->getBudgetStatisticModel($customer, $dateTime);
                 $this->checkBudgets($constraint, $stat, $timesheet, $customerDuration, $customerRate, 'customer');
             }
@@ -172,16 +187,21 @@ final class TimesheetBudgetUsedValidator extends ConstraintValidator
         return false;
     }
 
-    private function addBudgetViolation(TimesheetBudgetUsed $constraint, Timesheet $timesheet, string $field, float $budget, float $rate)
+    private function addBudgetViolation(TimesheetBudgetUsed $constraint, Timesheet $timesheet, string $field, float $budget, float $rate): void
     {
         // using the locale of the assigned user is not the best solution, but allows to be independent of the request stack
-        $helper = new LocaleHelper($timesheet->getUser()->getLanguage());
+        $helper = new LocaleFormatter($this->localeService, $timesheet->getUser()->getLanguage());
         $currency = $timesheet->getProject()->getCustomer()->getCurrency();
 
         $free = $budget - $rate;
         $free = max($free, 0);
 
-        $this->context->buildViolation($constraint->messageRate)
+        $message = $constraint->messageRate;
+        if (!$this->security->isGranted('budget_money', $field)) {
+            $message = $constraint->messagePermission;
+        }
+
+        $this->context->buildViolation($message)
             ->atPath($field)
             ->setTranslationDomain('validators')
             ->setParameters([
@@ -193,14 +213,19 @@ final class TimesheetBudgetUsedValidator extends ConstraintValidator
         ;
     }
 
-    private function addTimeBudgetViolation(TimesheetBudgetUsed $constraint, string $field, int $budget, int $duration)
+    private function addTimeBudgetViolation(TimesheetBudgetUsed $constraint, string $field, int $budget, int $duration): void
     {
         $durationFormat = new Duration();
 
         $free = $budget - $duration;
         $free = max($free, 0);
 
-        $this->context->buildViolation($constraint->messageTime)
+        $message = $constraint->messageTime;
+        if (!$this->security->isGranted('budget_time', $field)) {
+            $message = $constraint->messagePermission;
+        }
+
+        $this->context->buildViolation($message)
             ->atPath($field)
             ->setTranslationDomain('validators')
             ->setParameters([

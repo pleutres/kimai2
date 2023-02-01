@@ -2,13 +2,13 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" target-language="ro" datatype="plaintext" original="invoice-calculator.en.xlf">
     <body>
-      <trans-unit id="1inO2IF" resname="label.invoice_calculator">
-        <source>label.invoice_calculator</source>
+      <trans-unit id="MviRJeB" resname="invoice_calculator">
+        <source>invoice_calculator</source>
         <target>Calcularea sumelor</target>
       </trans-unit>
       <trans-unit id="N6juwc4" resname="default">
         <source>default</source>
-        <target>Predefinit: o intrare pentru fiecare înregistrare a timpului</target>
+        <target state="translated">Implicit: o intrare per înregistrare a timpului</target>
       </trans-unit>
       <trans-unit id="_bAHi13" resname="short">
         <source>short</source>

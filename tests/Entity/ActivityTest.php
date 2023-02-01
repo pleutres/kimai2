@@ -16,7 +16,6 @@ use App\Entity\Project;
 use App\Entity\Team;
 use App\Export\Spreadsheet\ColumnDefinition;
 use App\Export\Spreadsheet\Extractor\AnnotationExtractor;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -31,6 +30,7 @@ class ActivityTest extends AbstractEntityTest
         $this->assertNull($sut->getProject());
         $this->assertNull($sut->getName());
         $this->assertNull($sut->getComment());
+        $this->assertNull($sut->getInvoiceText());
         $this->assertTrue($sut->isVisible());
         $this->assertTrue($sut->isBillable());
         $this->assertTrue($sut->isGlobal());
@@ -39,7 +39,6 @@ class ActivityTest extends AbstractEntityTest
         $this->assertInstanceOf(Collection::class, $sut->getMetaFields());
         $this->assertEquals(0, $sut->getMetaFields()->count());
         $this->assertNull($sut->getMetaField('foo'));
-        $this->assertNull($sut->getMetaFieldValue('foo'));
         $this->assertInstanceOf(Collection::class, $sut->getTeams());
     }
 
@@ -66,6 +65,9 @@ class ActivityTest extends AbstractEntityTest
         $this->assertInstanceOf(Activity::class, $sut->setComment('hello world'));
         $this->assertEquals('hello world', $sut->getComment());
 
+        $sut->setInvoiceText('very long invoice text comment 12324');
+        self::assertEquals('very long invoice text comment 12324', $sut->getInvoiceText());
+
         self::assertFalse($sut->hasColor());
         $sut->setColor('#fffccc');
         $this->assertEquals('#fffccc', $sut->getColor());
@@ -91,7 +93,6 @@ class ActivityTest extends AbstractEntityTest
         self::assertSame($result, $meta);
         self::assertEquals('test', $result->getType());
         self::assertEquals('bar2', $result->getValue());
-        self::assertEquals('bar2', $sut->getMetaFieldValue('foo'));
 
         $meta2 = new ActivityMeta();
         $meta2->setName('foo')->setValue('bar')->setType('test2');
@@ -102,7 +103,6 @@ class ActivityTest extends AbstractEntityTest
         $result = $sut->getMetaField('foo');
         self::assertSame($result, $meta);
         self::assertEquals('test2', $result->getType());
-        self::assertEquals('bar2', $sut->getMetaFieldValue('foo'));
 
         $sut->setMetaField((new ActivityMeta())->setName('blub')->setIsVisible(true));
         $sut->setMetaField((new ActivityMeta())->setName('blab')->setIsVisible(true));
@@ -113,7 +113,7 @@ class ActivityTest extends AbstractEntityTest
     public function testTeams()
     {
         $sut = new Activity();
-        $team = new Team();
+        $team = new Team('foo');
         self::assertEmpty($sut->getTeams());
         self::assertEmpty($team->getActivities());
 
@@ -124,7 +124,7 @@ class ActivityTest extends AbstractEntityTest
         self::assertSame($sut, $team->getActivities()[0]);
 
         // test remove unknown team doesn't do anything
-        $sut->removeTeam(new Team());
+        $sut->removeTeam(new Team('foo'));
         self::assertCount(1, $sut->getTeams());
         self::assertCount(1, $team->getActivities());
 
@@ -135,23 +135,23 @@ class ActivityTest extends AbstractEntityTest
 
     public function testExportAnnotations()
     {
-        $sut = new AnnotationExtractor(new AnnotationReader());
+        $sut = new AnnotationExtractor();
 
         $columns = $sut->extract(Activity::class);
 
         self::assertIsArray($columns);
 
         $expected = [
-            ['label.id', 'integer'],
-            ['label.name', 'string'],
-            ['label.project', 'string'],
-            ['label.budget', 'float'],
-            ['label.timeBudget', 'duration'],
-            ['label.budgetType', 'string'],
-            ['label.color', 'string'],
-            ['label.visible', 'boolean'],
-            ['label.comment', 'string'],
-            ['label.billable', 'boolean'],
+            ['id', 'integer'],
+            ['name', 'string'],
+            ['project', 'string'],
+            ['budget', 'float'],
+            ['timeBudget', 'duration'],
+            ['budgetType', 'string'],
+            ['color', 'string'],
+            ['visible', 'boolean'],
+            ['comment', 'string'],
+            ['billable', 'boolean'],
         ];
 
         self::assertCount(\count($expected), $columns);
@@ -186,7 +186,7 @@ class ActivityTest extends AbstractEntityTest
 
         $sut->setProject($project);
 
-        $team = new Team();
+        $team = new Team('foo');
         $sut->addTeam($team);
 
         $meta = new ActivityMeta();
@@ -201,7 +201,6 @@ class ActivityTest extends AbstractEntityTest
         foreach ($sut->getMetaFields() as $metaField) {
             $cloneMeta = $clone->getMetaField($metaField->getName());
             self::assertEquals($cloneMeta->getValue(), $metaField->getValue());
-            self::assertEquals($metaField->getValue(), $clone->getMetaFieldValue($metaField->getName()));
         }
         self::assertEquals($clone->getBudget(), $sut->getBudget());
         self::assertEquals($clone->getTimeBudget(), $sut->getTimeBudget());

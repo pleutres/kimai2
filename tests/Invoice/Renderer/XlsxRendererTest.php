@@ -29,14 +29,12 @@ class XlsxRendererTest extends TestCase
     {
         $sut = $this->getAbstractRenderer(XlsxRenderer::class);
 
-        $this->assertFalse($sut->supports($this->getInvoiceDocument('default.html.twig')));
-        $this->assertFalse($sut->supports($this->getInvoiceDocument('freelancer.html.twig')));
+        $this->assertFalse($sut->supports($this->getInvoiceDocument('invoice.html.twig')));
+        $this->assertFalse($sut->supports($this->getInvoiceDocument('service-date.pdf.twig')));
         $this->assertFalse($sut->supports($this->getInvoiceDocument('timesheet.html.twig')));
-        $this->assertFalse($sut->supports($this->getInvoiceDocument('foo.html.twig')));
-        $this->assertFalse($sut->supports($this->getInvoiceDocument('company.docx')));
-        $this->assertFalse($sut->supports($this->getInvoiceDocument('export.csv')));
+        $this->assertFalse($sut->supports($this->getInvoiceDocument('company.docx', true)));
         $this->assertTrue($sut->supports($this->getInvoiceDocument('spreadsheet.xlsx', true)));
-        $this->assertFalse($sut->supports($this->getInvoiceDocument('open-spreadsheet.ods')));
+        $this->assertFalse($sut->supports($this->getInvoiceDocument('open-spreadsheet.ods', true)));
     }
 
     public function getTestModel()

@@ -13,17 +13,18 @@ final class TimesheetExported extends TimesheetConstraint
 {
     public const TIMESHEET_EXPORTED = 'kimai-timesheet-exported-01';
 
-    protected static $errorNames = [
+    protected const ERROR_NAMES = [
         self::TIMESHEET_EXPORTED => 'This timesheet is already exported.',
     ];
 
-    public $message = 'This timesheet is already exported.';
+    public string $message = 'This timesheet is already exported.';
+
     /**
      * @var \DateTime|string|null
      */
-    public $now;
+    public null|\DateTime|string $now;
 
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return self::CLASS_CONSTRAINT;
     }

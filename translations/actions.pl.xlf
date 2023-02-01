@@ -24,7 +24,7 @@
       </trans-unit>
       <trans-unit id="JeK2sQZ" resname="repeat">
         <source>repeat</source>
-        <target>Od nowa</target>
+        <target state="translated">Uruchom ponownie</target>
       </trans-unit>
       <trans-unit id="J0sRBY_" resname="profile-stats">
         <source>profile-stats</source>
@@ -34,21 +34,21 @@
         <source>settings</source>
         <target>Ustawienia</target>
       </trans-unit>
-      <trans-unit id="xovWV.Y" resname="timesheet.filter">
+      <trans-unit id="anCjtwe" resname="timesheet.filter">
         <source>Filter timesheets</source>
-        <target>Ewidencje</target>
+        <target state="translated">Filtruj ewidencję pomiarów</target>
       </trans-unit>
-      <trans-unit id="U7.woIo" resname="customer.filter">
+      <trans-unit id="xY9_cU2" resname="customer.filter">
         <source>Filter customers</source>
-        <target>Filt klienta</target>
+        <target state="translated">Filtruj klientów</target>
       </trans-unit>
-      <trans-unit id="j9gsVnq" resname="project.filter">
+      <trans-unit id="UFgOnc6" resname="project.filter">
         <source>Filter projects</source>
-        <target>Filtr projektu</target>
+        <target state="translated">Filtruj projekty</target>
       </trans-unit>
-      <trans-unit id="xl_5l3y" resname="activity.filter">
+      <trans-unit id="5G3QNHA" resname="activity.filter">
         <source>Filter activities</source>
-        <target>Filt aktywności</target>
+        <target state="translated">Filtruj aktywności</target>
       </trans-unit>
       <trans-unit id="b1pgNOd" resname="copy">
         <source>copy</source>
@@ -68,7 +68,7 @@
       </trans-unit>
       <trans-unit id="QR1nvcR" resname="create-timesheet">
         <source>create-timesheet</source>
-        <target>Utwórz ewidencję</target>
+        <target state="translated">Utwórz ewidencję pomiarów</target>
       </trans-unit>
       <trans-unit id="T_PN1AT" resname="permissions">
         <source>permissions</source>
@@ -88,7 +88,7 @@
       </trans-unit>
       <trans-unit id="aP9j_4L" resname="download">
         <source>download</source>
-        <target>Pobieranie</target>
+        <target state="translated">Pobieranie</target>
       </trans-unit>
       <trans-unit id="Qh5mV5Q" resname="create-timesheet-multiuser">
         <source>create-timesheet-multiuser</source>
@@ -96,7 +96,23 @@
       </trans-unit>
       <trans-unit id="38M3a4J" resname="filter">
         <source>filter</source>
-        <target>filtruj dane</target>
+        <target state="translated">Filtruj dane</target>
+      </trans-unit>
+      <trans-unit id="SEyZupT" resname="invoice.cancel">
+        <source>invoice.cancel</source>
+        <target state="translated">Anuluj fakturę</target>
+      </trans-unit>
+      <trans-unit id="pJzNT.n" resname="vcard">
+        <source>vcard</source>
+        <target state="translated">Wizytówka</target>
+      </trans-unit>
+      <trans-unit id="2cMESs." resname="widget_add">
+        <source>Add widget</source>
+        <target state="translated">Dodaj widżet</target>
+      </trans-unit>
+      <trans-unit id="YCc5UoO" resname="widget_remove">
+        <source>Remove widget</source>
+        <target state="translated">Usuń widżet</target>
       </trans-unit>
     </body>
   </file>

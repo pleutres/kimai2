@@ -10,8 +10,8 @@
 namespace App\Tests\Validator\Constraints;
 
 use App\Configuration\ConfigLoaderInterface;
-use App\Configuration\SystemConfiguration;
 use App\Entity\Timesheet;
+use App\Tests\Mocks\SystemConfigurationFactory;
 use App\Validator\Constraints\TimesheetLongRunning;
 use App\Validator\Constraints\TimesheetLongRunningValidator;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -21,18 +21,19 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 /**
  * @covers \App\Validator\Constraints\TimesheetLongRunning
  * @covers \App\Validator\Constraints\TimesheetLongRunningValidator
+ * @extends ConstraintValidatorTestCase<TimesheetLongRunningValidator>
  */
 class TimesheetLongRunningValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator()
+    protected function createValidator(): TimesheetLongRunningValidator
     {
         return $this->createMyValidator(120);
     }
 
-    protected function createMyValidator(int $minutes)
+    protected function createMyValidator(int $minutes): TimesheetLongRunningValidator
     {
         $loader = $this->createMock(ConfigLoaderInterface::class);
-        $config = new SystemConfiguration($loader, [
+        $config = SystemConfigurationFactory::create($loader, [
             'timesheet' => [
                 'rules' => [
                     'long_running_duration' => $minutes,
@@ -54,7 +55,7 @@ class TimesheetLongRunningValidatorTest extends ConstraintValidatorTestCase
     {
         $this->expectException(UnexpectedTypeException::class);
 
-        $this->validator->validate(new NotBlank(), new TimesheetLongRunning(['message' => 'myMessage']));
+        $this->validator->validate(new NotBlank(), new TimesheetLongRunning(['message' => 'myMessage'])); // @phpstan-ignore-line
     }
 
     public function testLongRunningTriggers()
@@ -69,7 +70,7 @@ class TimesheetLongRunningValidatorTest extends ConstraintValidatorTestCase
 
         $this->buildViolation('Maximum duration of {{ value }} hours exceeded.')
             ->atPath('property.path.duration')
-            ->setParameter('{{ value }}', '02:00')
+            ->setParameter('{{ value }}', '2:00')
             ->setCode(TimesheetLongRunning::LONG_RUNNING)
             ->assertRaised();
     }

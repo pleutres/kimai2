@@ -13,13 +13,13 @@ final class TimesheetRestart extends TimesheetConstraint
 {
     public const START_DISALLOWED = 'kimai-timesheet-restart-01';
 
-    protected static $errorNames = [
+    protected const ERROR_NAMES = [
         self::START_DISALLOWED => 'You are not allowed to start this timesheet record.',
     ];
 
-    public $message = 'You are not allowed to start this timesheet record.';
+    public string $message = 'You are not allowed to start this timesheet record.';
 
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return self::CLASS_CONSTRAINT;
     }

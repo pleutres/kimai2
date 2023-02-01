@@ -17,10 +17,10 @@ use App\Repository\Loader\TeamLoader;
 use App\Repository\Paginator\LoaderPaginator;
 use App\Repository\Paginator\PaginatorInterface;
 use App\Repository\Query\TeamQuery;
+use App\Utils\Pagination;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Pagerfanta;
 
 /**
  * @extends \Doctrine\ORM\EntityRepository<Team>
@@ -40,7 +40,7 @@ class TeamRepository extends EntityRepository
         return $result;
     }
 
-    public function find($id, $lockMode = null, $lockVersion = null)
+    public function find($id, $lockMode = null, $lockVersion = null): ?Team
     {
         /** @var Team|null $team */
         $team = parent::find($id, $lockMode, $lockVersion);
@@ -52,6 +52,26 @@ class TeamRepository extends EntityRepository
         $loader->loadResults([$team]);
 
         return $team;
+    }
+
+    /**
+     * @param int[] $teamIds
+     * @return Team[]
+     */
+    public function findByIds(array $teamIds): array
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb
+            ->where($qb->expr()->in('t.id', ':id'))
+            ->setParameter('id', $teamIds)
+        ;
+
+        $teams = $qb->getQuery()->getResult();
+
+        $loader = new TeamLoader($qb->getEntityManager());
+        $loader->loadResults($teams);
+
+        return $teams;
     }
 
     /**
@@ -107,9 +127,9 @@ class TeamRepository extends EntityRepository
         return $qb;
     }
 
-    public function getPagerfantaForQuery(TeamQuery $query): Pagerfanta
+    public function getPagerfantaForQuery(TeamQuery $query): Pagination
     {
-        $paginator = new Pagerfanta($this->getPaginatorForQuery($query));
+        $paginator = new Pagination($this->getPaginatorForQuery($query));
         $paginator->setMaxPerPage($query->getPageSize());
         $paginator->setCurrentPage($query->getPage());
 

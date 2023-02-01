@@ -10,7 +10,7 @@
 namespace App\Tests\Validator\Constraints;
 
 use App\Activity\ActivityStatisticService;
-use App\Configuration\SystemConfiguration;
+use App\Configuration\LocaleService;
 use App\Customer\CustomerStatisticService;
 use App\Entity\Activity;
 use App\Entity\Customer;
@@ -25,12 +25,14 @@ use App\Model\ProjectBudgetStatisticModel;
 use App\Model\ProjectStatistic;
 use App\Project\ProjectStatisticService;
 use App\Repository\TimesheetRepository;
+use App\Tests\Mocks\SystemConfigurationFactory;
 use App\Timesheet\Rate;
 use App\Timesheet\RateService;
 use App\Timesheet\RateServiceInterface;
 use App\Validator\Constraints\TimesheetBudgetUsed;
 use App\Validator\Constraints\TimesheetBudgetUsedValidator;
 use DateTime;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
@@ -38,16 +40,19 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 /**
  * @covers \App\Validator\Constraints\TimesheetBudgetUsed
  * @covers \App\Validator\Constraints\TimesheetBudgetUsedValidator
+ * @extends ConstraintValidatorTestCase<TimesheetBudgetUsedValidator>
  */
 class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator(bool $isAllowed = false, ?ActivityBudgetStatisticModel $activityStatisticModel = null, ?ProjectBudgetStatisticModel $projectStatisticModel = null, ?CustomerBudgetStatisticModel $customerStatisticModel = null, ?array $rawData = null, ?Rate $rate = null)
+    /**
+     * @param array<mixed>|null $rawData
+     */
+    protected function createValidator(bool $isAllowed = false, ?ActivityBudgetStatisticModel $activityStatisticModel = null, ?ProjectBudgetStatisticModel $projectStatisticModel = null, ?CustomerBudgetStatisticModel $customerStatisticModel = null, ?array $rawData = null, ?Rate $rate = null): TimesheetBudgetUsedValidator
     {
-        $configuration = $this->createMock(SystemConfiguration::class);
-        $configuration->method('isTimesheetAllowOverbookingBudget')->willReturn($isAllowed);
+        $configuration = SystemConfigurationFactory::createStub(['timesheet' => ['rules' => ['allow_overbooking_budget' => $isAllowed]]]);
 
         if ($customerStatisticModel === null) {
-            $customerStatisticModel = new CustomerBudgetStatisticModel(new Customer());
+            $customerStatisticModel = new CustomerBudgetStatisticModel(new Customer('foo'));
             $customerStatistic = new CustomerStatistic();
             $customerStatisticModel->setStatisticTotal($customerStatistic);
             $customerStatisticModel->setStatistic($customerStatistic);
@@ -88,7 +93,11 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
             $rateService = new RateService([], $timesheetRepository);
         }
 
-        return new TimesheetBudgetUsedValidator($configuration, $customerRepository, $projectRepository, $activityRepository, $timesheetRepository, $rateService);
+        $auth = $this->createMock(AuthorizationCheckerInterface::class);
+
+        $localeService = new LocaleService([]);
+
+        return new TimesheetBudgetUsedValidator($configuration, $customerRepository, $projectRepository, $activityRepository, $timesheetRepository, $rateService, $auth, $localeService);
     }
 
     public function testConstraintIsInvalid()
@@ -112,7 +121,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
     {
         $this->expectException(UnexpectedTypeException::class);
 
-        $this->validator->validate('foo', new TimesheetBudgetUsed());
+        $this->validator->validate('foo', new TimesheetBudgetUsed()); // @phpstan-ignore-line
     }
 
     public function testWithMissingEnd()
@@ -148,7 +157,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
     public function testWithoutBudget()
     {
         $project = new Project();
-        $project->setCustomer(new Customer());
+        $project->setCustomer(new Customer('foo'));
 
         $timesheet = new Timesheet();
         $timesheet->setBegin(new DateTime());
@@ -173,7 +182,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
         $end->modify('+3601 seconds');
 
         $project = new Project();
-        $project->setCustomer(new Customer());
+        $project->setCustomer(new Customer('foo'));
 
         $timesheet = new Timesheet();
         $timesheet->setBegin($begin);
@@ -191,7 +200,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
         return [
             // activity: violations ----------------------------------------------------------------------
             //        previously logged                         available budgets                                           expected violation                              duration            entry currently in database
-            'a_a' => [1230, null, null, null, null, null,       null, 3600, null, null, null, null, null, null, null,       '00:20', '00:39', '01:00', 'activity',          '+3600 seconds'],
+            'a_a' => [1230, null, null, null, null, null,       null, 3600, null, null, null, null, null, null, null,       '0:20', '0:39', '1:00', 'activity',          '+3600 seconds'],
             'a_b' => [null, 1001.0, null, null, null, null,     null, null, 1000.0, null, null, null, null, null, null,     '€1,001.00', '€0.00', '€1,000.00', 'activity',  '+3600 seconds'],
 
             // activity: no violations
@@ -200,29 +209,29 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
             'a_e' => [1230, 1001.0, null, null, null, null,     null, null, null, null, null, null, null, null, null,       null, null, null, null,                         '+3600 seconds'],
 
             //        previously logged                         available budgets                                           expected violation                              duration            entry currently in database
-            'a_f1' => [1320, null, null, null, null, null,      null, 3600, null, null, null, null, null, null, null,       '00:22', '00:38', '01:00', 'activity',          '+3600 seconds',    ['rate' => 1.0, 'duration' => 1000]],
-            'a_h1' => [7200, null, null, null, null, null,      null, 7200, null, null, null, null, null, null, null,       '02:00', '00:00', '02:00', 'activity',          '+3601 seconds',    ['rate' => 1.0, 'duration' => 3600]],
+            'a_f1' => [1320, null, null, null, null, null,      null, 3600, null, null, null, null, null, null, null,       '0:22', '0:38', '1:00', 'activity',          '+3600 seconds',    ['rate' => 1.0, 'duration' => 1000]],
+            'a_h1' => [7200, null, null, null, null, null,      null, 7200, null, null, null, null, null, null, null,       '2:00', '0:00', '2:00', 'activity',          '+3601 seconds',    ['rate' => 1.0, 'duration' => 3600]],
             'a_h2' => [3601, null, null, null, null, null,      null, 3600, null, null, null, null, null, null, null,       null, null, null, null,                         '+3600 seconds',    ['rate' => 1.0, 'duration' => 3601]],
-            'a_g0' => [null, 1002.0, null, null, null, null,    null, null, 1000.0, null, null, null, null, null, null,     '1,002.00', '0.00', '1,000.00', 'activity',     '+3600 seconds',    ['rate' => 1.0, 'duration' => 1010]],
+            'a_g0' => [null, 1002.0, null, null, null, null,    null, null, 1000.0, null, null, null, null, null, null,     '€1,002.00', '€0.00', '€1,000.00', 'activity',     '+3600 seconds',    ['rate' => 1.0, 'duration' => 1010]],
             'a_g1' => [null, 1002.0, null, null, null, null,    null, null, 1000.0, null, null, null, null, null, null,     null, null, null, null,                         '+3600 seconds',    ['rate' => 2.0, 'duration' => 0]],
             // nothing changed => no violation
             'a_x1' => [3600, 1000.0, null, null, null, null,    null, 3600, 1000.0, null, null, null, null, null, null,     null, null, null, null,                         '+3600 seconds',    ['rate' => 1000.0, 'duration' => 3600], new Rate(1000.0, 0.00)],
             // date changed => violation
-            'a_x2' => [3600, 1000.0, null, null, null, null,    'month', 3600, 1000.0, null, null, null, null, null, null,  '1,000.00', '0.00', '1,000.00', 'activity',     '+3600 seconds',    ['rate' => 999.0, 'duration' => 3599, 'begin' => new DateTime('2021-03-17 16:15:00'), 'end' => new DateTime('2021-03-17 17:15:01'), 'billable' => true], new Rate(1000.0, 0.00)],
+            'a_x2' => [3600, 1000.0, null, null, null, null,    'month', 3600, 1000.0, null, null, null, null, null, null,  '€1,000.00', '€0.00', '€1,000.00', 'activity',     '+3600 seconds',    ['rate' => 999.0, 'duration' => 3599, 'begin' => new DateTime('2021-03-17 16:15:00'), 'end' => new DateTime('2021-03-17 17:15:01'), 'billable' => true], new Rate(1000.0, 0.00)],
             // date changed but not violation was raised
             'a_x3' => [3600, 1000.0, null, null, null, null,    'month', 3600, 1000.0, null, null, null, null, null, null,  null, null, null, null,                         '+3600 seconds',    ['rate' => 999.0, 'duration' => 3599, 'begin' => new DateTime('2021-03-17 16:15:00'), 'end' => new DateTime('2021-03-17 17:15:01'), 'billable' => false], new Rate(1000.0, 0.00)],
             'a_x4' => [3600, 1000.0, null, null, null, null,    'month', 3600, 1000.0, null, null, null, null, null, null,  null, null, null, null,                         '+3600 seconds',    ['rate' => 1000.0, 'duration' => 3600, 'begin' => new DateTime('2021-03-17 16:15:00'), 'end' => new DateTime('2021-03-17 17:15:01'), 'billable' => true], new Rate(1000.0, 0.00)],
             'a_x5' => [3600, 1000.0, null, null, null, null,    'month', 3600, 1000.0, null, null, null, null, null, null,  null, null, null, null,                         '+3600 seconds',    ['rate' => 1000.0, 'duration' => 3600, 'begin' => new DateTime('2021-03-17 16:15:00'), 'end' => new DateTime('2021-03-17 17:15:01'), 'billable' => false], new Rate(1000.0, 0.00)],
 
             // project: violations ----------------------------------------------------------------------
-            'p_j' => [null, null, 1230, null, null, null,       null, null, null, null, 3600, null, null, null, null,       '00:20', '00:39', '01:00', 'project',           '+3600 seconds'],
+            'p_j' => [null, null, 1230, null, null, null,       null, null, null, null, 3600, null, null, null, null,       '0:20', '0:39', '1:00', 'project',           '+3600 seconds'],
             'p_k' => [null, null, null, 1001.0, null, null,     null, null, null, null, null, 1000.0, null, null, null,     '€1,001.00', '€0.00', '€1,000.00', 'project',   '+3600 seconds'],
 
             //        previously logged                         available budgets                                           expected violation                              duration            entry currently in database
-            'p_f1' => [null, null, 1320, null, null, null,      null, null, null, null, 3600, null, null, null, null,       '00:22', '00:38', '01:00', 'project',           '+3600 seconds',    ['rate' => 1.0, 'duration' => 1000]],
-            'p_h1' => [null, null, 7200, null, null, null,      null, null, null, null, 7200, null, null, null, null,       '02:00', '00:00', '02:00', 'project',           '+3601 seconds',    ['rate' => 1.0, 'duration' => 3600]],
+            'p_f1' => [null, null, 1320, null, null, null,      null, null, null, null, 3600, null, null, null, null,       '0:22', '0:38', '1:00', 'project',           '+3600 seconds',    ['rate' => 1.0, 'duration' => 1000]],
+            'p_h1' => [null, null, 7200, null, null, null,      null, null, null, null, 7200, null, null, null, null,       '2:00', '0:00', '2:00', 'project',           '+3601 seconds',    ['rate' => 1.0, 'duration' => 3600]],
             'p_h2' => [null, null, 3601, null, null, null,      null, null, null, null, 3600, null, null, null, null,       null, null, null, null,                         '+3600 seconds',    ['rate' => 1.0, 'duration' => 3601]],
-            'p_g0' => [null, null, null, 1002.0, null, null,    null, null, null, null, null, 1000.0, null, null, null,     '1,002.00', '0.00', '1,000.00', 'project',      '+3600 seconds',    ['rate' => 1.0, 'duration' => 1010]],
+            'p_g0' => [null, null, null, 1002.0, null, null,    null, null, null, null, null, 1000.0, null, null, null,     '€1,002.00', '€0.00', '€1,000.00', 'project',      '+3600 seconds',    ['rate' => 1.0, 'duration' => 1010]],
             'p_g1' => [null, null, null, 1002.0, null, null,    null, null, null, null, null, 1000.0, null, null, null,     null, null, null, null,                         '+3600 seconds',    ['rate' => 2.0, 'duration' => 0]],
 
             // project: no violations
@@ -237,14 +246,14 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
             'p_u' => [1230, 1001.0, 1230, 1001.0, null, null,   null, null, null, null, null, null, null, null, null,       null, null, null, null,                         '+3600 seconds'],
 
             // customer: violations ----------------------------------------------------------------------
-            'c_v' => [null, null, null, null, 1230, null,       null, null, null, null, null, null, null, 3600, null,       '00:20', '00:39', '01:00', 'customer',          '+3600 seconds'],
+            'c_v' => [null, null, null, null, 1230, null,       null, null, null, null, null, null, null, 3600, null,       '0:20', '0:39', '1:00', 'customer',          '+3600 seconds'],
             'c_w' => [null, null, null, null, null, 1001.0,     null, null, null, null, null, null, null, null, 1000.0,     '€1,001.00', '€0.00', '€1,000.00', 'customer',  '+3600 seconds'],
 
             //        previously logged                         available budgets                                           expected violation                              duration            entry currently in database
-            'c_f1' => [null, null, null, null, 1320, null,      null, null, null, null, null, null, null, 3600, null,       '00:22', '00:38', '01:00', 'customer',          '+3600 seconds',    ['rate' => 1.0, 'duration' => 1000]],
-            'c_h1' => [null, null, null, null, 7200, null,      null, null, null, null, null, null, null, 7200, null,       '02:00', '00:00', '02:00', 'customer',          '+3601 seconds',    ['rate' => 1.0, 'duration' => 3600]],
+            'c_f1' => [null, null, null, null, 1320, null,      null, null, null, null, null, null, null, 3600, null,       '0:22', '0:38', '1:00', 'customer',          '+3600 seconds',    ['rate' => 1.0, 'duration' => 1000]],
+            'c_h1' => [null, null, null, null, 7200, null,      null, null, null, null, null, null, null, 7200, null,       '2:00', '0:00', '2:00', 'customer',          '+3601 seconds',    ['rate' => 1.0, 'duration' => 3600]],
             'c_h2' => [null, null, null, null, 3601, null,      null, null, null, null, null, null, null, 3600, null,       null, null, null, null,                         '+3600 seconds',    ['rate' => 1.0, 'duration' => 3601]],
-            'c_g0' => [null, null, null, null, null, 1002.0,    null, null, null, null, null, null, null, null, 1000.0,     '1,002.00', '0.00', '1,000.00', 'customer',     '+3600 seconds',    ['rate' => 1.0, 'duration' => 1010]],
+            'c_g0' => [null, null, null, null, null, 1002.0,    null, null, null, null, null, null, null, null, 1000.0,     '€1,002.00', '€0.00', '€1,000.00', 'customer',     '+3600 seconds',    ['rate' => 1.0, 'duration' => 1010]],
             'c_g1' => [null, null, null, null, null, 1002.0,    null, null, null, null, null, null, null, null, 1000.0,     null, null, null, null,                         '+3600 seconds',    ['rate' => 2.0, 'duration' => 0]],
 
             // customer: no violations
@@ -368,6 +377,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
             }
 
             $customer = $this->createMock(Customer::class);
+            $customer->method('getCurrency')->willReturn('EUR');
             $customer->method('getId')->willReturn($rawData['customer']);
             $customer->method('isMonthlyBudget')->willReturn(false);
             if ($customerBudgetType !== null) {
@@ -408,6 +418,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
             $timesheet->method('getRate')->willReturn($rawData['rate']);
             $timesheet->method('getBegin')->willReturn($begin);
             $timesheet->method('getEnd')->willReturn($end);
+            $timesheet->method('getDuration')->willReturn($end->getTimestamp() - $begin->getTimestamp());
             $timesheet->method('getUser')->willReturn(new User());
             $timesheet->method('getProject')->willReturn($project);
             $timesheet->method('getActivity')->willReturn($activity);
@@ -421,7 +432,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
                 $activity->setBudget($activityBudget);
             }
 
-            $customer = new Customer();
+            $customer = new Customer('foo');
             if ($customerTimeBudget !== null) {
                 $customer->setTimeBudget($customerTimeBudget);
             }
@@ -466,7 +477,7 @@ class TimesheetBudgetUsedValidatorTest extends ConstraintValidatorTestCase
         if (null === $used && null === $budget && null === $free && $path === null) {
             $this->assertNoViolation();
         } else {
-            $this->buildViolation('The budget is completely used.')
+            $this->buildViolation('Sorry, the budget is used up.')
                 ->atPath('property.path.' . $path)
                 ->setParameters([
                     '%used%' => $used,

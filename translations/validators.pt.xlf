@@ -78,6 +78,14 @@
         <source>This timesheet is already exported.</source>
         <target>Este quadro de horários já foi exportado.</target>
       </trans-unit>
+      <trans-unit id="Jz1y3yB" resname="Duration cannot be zero.">
+        <source>Duration cannot be zero.</source>
+        <target state="translated">Não é permitida uma duração vazia.</target>
+      </trans-unit>
+      <trans-unit id="dcPei9G" resname="Sorry, the budget is used up.">
+        <source>Sorry, the budget is used up.</source>
+        <target state="translated">Desculpe, o orçamento esgotou.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

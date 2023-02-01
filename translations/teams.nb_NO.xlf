@@ -2,10 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" target-language="nb-NO" datatype="plaintext" original="teams.en.xlf">
     <body>
-      <trans-unit id="kgxAl_x" resname="teams.title">
-        <source>teams.title</source>
-        <target>Lag</target>
-      </trans-unit>
       <trans-unit id="A_4Fc7c" resname="teams.project_access">
         <source>teams.project_access</source>
         <target>Innvilg tilgang til prosjekter</target>
@@ -33,6 +29,10 @@
       <trans-unit id="cZEIdcu" resname="team.create_default">
         <source>team.create_default</source>
         <target>Opprett et nytt lag for å begrense tilgang</target>
+      </trans-unit>
+      <trans-unit id="6g81kYY" approved="no" resname="team.member">
+        <source>team.member</source>
+        <target state="translated">Medlem</target>
       </trans-unit>
     </body>
   </file>

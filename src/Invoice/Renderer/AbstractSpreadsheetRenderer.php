@@ -9,8 +9,8 @@
 
 namespace App\Invoice\Renderer;
 
-use App\Entity\InvoiceDocument;
 use App\Invoice\InvoiceModel;
+use App\Model\InvoiceDocument;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -67,6 +67,9 @@ abstract class AbstractSpreadsheetRenderer extends AbstractRenderer
             $sheetValues = false;
             foreach ($row->getCellIterator() as $cell) {
                 $value = $cell->getValue();
+                if ($value === null) {
+                    continue;
+                }
                 $replacer = null;
                 $firstReplacerPos = stripos($value, '${');
                 if ($firstReplacerPos === false) {
@@ -95,14 +98,14 @@ abstract class AbstractSpreadsheetRenderer extends AbstractRenderer
                     if (stripos($value, $searchKey) === false) {
                         continue;
                     }
-                    if (\is_string($content) && $content[0] === '=') {
+                    if (\is_string($content) && str_starts_with($content, '=')) {
                         $contentLooksLikeFormula = true;
                     }
                     $value = str_replace($searchKey, $content, $value);
                 }
 
                 if ($contentLooksLikeFormula && $firstReplacerPos === 0) {
-                    // see https://github.com/kevinpapst/kimai2/pull/2054
+                    // see https://github.com/kimai/kimai/pull/2054
                     $cell->setValueExplicit($value, DataType::TYPE_STRING);
                 } else {
                     $cell->setValue($value);
@@ -134,7 +137,7 @@ abstract class AbstractSpreadsheetRenderer extends AbstractRenderer
             $cellCounter = 0;
             foreach ($row->getCellIterator() as $cell) {
                 $value = $cell->getValue();
-                if (stripos($value, '${entry.') !== false) {
+                if ($value !== null && stripos($value, '${entry.') !== false) {
                     $startRow = $row->getRowIndex();
                     $worksheet->insertNewRowBefore($startRow + 1, $invoiceItemCount - 1);
                     break 2;

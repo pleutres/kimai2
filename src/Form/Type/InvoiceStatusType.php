@@ -14,31 +14,23 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Custom form field type to select an invoice template.
- */
-class InvoiceStatusType extends AbstractType
+final class InvoiceStatusType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'label' => 'label.status',
+            'label' => 'status',
             'multiple' => true,
             'choices' => [
                 'status.' . Invoice::STATUS_NEW => Invoice::STATUS_NEW,
                 'status.' . Invoice::STATUS_PENDING => Invoice::STATUS_PENDING,
                 'status.' . Invoice::STATUS_PAID => Invoice::STATUS_PAID,
+                'status.' . Invoice::STATUS_CANCELED => Invoice::STATUS_CANCELED,
             ],
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }

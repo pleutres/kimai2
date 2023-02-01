@@ -22,10 +22,6 @@
         <source>timesheet.start.error</source>
         <target>De teller kon niet worden gestart: %reason%</target>
       </trans-unit>
-      <trans-unit id="srhs0gp" resname="timesheet.start.exceeded_limit">
-        <source>timesheet.start.exceeded_limit</source>
-        <target>U heeft het maximumaantal lopende tellers bereikt. Stop eerst minstens één teller.</target>
-      </trans-unit>
       <trans-unit id="kPINWEK" resname="timesheet.locked.warning">
         <source>timesheet.locked.warning</source>
         <target>U bewerkt een geëxporteerd item</target>
@@ -53,6 +49,10 @@
       <trans-unit id="wejAEcR" resname="action.upload.error">
         <source>action.upload.error</source>
         <target>Het bestand kan niet worden geüpload of opgeslagen: %reason%</target>
+      </trans-unit>
+      <trans-unit resname="action.csrf.error" id="bOE_q5R">
+        <source>action.csrf.error</source>
+        <target state="translated">Deze actie kan niet worden voltooid: Invalid security token.</target>
       </trans-unit>
     </body>
   </file>

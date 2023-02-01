@@ -15,11 +15,15 @@ interface SamlConfigurationInterface
 
     public function getTitle(): string;
 
+    public function getProvider(): string;
+
     public function getAttributeMapping(): array;
 
     public function getRolesAttribute(): ?string;
 
     public function getRolesMapping(): array;
+
+    public function isRolesResetOnLogin(): bool;
 
     public function getConnection(): array;
 }

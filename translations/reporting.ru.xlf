@@ -14,10 +14,6 @@
         <source>report_monthly_users</source>
         <target>Месячный просмотр для всех пользователей</target>
       </trans-unit>
-      <trans-unit id="ns_jU13" resname="reporting.initial_view">
-        <source>reporting.initial_view</source>
-        <target>Исходный отчет</target>
-      </trans-unit>
       <trans-unit id="1gBKwGH" resname="report_inactive_project">
         <source>report_inactive_project</source>
         <target>Неактивные проекты</target>
@@ -37,6 +33,18 @@
       <trans-unit id="BQAsynV" resname="report_project_daterange">
         <source>report_project_daterange</source>
         <target>Ежемесячный отчёт</target>
+      </trans-unit>
+      <trans-unit id="3JLmvfB" resname="report_user_year">
+        <source>report_user_year</source>
+        <target state="translated">Годовой просмотр для одного пользователя</target>
+      </trans-unit>
+      <trans-unit id="8RaUHlW" resname="report_customer_monthly_projects">
+        <source>report_customer_monthly_projects</source>
+        <target state="translated">Проекты по месяцам, активности и пользователям</target>
+      </trans-unit>
+      <trans-unit id="518eY_l" resname="report_project_details">
+        <source>report_project_details</source>
+        <target state="translated">Детали проекта</target>
       </trans-unit>
     </body>
   </file>

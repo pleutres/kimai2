@@ -14,10 +14,6 @@
         <source>report_monthly_users</source>
         <target>Vizualizare lunară pentru toți utilizatorii</target>
       </trans-unit>
-      <trans-unit id="ns_jU13" resname="reporting.initial_view">
-        <source>reporting.initial_view</source>
-        <target>Raport inițial</target>
-      </trans-unit>
       <trans-unit id="1gBKwGH" resname="report_inactive_project">
         <source>report_inactive_project</source>
         <target>Proiecte inactive</target>
@@ -45,6 +41,10 @@
       <trans-unit id="3JLmvfB" resname="report_user_year">
         <source>report_user_year</source>
         <target>Vizualizare anuală pentru un utilizator</target>
+      </trans-unit>
+      <trans-unit id="8RaUHlW" resname="report_customer_monthly_projects">
+        <source>report_customer_monthly_projects</source>
+        <target state="translated">Proiecte după lună, activitate și utilizator</target>
       </trans-unit>
     </body>
   </file>

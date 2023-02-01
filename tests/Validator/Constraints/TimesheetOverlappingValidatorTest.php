@@ -10,9 +10,9 @@
 namespace App\Tests\Validator\Constraints;
 
 use App\Configuration\ConfigLoaderInterface;
-use App\Configuration\SystemConfiguration;
 use App\Entity\Timesheet;
 use App\Repository\TimesheetRepository;
+use App\Tests\Mocks\SystemConfigurationFactory;
 use App\Validator\Constraints\TimesheetOverlapping;
 use App\Validator\Constraints\TimesheetOverlappingValidator;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -22,18 +22,19 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 /**
  * @covers \App\Validator\Constraints\TimesheetOverlapping
  * @covers \App\Validator\Constraints\TimesheetOverlappingValidator
+ * @extends ConstraintValidatorTestCase<TimesheetOverlappingValidator>
  */
 class TimesheetOverlappingValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator()
+    protected function createValidator(): TimesheetOverlappingValidator
     {
         return $this->createMyValidator(false, true);
     }
 
-    protected function createMyValidator(bool $allowOverlappingRecords = false, bool $hasRecords = true)
+    protected function createMyValidator(bool $allowOverlappingRecords = false, bool $hasRecords = true): TimesheetOverlappingValidator
     {
         $loader = $this->createMock(ConfigLoaderInterface::class);
-        $config = new SystemConfiguration($loader, [
+        $config = SystemConfigurationFactory::create($loader, [
             'timesheet' => [
                 'rules' => [
                     'allow_overlapping_records' => $allowOverlappingRecords,
@@ -57,7 +58,7 @@ class TimesheetOverlappingValidatorTest extends ConstraintValidatorTestCase
     {
         $this->expectException(UnexpectedTypeException::class);
 
-        $this->validator->validate(new NotBlank(), new TimesheetOverlapping(['message' => 'myMessage']));
+        $this->validator->validate(new NotBlank(), new TimesheetOverlapping(['message' => 'myMessage'])); // @phpstan-ignore-line
     }
 
     public function testOverlappingDisallowedWithRecords()
@@ -71,7 +72,7 @@ class TimesheetOverlappingValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate($timesheet, new TimesheetOverlapping(['message' => 'myMessage']));
 
         $this->buildViolation('You already have an entry for this time.')
-            ->atPath('property.path.begin')
+            ->atPath('property.path.begin_date')
             ->setCode(TimesheetOverlapping::RECORD_OVERLAPPING)
             ->assertRaised();
     }

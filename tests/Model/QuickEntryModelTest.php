@@ -21,10 +21,10 @@ use PHPUnit\Framework\TestCase;
  */
 class QuickEntryModelTest extends TestCase
 {
-    public function testEmptyModel()
+    public function testEmptyModel(): void
     {
         $sut = new QuickEntryModel();
-        self::assertTrue($sut->isPrototype());
+        self::assertFalse($sut->isPrototype());
         self::assertNull($sut->getProject());
         self::assertNull($sut->getActivity());
         self::assertNull($sut->getUser());
@@ -37,7 +37,7 @@ class QuickEntryModelTest extends TestCase
         self::assertFalse($sut->hasTimesheetWithDuration());
     }
 
-    public function testFullModel()
+    public function testFullModel(): void
     {
         $user = new User();
         $project = new Project();
@@ -101,11 +101,10 @@ class QuickEntryModelTest extends TestCase
         self::assertCount(4, $sut->getTimesheets());
     }
 
-    public function testHasExistingTimesheet()
+    public function testHasExistingTimesheet(): void
     {
         $sut = new QuickEntryModel();
 
-        self::assertTrue($sut->isPrototype());
         self::assertFalse($sut->hasExistingTimesheet());
         $mock = $this->createMock(Timesheet::class);
         $mock->method('getId')->willReturn(1);
@@ -114,7 +113,7 @@ class QuickEntryModelTest extends TestCase
         self::assertFalse($sut->isPrototype());
     }
 
-    public function testDefaultModel()
+    public function testDefaultModel(): void
     {
         $user = new User();
         $project = new Project();
@@ -125,5 +124,19 @@ class QuickEntryModelTest extends TestCase
         self::assertSame($project, $sut->getProject());
         self::assertSame($activity, $sut->getActivity());
         self::assertSame($user, $sut->getUser());
+    }
+
+    public function testPrototype(): void
+    {
+        $sut = new QuickEntryModel();
+        $sut->markAsPrototype();
+        self::assertTrue($sut->isPrototype());
+
+        $sut = new QuickEntryModel();
+        $sut->markAsPrototype();
+        $mock = $this->createMock(Timesheet::class);
+        $mock->method('getId')->willReturn(1);
+        $sut->addTimesheet($mock);
+        self::assertTrue($sut->isPrototype());
     }
 }

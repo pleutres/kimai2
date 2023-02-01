@@ -1,48 +1,47 @@
-# ========== KIMAI ==========
 # some hosters require a htaccess to change the PHP version
 .htaccess
 .env-*
 .idea/
 .DS_Store
+rector.php
+phpstan.sh
 
 # for symfony local webserver
 php.ini
+.php-version
+
+# YARN 2
+.yarnrc.yml
+.yarn
+
+# for keeping empty directories
+!.gitkeep
 
 /bin/*
-!bin/console
-/config/packages/local.yaml
-/config/packages/*-local.yaml
-/config/packages/*/local.yaml
-/config/packages/*/*-local.yaml
+!/bin/console
+*local.yaml
 /config/bundles-local.php
 
-public/avatars/*.png
-
-templates/invoice/renderer/.~lock*
-translations/branding.*.xlf
+/templates/invoice/renderer/.~lock*
+/translations/branding.*.xlf
 
 /var/data/*
-!/var/data/.gitkeep
 /var/coverage/
 /var/cache/*
-!var/cache/.gitkeep
 
 /var/invoices/*
 /var/export/*
-
-/var/packages/*
-!var/packages/.gitkeep
-/var/plugins/*
-!var/plugins/.gitkeep
-
 /var/log/*
-!var/log/.gitkeep
-
 /var/sessions/*
-!var/sessions/.gitkeep
-# ========== KIMAI ==========
+/var/packages/*
+/var/plugins/*
+*.disabled
 
 ###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
 .env
 /public/bundles/
 /vendor/
@@ -61,7 +60,6 @@ translations/branding.*.xlf
 
 ###> symfony/phpunit-bridge ###
 .phpunit
-/phpunit.xml
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/webpack-encore-bundle ###

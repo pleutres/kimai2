@@ -28,24 +28,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ActivityService
 {
-    /**
-     * @var ActivityRepository
-     */
-    private $repository;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    public function __construct(ActivityRepository $activityRepository, EventDispatcherInterface $dispatcher, ValidatorInterface $validator)
+    public function __construct(private ActivityRepository $repository, private EventDispatcherInterface $dispatcher, private ValidatorInterface $validator)
     {
-        $this->repository = $activityRepository;
-        $this->dispatcher = $dispatcher;
-        $this->validator = $validator;
     }
 
     public function createNewActivity(?Project $project = null): Activity
@@ -100,5 +84,10 @@ class ActivityService
         $this->dispatcher->dispatch(new ActivityUpdatePostEvent($activity));
 
         return $activity;
+    }
+
+    public function findActivityByName(string $name, ?Project $project = null): ?Activity
+    {
+        return $this->repository->findOneBy(['project' => $project?->getId(), 'name' => $name]);
     }
 }

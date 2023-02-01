@@ -2,10 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" target-language="tr" datatype="plaintext" original="teams.en.xlf">
     <body>
-      <trans-unit id="kgxAl_x" resname="teams.title">
-        <source>teams.title</source>
-        <target>Takımlar</target>
-      </trans-unit>
       <trans-unit id="A_4Fc7c" resname="teams.project_access">
         <source>teams.project_access</source>
         <target>Projelere erişim ver</target>
@@ -33,6 +29,10 @@
       <trans-unit id=".yIcFDx" resname="team.visibility_global">
         <source>team.visibility_global</source>
         <target>Henüz bir takım atanmadığından herkes tarafından görülebilir.</target>
+      </trans-unit>
+      <trans-unit id="6g81kYY" approved="no" resname="team.member">
+        <source>team.member</source>
+        <target state="translated">Üye</target>
       </trans-unit>
     </body>
   </file>

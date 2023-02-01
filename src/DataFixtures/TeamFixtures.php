@@ -25,7 +25,7 @@ use Faker\Factory;
  *
  * @codeCoverageIgnore
  */
-class TeamFixtures extends Fixture
+final class TeamFixtures extends Fixture
 {
     public const AMOUNT_TEAMS = 10;
     public const MAX_USERS_PER_TEAM = 15;
@@ -40,7 +40,7 @@ class TeamFixtures extends Fixture
      * @param ObjectManager $manager
      * @return array<int|string, User>
      */
-    protected function getAllUsers(ObjectManager $manager): array
+    private function getAllUsers(ObjectManager $manager): array
     {
         $all = [];
         /** @var User[] $entries */
@@ -56,7 +56,7 @@ class TeamFixtures extends Fixture
      * @param ObjectManager $manager
      * @return array<int|string, Project>
      */
-    protected function getAllProjects(ObjectManager $manager): array
+    private function getAllProjects(ObjectManager $manager): array
     {
         $all = [];
 
@@ -69,10 +69,7 @@ class TeamFixtures extends Fixture
         return $all;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $allUsers = $this->getAllUsers($manager);
         $allProjects = $this->getAllProjects($manager);
@@ -91,10 +88,10 @@ class TeamFixtures extends Fixture
             }
             $projectCount = mt_rand(0, $maxProjects);
 
-            $team = new Team();
-            $team->setName($faker->company . ' ' . $i);
+            $team = new Team($faker->company() . ' ' . $i);
             $team->addTeamlead($allUsers[array_rand($allUsers)]);
 
+            /* @phpstan-ignore-next-line */
             if ($userCount > 0) {
                 $userKeys = array_rand($allUsers, $userCount);
                 if (!\is_array($userKeys)) {
@@ -119,6 +116,6 @@ class TeamFixtures extends Fixture
         }
 
         $manager->flush();
-        $manager->clear(Team::class);
+        $manager->clear();
     }
 }

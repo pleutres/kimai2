@@ -15,7 +15,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Defines the sample data to load in the database when running the unit and
@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  *
  * @codeCoverageIgnore
  */
-class UserFixtures extends Fixture implements FixtureGroupInterface
+final class UserFixtures extends Fixture implements FixtureGroupInterface
 {
     public const DEFAULT_PASSWORD = 'kitten';
     public const DEFAULT_API_TOKEN = 'api_kitten';
@@ -42,67 +42,54 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
     public const MIN_RATE = 30;
     public const MAX_RATE = 120;
 
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $encoder;
-
-    /**
-     * @param UserPasswordEncoderInterface $encoder
-     */
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
-        $this->encoder = $encoder;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function load(ObjectManager $manager)
+    public static function getGroups(): array
+    {
+        return ['user'];
+    }
+
+    public function load(ObjectManager $manager): void
     {
         $this->loadDefaultAccounts($manager);
         $this->loadTestUsers($manager);
     }
 
-    public static function getGroups(): array
-    {
-        return ['user', 'users'];
-    }
-
     /**
      * Default users for all test cases
-     *
-     * @param ObjectManager $manager
      */
-    private function loadDefaultAccounts(ObjectManager $manager)
+    private function loadDefaultAccounts(ObjectManager $manager): void
     {
-        $passwordEncoder = $this->encoder;
-
         $allUsers = $this->getUserDefinition();
         foreach ($allUsers as $userData) {
             $user = new User();
-            $user
-                ->setAlias($userData[0])
-                ->setTitle($userData[1])
-                ->setUsername($userData[2])
-                ->setEmail($userData[3])
-                ->setRoles([$userData[4]])
-                ->setAvatar($userData[5])
-                ->setEnabled($userData[6])
-                ->setPassword($passwordEncoder->encodePassword($user, self::DEFAULT_PASSWORD))
-                ->setApiToken($passwordEncoder->encodePassword($user, self::DEFAULT_API_TOKEN))
-            ;
+            $user->setAlias($userData[0]);
+            $user->setTitle($userData[1]);
+            $user->setUserIdentifier($userData[2]);
+            $user->setEmail($userData[3]);
+            $user->setRoles([$userData[4]]);
+            $user->setAvatar($userData[5]);
+            $user->setEnabled($userData[6]);
+            $user->setPassword($this->passwordHasher->hashPassword($user, $userData[8]));
+            $user->setApiToken($this->passwordHasher->hashPassword($user, $userData[9]));
             $manager->persist($user);
 
             $prefs = $this->getUserPreferences($user, $userData[7]);
             $user->setPreferences($prefs);
+            // better to be able to test the wizard in demo installations
+            /*
+            foreach (User::WIZARDS as $wizard) {
+                $user->setWizardAsSeen($wizard);
+            }
+            */
             $manager->persist($prefs[0]);
             $manager->persist($prefs[1]);
         }
 
         $manager->flush();
-        $manager->clear(User::class);
-        $manager->clear(UserPreference::class);
+        $manager->clear();
     }
 
     /**
@@ -110,21 +97,17 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
      * @param string|null $timezone
      * @return array
      */
-    private function getUserPreferences(User $user, string $timezone = null)
+    private function getUserPreferences(User $user, string $timezone = null): array
     {
         $preferences = [];
 
-        $prefHourlyRate = new UserPreference();
-        $prefHourlyRate->setName(UserPreference::HOURLY_RATE);
-        $prefHourlyRate->setValue(rand(self::MIN_RATE, self::MAX_RATE));
-        $prefHourlyRate->setUser($user);
+        $prefHourlyRate = new UserPreference(UserPreference::HOURLY_RATE, rand(self::MIN_RATE, self::MAX_RATE));
+        $user->addPreference($prefHourlyRate);
         $preferences[] = $prefHourlyRate;
 
         if (null !== $timezone) {
-            $prefTimezone = new UserPreference();
-            $prefTimezone->setName(UserPreference::TIMEZONE);
-            $prefTimezone->setValue($timezone);
-            $prefTimezone->setUser($user);
+            $prefTimezone = new UserPreference(UserPreference::TIMEZONE, $timezone);
+            $user->addPreference($prefTimezone);
             $preferences[] = $prefTimezone;
         }
 
@@ -132,20 +115,17 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
     }
 
     /**
-     * Generate randomized test users, which don't have API access.
-     *
-     * @param ObjectManager $manager
+     * Generate randomized test users, without API access.
      */
-    private function loadTestUsers(ObjectManager $manager)
+    private function loadTestUsers(ObjectManager $manager): void
     {
-        $passwordEncoder = $this->encoder;
         $faker = Factory::create();
         $existingName = [];
         $existingEmail = [];
 
         for ($i = 1; $i <= self::AMOUNT_EXTRA_USER; $i++) {
-            $username = $faker->userName;
-            $email = $faker->email;
+            $username = $faker->userName();
+            $email = $faker->email();
 
             if (\in_array($username, $existingName)) {
                 continue;
@@ -159,15 +139,13 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
             $existingEmail[] = $email;
 
             $user = new User();
-            $user
-                ->setAlias($faker->name)
-                ->setTitle(substr($faker->jobTitle, 0, 49))
-                ->setUsername($username)
-                ->setEmail($email)
-                ->setRoles([User::ROLE_USER])
-                ->setEnabled(true)
-                ->setPassword($passwordEncoder->encodePassword($user, self::DEFAULT_PASSWORD))
-            ;
+            $user->setAlias($faker->name());
+            $user->setTitle(substr($faker->jobTitle(), 0, 49));
+            $user->setUserIdentifier($username);
+            $user->setEmail($email);
+            $user->setRoles([User::ROLE_USER]);
+            $user->setEnabled(true);
+            $user->setPassword($this->passwordHasher->hashPassword($user, self::DEFAULT_PASSWORD));
             $manager->persist($user);
 
             $prefs = $this->getUserPreferences($user);
@@ -176,14 +154,10 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         }
 
         $manager->flush();
-        $manager->clear(User::class);
-        $manager->clear(UserPreference::class);
+        $manager->clear();
     }
 
-    /**
-     * @return array
-     */
-    protected function getUserDefinition()
+    private function getUserDefinition(): array
     {
         // alias = $userData[0]
         // title = $userData[1]
@@ -193,6 +167,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
         // avatar = $userData[5]
         // enabled = $userData[6]
         // timezone = $userData[7]
+        // password = $userData[8]
+        // api = $userData[9]
 
         return [
             [
@@ -204,6 +180,20 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
                 self::DEFAULT_AVATAR,
                 true,
                 'America/Vancouver',
+                self::DEFAULT_PASSWORD,
+                self::DEFAULT_API_TOKEN,
+            ],
+            [
+                'John Doe',
+                'Developer',
+                'user',
+                'user@example.com',
+                User::ROLE_USER,
+                self::DEFAULT_AVATAR,
+                true,
+                'America/Vancouver',
+                'password',
+                'password',
             ],
             // inactive user to test login
             [
@@ -215,6 +205,8 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
                 self::DEFAULT_AVATAR,
                 false,
                 'Australia/Sydney',
+                self::DEFAULT_PASSWORD,
+                self::DEFAULT_API_TOKEN,
             ],
             [
                 'Tony Maier',
@@ -225,6 +217,20 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
                 'https://en.gravatar.com/userimage/3533186/bf2163b1dd23f3107a028af0195624e9.jpeg',
                 true,
                 'Asia/Bangkok',
+                self::DEFAULT_PASSWORD,
+                self::DEFAULT_API_TOKEN,
+            ],
+            [
+                'Tony Maier',
+                'Head of Sales',
+                'teamlead',
+                'teamlead@example.com',
+                User::ROLE_TEAMLEAD,
+                'https://en.gravatar.com/userimage/3533186/bf2163b1dd23f3107a028af0195624e9.jpeg',
+                true,
+                'Asia/Bangkok',
+                'password',
+                'password',
             ],
             // no avatar to test default image macro
             [
@@ -236,6 +242,20 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
                 null,
                 true,
                 'Europe/London',
+                self::DEFAULT_PASSWORD,
+                self::DEFAULT_API_TOKEN,
+            ],
+            [
+                'Anna Smith',
+                'Administrator',
+                'administrator',
+                'administrator@example.com',
+                User::ROLE_ADMIN,
+                null,
+                true,
+                'Europe/London',
+                'password',
+                'password',
             ],
             // no alias to test twig username macro
             [
@@ -244,10 +264,24 @@ class UserFixtures extends Fixture implements FixtureGroupInterface
                 self::USERNAME_SUPER_ADMIN,
                 'susan_super@example.com',
                 User::ROLE_SUPER_ADMIN,
-                '/build/images/default_avatar.png',
+                '/touch-icon-192x192.png',
                 true,
                 'Europe/Berlin',
-            ]
+                self::DEFAULT_PASSWORD,
+                self::DEFAULT_API_TOKEN,
+            ],
+            [
+                null,
+                'Super Administrator',
+                'super_admin',
+                'super_admin@example.com',
+                User::ROLE_SUPER_ADMIN,
+                '/touch-icon-192x192.png',
+                true,
+                'Europe/Berlin',
+                'password',
+                'password',
+            ],
         ];
     }
 }

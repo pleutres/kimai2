@@ -30,11 +30,11 @@ class InvoiceArchiveQuery extends BaseQuery
      * Filter for invoice status (by default all)
      * @var string[]
      */
-    private $status = [];
+    private array $status = [];
     /**
      * @var Customer[]
      */
-    private $customers = [];
+    private array $customers = [];
 
     public function __construct()
     {
@@ -94,7 +94,7 @@ class InvoiceArchiveQuery extends BaseQuery
 
     public function addStatus(string $status): void
     {
-        if (!\in_array($status, [Invoice::STATUS_NEW, Invoice::STATUS_PENDING, Invoice::STATUS_PAID])) {
+        if (!\in_array($status, [Invoice::STATUS_NEW, Invoice::STATUS_PENDING, Invoice::STATUS_PAID, Invoice::STATUS_CANCELED])) {
             throw new \InvalidArgumentException('Unknown invoice status given.');
         }
 

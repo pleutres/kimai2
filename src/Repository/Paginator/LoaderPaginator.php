@@ -15,38 +15,19 @@ use Doctrine\ORM\QueryBuilder;
 
 final class LoaderPaginator implements PaginatorInterface
 {
-    /**
-     * @var QueryBuilder
-     */
-    private $query;
-    /**
-     * @var int
-     */
-    private $results = 0;
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    public function __construct(LoaderInterface $loader, QueryBuilder $query, int $results)
+    public function __construct(private LoaderInterface $loader, private QueryBuilder $query, private int $results)
     {
-        $this->loader = $loader;
-        $this->query = $query;
-        $this->results = $results;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getNbResults()
+    public function getNbResults(): int
     {
         return $this->results;
     }
 
     /**
-     * {@inheritdoc}
+     * @return iterable<array-key, iterable<mixed>>
      */
-    public function getSlice($offset, $length)
+    public function getSlice(int $offset, int $length): iterable
     {
         $query = $this->query
             ->getQuery()
@@ -56,13 +37,17 @@ final class LoaderPaginator implements PaginatorInterface
         return $this->getResults($query);
     }
 
+    /**
+     * @param Query<null, mixed> $query
+     * @return iterable<array-key, iterable<mixed>>
+     */
     private function getResults(Query $query)
     {
         $results = $query->execute();
 
         $this->loader->loadResults($results);
 
-        return $results;
+        return $results; // @phpstan-ignore-line
     }
 
     public function getAll(): iterable

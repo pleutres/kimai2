@@ -9,34 +9,25 @@
 
 namespace App\Controller\Auth;
 
-use App\Configuration\SystemConfiguration;
+use App\Configuration\SamlConfigurationInterface;
 use App\Saml\SamlAuthFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 
-/**
- * @Route(path="/saml")
- */
+#[Route(path: '/saml')]
 final class SamlController extends AbstractController
 {
-    private $authFactory;
-    private $systemConfiguration;
-
-    public function __construct(SamlAuthFactory $authFactory, SystemConfiguration $systemConfiguration)
+    public function __construct(private SamlAuthFactory $authFactory, private SamlConfigurationInterface $samlConfiguration)
     {
-        $this->authFactory = $authFactory;
-        $this->systemConfiguration = $systemConfiguration;
     }
 
-    /**
-     * @Route(path="/login", name="saml_login")
-     */
+    #[Route(path: '/login', name: 'saml_login')]
     public function loginAction(Request $request)
     {
-        if (!$this->systemConfiguration->isSamlActive()) {
+        if (!$this->samlConfiguration->isActivated()) {
             throw $this->createNotFoundException('SAML deactivated');
         }
 
@@ -47,7 +38,7 @@ final class SamlController extends AbstractController
 
         if ($request->attributes->has($authErrorKey)) {
             $error = $request->attributes->get($authErrorKey);
-        } elseif (null !== $session && $session->has($authErrorKey)) {
+        } elseif ($session->has($authErrorKey)) {
             $error = $session->get($authErrorKey);
             $session->remove($authErrorKey);
         }
@@ -62,12 +53,10 @@ final class SamlController extends AbstractController
         $this->authFactory->create()->login($session->get('_security.main.target_path'));
     }
 
-    /**
-     * @Route(path="/metadata", name="saml_metadata")
-     */
+    #[Route(path: '/metadata', name: 'saml_metadata')]
     public function metadataAction()
     {
-        if (!$this->systemConfiguration->isSamlActive()) {
+        if (!$this->samlConfiguration->isActivated()) {
             throw $this->createNotFoundException('SAML deactivated');
         }
 
@@ -79,24 +68,20 @@ final class SamlController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route(path="/acs", name="saml_acs")
-     */
+    #[Route(path: '/acs', name: 'saml_acs')]
     public function assertionConsumerServiceAction()
     {
-        if (!$this->systemConfiguration->isSamlActive()) {
+        if (!$this->samlConfiguration->isActivated()) {
             throw $this->createNotFoundException('SAML deactivated');
         }
 
         throw new \RuntimeException('You must configure the check path in your firewall.');
     }
 
-    /**
-     * @Route(path="/logout", name="saml_logout")
-     */
+    #[Route(path: '/logout', name: 'saml_logout')]
     public function logoutAction()
     {
-        if (!$this->systemConfiguration->isSamlActive()) {
+        if (!$this->samlConfiguration->isActivated()) {
             throw $this->createNotFoundException('SAML deactivated');
         }
 

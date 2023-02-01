@@ -17,27 +17,23 @@ class Constants
     /**
      * The current release version
      */
-    public const VERSION = '1.19.4';
+    public const VERSION = '2.0.0';
     /**
      * The current release: major * 10000 + minor * 100 + patch
      */
-    public const VERSION_ID = 11904;
-    /**
-     * The current release status, either "stable" or "dev"
-     */
-    public const STATUS = 'stable';
+    public const VERSION_ID = 20000;
     /**
      * The software name
      */
     public const SOFTWARE = 'Kimai';
     /**
-     * The release name, will only change for new major version
-     */
-    public const NAME = 'Ayumi';
-    /**
      * Used in multiple views
      */
-    public const GITHUB = 'https://github.com/kevinpapst/kimai2/';
+    public const GITHUB = 'https://github.com/kimai/kimai/';
+    /**
+     * The Github repository name
+     */
+    public const GITHUB_REPO = 'kimai/kimai';
     /**
      * Homepage, used in multiple views
      */

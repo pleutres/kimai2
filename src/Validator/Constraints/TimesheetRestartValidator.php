@@ -11,27 +11,22 @@ namespace App\Validator\Constraints;
 
 use App\Entity\Timesheet as TimesheetEntity;
 use App\Timesheet\TrackingModeService;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 final class TimesheetRestartValidator extends ConstraintValidator
 {
-    private $trackingModeService;
-    private $security;
-
-    public function __construct(Security $security, TrackingModeService $service)
+    public function __construct(private Security $security, private TrackingModeService $trackingModeService)
     {
-        $this->security = $security;
-        $this->trackingModeService = $service;
     }
 
     /**
      * @param TimesheetEntity $timesheet
      * @param Constraint $constraint
      */
-    public function validate($timesheet, Constraint $constraint)
+    public function validate(mixed $timesheet, Constraint $constraint): void
     {
         if (!($constraint instanceof TimesheetRestart)) {
             throw new UnexpectedTypeException($constraint, TimesheetRestart::class);
@@ -57,10 +52,10 @@ final class TimesheetRestartValidator extends ConstraintValidator
         }
 
         $mode = $this->trackingModeService->getActiveMode();
-        $path = 'start';
+        $path = 'start_date';
 
         if ($mode->canEditEnd()) {
-            $path = 'end';
+            $path = 'end_date';
         } elseif ($mode->canEditDuration()) {
             $path = 'duration';
         }

@@ -2,10 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" target-language="pl" datatype="plaintext" original="teams.en.xlf">
     <body>
-      <trans-unit id="kgxAl_x" resname="teams.title">
-        <source>teams.title</source>
-        <target>Zespoły</target>
-      </trans-unit>
       <trans-unit id="A_4Fc7c" resname="teams.project_access">
         <source>teams.project_access</source>
         <target>Zezwól na dostęp do projektu</target>
@@ -28,11 +24,15 @@
       </trans-unit>
       <trans-unit id="cZEIdcu" resname="team.create_default">
         <source>team.create_default</source>
-        <target>Utwórz nowy zespól w celu ograniczenia dostępu</target>
+        <target state="translated">Utwórz nowy zespół w celu ograniczenia dostępu</target>
       </trans-unit>
       <trans-unit id="FC4DW27" resname="team.activity_visibility_inherited">
         <source>team.activity_visibility_inherited</source>
-        <target>Działanie ma ograniczony dostęp, ponieważ uprawnienia zespołu są ustawione dla projektu i/lub klienta.</target>
+        <target state="translated">Działanie ma ograniczony dostęp, ponieważ uprawnienia zespołu są ustawione dla projektu lub klienta.</target>
+      </trans-unit>
+      <trans-unit id="6g81kYY" approved="no" resname="team.member">
+        <source>team.member</source>
+        <target state="translated">Członek</target>
       </trans-unit>
     </body>
   </file>

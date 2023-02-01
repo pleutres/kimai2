@@ -18,12 +18,11 @@ use PHPUnit\Framework\TestCase;
  */
 class QuickEntryWeekTest extends TestCase
 {
-    public function testModel()
+    public function testModel(): void
     {
         $date = new \DateTime();
-        $rows = [];
 
-        $sut = new QuickEntryWeek($date, $rows);
+        $sut = new QuickEntryWeek($date);
         self::assertSame($date, $sut->getDate());
         self::assertEquals([], $sut->getRows());
 

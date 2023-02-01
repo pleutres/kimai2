@@ -40,7 +40,7 @@
       </trans-unit>
       <trans-unit id="6rO8GZ1" resname="Maximum duration of {{ value }} hours exceeded.">
         <source>Maximum duration of {{ value }} hours exceeded.</source>
-        <target>{{ valeur }} heures maximales autorisées.</target>
+        <target state="translated">{{ value }} heures maximales autorisées.</target>
       </trans-unit>
       <trans-unit id="S14XECA" resname="The username is already used.">
         <source>The username is already used.</source>
@@ -77,6 +77,14 @@
       <trans-unit id="rHd9_aA" resname="A project needs to be selected.">
         <source>A project needs to be selected.</source>
         <target>Un projet doit être sélectionné.</target>
+      </trans-unit>
+      <trans-unit id="Jz1y3yB" resname="Duration cannot be zero.">
+        <source>Duration cannot be zero.</source>
+        <target>Une durée vide n'est pas autorisée.</target>
+      </trans-unit>
+      <trans-unit id="dcPei9G" resname="Sorry, the budget is used up.">
+        <source>Sorry, the budget is used up.</source>
+        <target state="translated">Désolé, le solde est épuisé.</target>
       </trans-unit>
     </body>
   </file>

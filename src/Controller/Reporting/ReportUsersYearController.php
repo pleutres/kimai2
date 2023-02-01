@@ -14,31 +14,28 @@ use App\Controller\AbstractController;
 use App\Export\Spreadsheet\Writer\BinaryFileResponseWriter;
 use App\Export\Spreadsheet\Writer\XlsxWriter;
 use App\Model\MonthlyStatistic;
-use App\Reporting\YearlyUserList;
-use App\Reporting\YearlyUserListForm;
+use App\Reporting\YearlyUserList\YearlyUserList;
+use App\Reporting\YearlyUserList\YearlyUserListForm;
 use App\Repository\Query\UserQuery;
 use App\Repository\UserRepository;
 use App\Timesheet\TimesheetStatisticService;
 use Exception;
 use PhpOffice\PhpSpreadsheet\Reader\Html;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Route(path="/reporting/users")
- * @Security("is_granted('view_reporting') and is_granted('view_other_reporting') and is_granted('view_other_timesheet')")
- */
+#[Route(path: '/reporting/users')]
+#[IsGranted('report:other')]
 final class ReportUsersYearController extends AbstractController
 {
     /**
-     * @Route(path="/year", name="report_yearly_users", methods={"GET","POST"})
-     *
      * @param Request $request
      * @return Response
      * @throws Exception
      */
+    #[Route(path: '/year', name: 'report_yearly_users', methods: ['GET', 'POST'])]
     public function report(Request $request, SystemConfiguration $systemConfiguration, TimesheetStatisticService $statisticService, UserRepository $userRepository): Response
     {
         return $this->render(
@@ -48,12 +45,11 @@ final class ReportUsersYearController extends AbstractController
     }
 
     /**
-     * @Route(path="/year_export", name="report_yearly_users_export", methods={"GET","POST"})
-     *
      * @param Request $request
      * @return Response
      * @throws Exception
      */
+    #[Route(path: '/year_export', name: 'report_yearly_users_export', methods: ['GET', 'POST'])]
     public function export(Request $request, SystemConfiguration $systemConfiguration, TimesheetStatisticService $statisticService, UserRepository $userRepository): Response
     {
         $data = $this->getData($request, $systemConfiguration, $statisticService, $userRepository);
@@ -73,9 +69,6 @@ final class ReportUsersYearController extends AbstractController
         $currentUser = $this->getUser();
         $dateTimeFactory = $this->getDateTimeFactory();
 
-        $query = new UserQuery();
-        $query->setCurrentUser($currentUser);
-        $allUsers = $userRepository->getUsersForQuery($query);
         $defaultDate = $dateTimeFactory->createStartOfYear();
 
         if (null !== ($financialYear = $systemConfiguration->getFinancialYearStart())) {
@@ -85,16 +78,28 @@ final class ReportUsersYearController extends AbstractController
         $values = new YearlyUserList();
         $values->setDate(clone $defaultDate);
 
-        $form = $this->createForm(YearlyUserListForm::class, $values, [
+        $form = $this->createFormForGetRequest(YearlyUserListForm::class, $values, [
             'timezone' => $dateTimeFactory->getTimezone()->getName(),
             'start_date' => $values->getDate(),
         ]);
 
         $form->submit($request->query->all(), false);
 
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $values->setDate(clone $defaultDate);
+        $query = new UserQuery();
+        $query->setSystemAccount(false);
+        $query->setCurrentUser($currentUser);
+
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                $values->setDate(clone $defaultDate);
+            } else {
+                if ($values->getTeam() !== null) {
+                    $query->setSearchTeams([$values->getTeam()]);
+                }
+            }
         }
+
+        $allUsers = $userRepository->getUsersForQuery($query);
 
         if ($values->getDate() === null) {
             $values->setDate(clone $defaultDate);
@@ -118,7 +123,7 @@ final class ReportUsersYearController extends AbstractController
         }
 
         return [
-            'query' => $values,
+            'subReportDate' => $values->getDate(),
             'period_attribute' => 'months',
             'dataType' => $values->getSumType(),
             'report_title' => 'report_yearly_users',

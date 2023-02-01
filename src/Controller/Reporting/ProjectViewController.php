@@ -13,23 +13,23 @@ use App\Controller\AbstractController;
 use App\Project\ProjectStatisticService;
 use App\Reporting\ProjectView\ProjectViewForm;
 use App\Reporting\ProjectView\ProjectViewQuery;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProjectViewController extends AbstractController
 {
-    /**
-     * @Route(path="/reporting/project_view", name="report_project_view", methods={"GET","POST"})
-     * @Security("is_granted('view_reporting') and is_granted('budget_project')")
-     */
+    #[Route(path: '/reporting/project_view', name: 'report_project_view', methods: ['GET', 'POST'])]
+    #[IsGranted('report:project')]
+    #[IsGranted(new Expression("is_granted('budget_any', 'project')"))]
     public function __invoke(Request $request, ProjectStatisticService $service)
     {
         $dateFactory = $this->getDateTimeFactory();
         $user = $this->getUser();
 
         $query = new ProjectViewQuery($dateFactory->createDateTime(), $user);
-        $form = $this->createForm(ProjectViewForm::class, $query);
+        $form = $this->createFormForGetRequest(ProjectViewForm::class, $query);
         $form->submit($request->query->all(), false);
 
         $projects = $service->findProjectsForView($query);
@@ -47,7 +47,7 @@ final class ProjectViewController extends AbstractController
         return $this->render('reporting/project_view.html.twig', [
             'entries' => $byCustomer,
             'form' => $form->createView(),
-            'title' => 'report_project_view',
+            'report_title' => 'report_project_view',
             'tableName' => 'project_view_reporting',
             'now' => $dateFactory->createDateTime(),
         ]);

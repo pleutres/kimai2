@@ -6,9 +6,17 @@
         <source>plugin.none_installed</source>
         <target>לא הותקנו תוספים עדין.</target>
       </trans-unit>
+      <trans-unit id="6Bl7IPj" resname="buy">
+        <source>Buy now</source>
+        <target state="translated">לרכוש כעת</target>
+      </trans-unit>
+      <trans-unit id="jZAB0yx" resname="shop">
+        <source>Plugin Shop</source>
+        <target state="translated">הרחבות נוספות</target>
+      </trans-unit>
       <trans-unit id="zVtBsSo" resname="plugin.marketplace">
         <source>plugin.marketplace</source>
-        <target>השוק של קימאי</target>
+        <target state="translated">תוספים חדשים מהחנות</target>
       </trans-unit>
     </body>
   </file>

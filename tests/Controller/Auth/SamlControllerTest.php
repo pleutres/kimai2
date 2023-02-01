@@ -9,18 +9,20 @@
 
 namespace App\Tests\Controller\Auth;
 
+use App\Configuration\SamlConfiguration;
 use App\Configuration\SystemConfiguration;
 use App\Controller\Auth\SamlController;
 use App\Saml\SamlAuthFactory;
 use App\Tests\Configuration\TestConfigLoader;
 use App\Tests\Mocks\Saml\SamlAuthFactoryFactory;
+use App\Tests\Mocks\SystemConfigurationFactory;
 use OneLogin\Saml2\Auth;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @group integration
@@ -36,7 +38,7 @@ class SamlControllerTest extends TestCase
     {
         $loader = new TestConfigLoader($loaderSettings);
 
-        return new SystemConfiguration($loader, $settings);
+        return SystemConfigurationFactory::create($loader, $settings);
     }
 
     protected function getDefaultSettings(bool $activated = true)
@@ -53,9 +55,9 @@ class SamlControllerTest extends TestCase
         return (new SamlAuthFactoryFactory($this))->create()->create();
     }
 
-    protected function getSystemConfiguration(bool $activated = true)
+    protected function getSamlConfiguration(bool $activated = true): SamlConfiguration
     {
-        return $this->getSystemConfigurationMock($this->getDefaultSettings($activated), []);
+        return new SamlConfiguration($this->getSystemConfigurationMock($this->getDefaultSettings($activated), []));
     }
 
     public function testAssertionConsumerServiceAction()
@@ -65,53 +67,42 @@ class SamlControllerTest extends TestCase
 
         $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
 
-        $sut = new SamlController($factory, $this->getSystemConfiguration());
+        $sut = new SamlController($factory, $this->getSamlConfiguration());
         $sut->assertionConsumerServiceAction();
-    }
-
-    public function testLogoutAction()
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('You must configure the logout path in your firewall.');
-
-        $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
-
-        $sut = new SamlController($factory, $this->getSystemConfiguration());
-        $sut->logoutAction();
     }
 
     public function testMetadataAction()
     {
         $expectedXmlString = <<<EOD
-<?xml version="1.0"?>
-    <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" validUntil="2020-07-23T10:26:50Z" cacheDuration="PT604800S" entityID="https://127.0.0.1:8010/auth/saml/metadata">
-        <md:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="false" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-            <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://127.0.0.1:8010/auth/saml/logout" />
-            <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
-            <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://127.0.0.1:8010/auth/saml/acs" index="1" />
-        </md:SPSSODescriptor>
-        <md:Organization>
-           <md:OrganizationName xml:lang="en">Kimai</md:OrganizationName>
-           <md:OrganizationDisplayName xml:lang="en">Kimai</md:OrganizationDisplayName>
-           <md:OrganizationURL xml:lang="en">https://www.kimai.org</md:OrganizationURL>
-        </md:Organization>
-        <md:ContactPerson contactType="technical">
-            <md:GivenName>Kimai Admin</md:GivenName>
-            <md:EmailAddress>kimai-tech@example.com</md:EmailAddress>
-        </md:ContactPerson>
-        <md:ContactPerson contactType="support">
-            <md:GivenName>Kimai Support</md:GivenName>
-            <md:EmailAddress>kimai-support@example.com</md:EmailAddress>
-        </md:ContactPerson>
-    </md:EntityDescriptor>
-EOD;
+            <?xml version="1.0"?>
+                <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" validUntil="2020-07-23T10:26:50Z" cacheDuration="PT604800S" entityID="https://127.0.0.1:8010/auth/saml/metadata">
+                    <md:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="false" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+                        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://127.0.0.1:8010/auth/saml/logout" />
+                        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
+                        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://127.0.0.1:8010/auth/saml/acs" index="1" />
+                    </md:SPSSODescriptor>
+                    <md:Organization>
+                       <md:OrganizationName xml:lang="en">Kimai</md:OrganizationName>
+                       <md:OrganizationDisplayName xml:lang="en">Kimai</md:OrganizationDisplayName>
+                       <md:OrganizationURL xml:lang="en">https://www.kimai.org</md:OrganizationURL>
+                    </md:Organization>
+                    <md:ContactPerson contactType="technical">
+                        <md:GivenName>Kimai Admin</md:GivenName>
+                        <md:EmailAddress>kimai-tech@example.com</md:EmailAddress>
+                    </md:ContactPerson>
+                    <md:ContactPerson contactType="support">
+                        <md:GivenName>Kimai Support</md:GivenName>
+                        <md:EmailAddress>kimai-support@example.com</md:EmailAddress>
+                    </md:ContactPerson>
+                </md:EntityDescriptor>
+            EOD;
 
         $oauth = $this->getAuth();
 
         $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
         $factory->expects($this->once())->method('create')->willReturn($oauth);
 
-        $sut = new SamlController($factory, $this->getSystemConfiguration());
+        $sut = new SamlController($factory, $this->getSamlConfiguration());
         $result = $sut->metadataAction();
 
         self::assertInstanceOf(Response::class, $result);
@@ -140,7 +131,7 @@ EOD;
 
         $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
 
-        $sut = new SamlController($factory, $this->getSystemConfiguration());
+        $sut = new SamlController($factory, $this->getSamlConfiguration());
         $sut->loginAction($request);
     }
 
@@ -151,7 +142,7 @@ EOD;
 
         $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
 
-        $sut = new SamlController($factory, $this->getSystemConfiguration(false));
+        $sut = new SamlController($factory, $this->getSamlConfiguration(false));
         $sut->loginAction(new Request());
     }
 
@@ -162,7 +153,7 @@ EOD;
 
         $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
 
-        $sut = new SamlController($factory, $this->getSystemConfiguration(false));
+        $sut = new SamlController($factory, $this->getSamlConfiguration(false));
         $sut->metadataAction();
     }
 
@@ -173,7 +164,7 @@ EOD;
 
         $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
 
-        $sut = new SamlController($factory, $this->getSystemConfiguration(false));
+        $sut = new SamlController($factory, $this->getSamlConfiguration(false));
         $sut->logoutAction();
     }
 
@@ -184,7 +175,7 @@ EOD;
 
         $factory = $this->getMockBuilder(SamlAuthFactory::class)->disableOriginalConstructor()->getMock();
 
-        $sut = new SamlController($factory, $this->getSystemConfiguration(false));
+        $sut = new SamlController($factory, $this->getSamlConfiguration(false));
         $sut->assertionConsumerServiceAction();
     }
 }

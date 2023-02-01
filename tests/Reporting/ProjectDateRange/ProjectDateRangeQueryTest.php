@@ -28,11 +28,12 @@ class ProjectDateRangeQueryTest extends TestCase
         self::assertEquals($date->getTimestamp(), $sut->getMonth()->getTimestamp());
         self::assertSame($user, $sut->getUser());
         self::assertNull($sut->getCustomer());
-        self::assertTrue($sut->isIncludeNoWork());
+        self::assertFalse($sut->isIncludeNoWork());
 
-        self::assertEquals('month', $sut->getBudgetType());
+        self::assertNull($sut->getBudgetType());
         self::assertFalse($sut->isIncludeNoBudget());
-        self::assertTrue($sut->isBudgetTypeMonthly());
+        self::assertFalse($sut->isBudgetTypeMonthly());
+        self::assertTrue($sut->isBudgetIndependent());
     }
 
     public function testSetterGetter()
@@ -40,7 +41,7 @@ class ProjectDateRangeQueryTest extends TestCase
         $sut = new ProjectDateRangeQuery(new \DateTime(), new User());
 
         $date = new \DateTime('+1 year');
-        $customer = new Customer();
+        $customer = new Customer('foo');
 
         $sut->setMonth($date);
         $sut->setCustomer($customer);

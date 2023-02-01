@@ -10,7 +10,7 @@
 namespace App\Form\Toolbar;
 
 use App\Repository\Query\ExportQuery;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,49 +18,41 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Defines the form used for filtering timesheet entries for exports.
  */
-class ExportToolbarForm extends AbstractToolbarForm
+final class ExportToolbarForm extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    use ToolbarFormTrait;
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->addSearchTermInputField($builder);
-        $this->addBillableChoice($builder);
-        $this->addExportStateChoice($builder);
-        $this->addTimesheetStateChoice($builder);
-        if ($options['include_user']) {
-            $this->addUsersChoice($builder);
-        }
         $this->addDateRange($builder, ['timezone' => $options['timezone']]);
         $this->addCustomerMultiChoice($builder, ['start_date_param' => null, 'end_date_param' => null, 'ignore_date' => true], true);
         $this->addProjectMultiChoice($builder, ['ignore_date' => true], true, true);
         $this->addActivityMultiChoice($builder, [], true);
-        $this->addExportRenderer($builder);
         $this->addTagInputField($builder);
-        $builder->add('markAsExported', CheckboxType::class, [
-            'label' => 'label.mark_as_exported',
-            'required' => false,
-        ]);
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     */
-    protected function addExportRenderer(FormBuilderInterface $builder)
-    {
+        if ($options['include_user']) {
+            $this->addUsersChoice($builder);
+            $this->addTeamsChoice($builder);
+        }
+        $this->addTimesheetStateChoice($builder);
+        $this->addBillableChoice($builder);
+        $this->addExportStateChoice($builder);
         $builder->add('renderer', HiddenType::class, []);
+        if ($options['include_export']) {
+            $builder->add('markAsExported', HiddenType::class, [
+                'label' => 'mark_as_exported',
+                'required' => false,
+            ]);
+        }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => ExportQuery::class,
             'csrf_protection' => false,
             'include_user' => true,
+            'include_export' => true,
             'timezone' => date_default_timezone_get(),
         ]);
     }

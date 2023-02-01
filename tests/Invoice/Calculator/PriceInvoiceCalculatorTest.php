@@ -37,7 +37,7 @@ class PriceInvoiceCalculatorTest extends AbstractCalculatorTest
 
     public function testWithMultipleEntries()
     {
-        $customer = new Customer();
+        $customer = new Customer('foo');
         $template = new InvoiceTemplate();
         $template->setVat(19);
 
@@ -126,7 +126,7 @@ class PriceInvoiceCalculatorTest extends AbstractCalculatorTest
         $this->assertEquals(19, $sut->getVat());
         $this->assertEquals('EUR', $model->getCurrency());
         $this->assertEquals(2521.12, $sut->getSubtotal());
-        $this->assertEquals(4800, $sut->getTimeWorked());
+        $this->assertEquals(6600, $sut->getTimeWorked());
 
         $entries = $sut->getEntries();
         self::assertCount(4, $entries);

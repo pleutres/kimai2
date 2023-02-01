@@ -32,7 +32,7 @@ abstract class AbstractVoterTest extends TestCase
      * @param string|null $role
      * @return User
      */
-    protected function getUser($id, ?string $role)
+    protected function getUser(int $id, ?string $role)
     {
         $roles = [];
         if (!empty($role)) {
@@ -41,6 +41,7 @@ abstract class AbstractVoterTest extends TestCase
 
         $user = new User();
         $user->setRoles($roles);
+        $user->setUserIdentifier((string) $id);
 
         $reflection = new \ReflectionClass($user);
         $property = $reflection->getProperty('id');
@@ -51,19 +52,19 @@ abstract class AbstractVoterTest extends TestCase
     }
 
     /**
-     * @param array $permissions
+     * @param array<string, array<string>> $permissions
      * @param bool $overwrite
      * @return RolePermissionManager
      */
-    protected function getRolePermissionManager(array $permissions = [], bool $overwrite = false)
+    protected function getRolePermissionManager(array $permissions = [], bool $overwrite = false): RolePermissionManager
     {
         if (!$overwrite) {
-            $activities = ['view_activity', 'edit_activity', 'budget_activity', 'delete_activity', 'create_activity'];
-            $activitiesTeam = ['view_activity', 'create_activity', 'edit_teamlead_activity', 'budget_teamlead_activity'];
-            $projects = ['view_project', 'create_project', 'edit_project', 'budget_project', 'delete_project', 'permissions_project', 'comments_project', 'details_project'];
-            $projectsTeam = ['view_teamlead_project', 'edit_teamlead_project', 'budget_teamlead_project', 'permissions_teamlead_project', 'comments_teamlead_project', 'details_teamlead_project'];
-            $customers = ['view_customer', 'create_customer', 'edit_customer', 'budget_customer', 'delete_customer', 'permissions_customer', 'comments_customer', 'details_customer'];
-            $customersTeam = ['view_teamlead_customer', 'edit_teamlead_customer', 'budget_teamlead_customer', 'comments_teamlead_customer', 'details_teamlead_customer'];
+            $activities = ['view_activity', 'edit_activity', 'budget_activity', 'time_activity', 'delete_activity', 'create_activity'];
+            $activitiesTeam = ['view_activity', 'create_activity', 'edit_teamlead_activity', 'budget_teamlead_activity', 'time_teamlead_activity'];
+            $projects = ['view_project', 'create_project', 'edit_project', 'budget_project', 'time_project', 'delete_project', 'permissions_project', 'comments_project', 'details_project'];
+            $projectsTeam = ['view_teamlead_project', 'edit_teamlead_project', 'budget_teamlead_project', 'time_teamlead_project', 'permissions_teamlead_project', 'comments_teamlead_project', 'details_teamlead_project'];
+            $customers = ['view_customer', 'create_customer', 'edit_customer', 'budget_customer', 'time_customer', 'delete_customer', 'permissions_customer', 'comments_customer', 'details_customer'];
+            $customersTeam = ['view_teamlead_customer', 'edit_teamlead_customer', 'budget_teamlead_customer', 'time_teamlead_customer', 'comments_teamlead_customer', 'details_teamlead_customer'];
             $invoice = ['view_invoice', 'create_invoice'];
             $invoiceTemplate = ['manage_invoice_template'];
             $timesheet = ['view_own_timesheet', 'start_own_timesheet', 'stop_own_timesheet', 'create_own_timesheet', 'edit_own_timesheet', 'export_own_timesheet', 'delete_own_timesheet'];
@@ -91,7 +92,17 @@ abstract class AbstractVoterTest extends TestCase
         $repository = $this->getMockBuilder(RolePermissionRepository::class)->onlyMethods(['getAllAsArray'])->disableOriginalConstructor()->getMock();
         $repository->method('getAllAsArray')->willReturn([]);
 
+        $names = [];
+        $perms = [];
+        foreach ($permissions as $role => $permissionNames) {
+            $perms[$role] = [];
+            foreach ($permissionNames as $name) {
+                $perms[$role][$name] = true;
+                $names[$name] = true;
+            }
+        }
+
         /* @var RolePermissionRepository $repository */
-        return new RolePermissionManager($repository, $permissions);
+        return new RolePermissionManager($repository, $perms, $names);
     }
 }

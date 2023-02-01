@@ -10,27 +10,21 @@
 namespace App\Form\Type;
 
 use App\Entity\Timesheet;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
 
-class QuickEntryTimesheetType extends AbstractType
+final class QuickEntryTimesheetType extends AbstractType
 {
-    private $security;
-
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $durationOptions = [
             'label' => false,
@@ -81,7 +75,7 @@ class QuickEntryTimesheetType extends AbstractType
                 try {
                     if (null !== $duration) {
                         $end = clone $data->getBegin();
-                        $end->modify('+ ' . $duration . ' seconds');
+                        $end->modify('+ ' . abs($duration) . ' seconds');
                         $data->setEnd($end);
                     } else {
                         $data->setDuration(null);
@@ -93,10 +87,7 @@ class QuickEntryTimesheetType extends AbstractType
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Timesheet::class,

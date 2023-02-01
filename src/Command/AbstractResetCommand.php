@@ -9,8 +9,8 @@
 
 namespace App\Command;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -26,58 +26,30 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 abstract class AbstractResetCommand extends Command
 {
-    /**
-     * @var string
-     */
-    private $environment;
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    public function __construct(string $kernelEnvironment, EntityManagerInterface $entityManager)
+    public function __construct(private string $kernelEnvironment)
     {
-        $this->environment = $kernelEnvironment;
-        $this->entityManager = $entityManager;
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('kimai:reset:' . $this->getEnvName())
-            ->setAliases(['kimai:reset-' . $this->getEnvName()])
-            ->setDescription('Resets the "' . $this->getEnvName() . '" environment')
             ->setHelp(
                 <<<EOT
-    This command will drop and re-create the database and its schemas, load data and clear the cache.
-    Use the <info>-n</info> switch to skip the question.
-EOT
+                        This command will drop and re-create the database and its schemas, load data and clear the cache.
+                        Use the <info>-n</info> switch to skip the question.
+                    EOT
             )
             ->addOption('no-cache', null, InputOption::VALUE_NONE, 'Skip cache flushing')
         ;
     }
 
-    /**
-     * Make sure that this command CANNOT be executed in production.
-     * It can't work, as the fixtures bundle is not available in production.
-     *
-     * @return bool
-     */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
-        return $this->environment !== 'prod';
+        return $this->kernelEnvironment !== 'prod';
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|null
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -89,36 +61,13 @@ EOT
             } catch (Exception $ex) {
                 $io->error('Failed to create database: ' . $ex->getMessage());
 
-                return 1;
+                return Command::FAILURE;
             }
         }
 
         if ($this->askConfirmation($input, $output, 'Do you want to drop and re-create the schema y/N ?')) {
-            try {
-                $command = $this->getApplication()->find('doctrine:schema:drop');
-                $command->run(new ArrayInput(['--force' => true]), $output);
-            } catch (Exception $ex) {
-                $io->error('Failed to drop database schema: ' . $ex->getMessage());
-
-                return 2;
-            }
-
-            try {
-                $command = $this->getApplication()->find('doctrine:query:sql');
-                $command->run(new ArrayInput(['sql' => 'DROP TABLE IF EXISTS migration_versions']), $output);
-            } catch (Exception $ex) {
-                $io->error('Failed to drop migration_versions table: ' . $ex->getMessage());
-
-                return 3;
-            }
-
-            try {
-                $command = $this->getApplication()->find('doctrine:query:sql');
-                $command->run(new ArrayInput(['sql' => 'DROP TABLE IF EXISTS kimai2_sessions']), $output);
-            } catch (Exception $ex) {
-                $io->error('Failed to drop kimai2_sessions table: ' . $ex->getMessage());
-
-                return 4;
+            if (($result = $this->dropSchema($io, $output)) !== Command::SUCCESS) {
+                return $result;
             }
 
             try {
@@ -129,7 +78,7 @@ EOT
             } catch (Exception $ex) {
                 $io->error('Failed to execute a migrations: ' . $ex->getMessage());
 
-                return 5;
+                return Command::FAILURE;
             }
         }
 
@@ -138,7 +87,7 @@ EOT
         } catch (Exception $ex) {
             $io->error('Failed to import data: ' . $ex->getMessage());
 
-            return 6;
+            return Command::FAILURE;
         }
 
         if (!$input->getOption('no-cache')) {
@@ -148,21 +97,46 @@ EOT
             } catch (Exception $ex) {
                 $io->error('Failed to clear cache: ' . $ex->getMessage());
 
-                return 7;
+                return Command::FAILURE;
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string $question
-     * @param bool $default
-     * @return bool
-     */
-    private function askConfirmation(InputInterface $input, OutputInterface $output, $question, $default = false)
+    protected function dropSchema(SymfonyStyle $io, OutputInterface $output): int
+    {
+        try {
+            $command = $this->getApplication()->find('doctrine:schema:drop');
+            $command->run(new ArrayInput(['--force' => true]), $output);
+        } catch (Exception $ex) {
+            $io->error('Failed to drop database schema: ' . $ex->getMessage());
+
+            return Command::FAILURE;
+        }
+
+        try {
+            $command = $this->getApplication()->find('doctrine:query:sql');
+            $command->run(new ArrayInput(['sql' => 'DROP TABLE IF EXISTS migration_versions']), $output);
+        } catch (Exception $ex) {
+            $io->error('Failed to drop migration_versions table: ' . $ex->getMessage());
+
+            return Command::FAILURE;
+        }
+
+        try {
+            $command = $this->getApplication()->find('doctrine:query:sql');
+            $command->run(new ArrayInput(['sql' => 'DROP TABLE IF EXISTS kimai2_sessions']), $output);
+        } catch (Exception $ex) {
+            $io->error('Failed to drop kimai2_sessions table: ' . $ex->getMessage());
+
+            return Command::FAILURE;
+        }
+
+        return Command::SUCCESS;
+    }
+
+    private function askConfirmation(InputInterface $input, OutputInterface $output, string $question): bool
     {
         if (!$input->isInteractive()) {
             return true;
@@ -170,12 +144,10 @@ EOT
 
         /** @var QuestionHelper $questionHelper */
         $questionHelper = $this->getHelperSet()->get('question');
-        $question = new ConfirmationQuestion('<question>' . $question . '</question>', $default);
+        $question = new ConfirmationQuestion('<question>' . $question . '</question>', false);
 
         return $questionHelper->ask($input, $output, $question);
     }
-
-    abstract protected function getEnvName(): string;
 
     abstract protected function loadData(InputInterface $input, OutputInterface $output): void;
 }

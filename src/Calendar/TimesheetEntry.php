@@ -13,36 +13,33 @@ use App\Entity\Activity;
 use App\Entity\Project;
 use App\Entity\Timesheet;
 
+/**
+ * @internal
+ */
 final class TimesheetEntry implements DragAndDropEntry
 {
-    /**
-     * @var Timesheet
-     */
-    private $timesheet;
-    /**
-     * @var string
-     */
-    private $color;
-
-    public function __construct(Timesheet $timesheet, string $color)
+    public function __construct(private Timesheet $timesheet, private string $color, private bool $copy = false)
     {
-        $this->timesheet = $timesheet;
-        $this->color = $color;
     }
 
     public function getData(): array
     {
-        $tags = null;
-        if (!empty($this->timesheet->getTagsAsArray())) {
-            $tags = implode(',', $this->timesheet->getTagsAsArray());
+        $data = [
+            'activity' => $this->timesheet->getActivity()?->getId(),
+            'project' => $this->timesheet->getProject()?->getId(),
+        ];
+
+        if ($this->copy) {
+            $tags = null;
+            if (!empty($this->timesheet->getTagsAsArray())) {
+                $tags = implode(',', $this->timesheet->getTagsAsArray());
+            }
+
+            $data['description'] = $this->timesheet->getDescription();
+            $data['tags'] = $tags;
         }
 
-        return [
-            'description' => $this->timesheet->getDescription(),
-            'activity' => $this->timesheet->getActivity() !== null ? $this->timesheet->getActivity()->getId() : null,
-            'project' => $this->timesheet->getProject() !== null ? $this->timesheet->getProject()->getId() : null,
-            'tags' => $tags,
-        ];
+        return $data;
     }
 
     public function getTitle(): string

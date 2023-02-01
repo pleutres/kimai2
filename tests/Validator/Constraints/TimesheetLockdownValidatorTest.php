@@ -10,13 +10,13 @@
 namespace App\Tests\Validator\Constraints;
 
 use App\Configuration\ConfigLoaderInterface;
-use App\Configuration\SystemConfiguration;
 use App\Entity\Timesheet;
 use App\Entity\User;
+use App\Tests\Mocks\SystemConfigurationFactory;
 use App\Timesheet\LockdownService;
 use App\Validator\Constraints\TimesheetLockdown;
 use App\Validator\Constraints\TimesheetLockdownValidator;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
@@ -24,15 +24,16 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 /**
  * @covers \App\Validator\Constraints\TimesheetLockdown
  * @covers \App\Validator\Constraints\TimesheetLockdownValidator
+ * @extends ConstraintValidatorTestCase<TimesheetLockdownValidator>
  */
 class TimesheetLockdownValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator()
+    protected function createValidator(): TimesheetLockdownValidator
     {
         return $this->createMyValidator(false, false, null, null, null);
     }
 
-    protected function createMyValidator(bool $allowOverwriteFull, bool $allowOverwriteGrace, ?string $start, ?string $end, ?string $grace)
+    protected function createMyValidator(bool $allowOverwriteFull, bool $allowOverwriteGrace, ?string $start, ?string $end, ?string $grace): TimesheetLockdownValidator
     {
         $auth = $this->createMock(Security::class);
         $auth->method('getUser')->willReturn(new User());
@@ -50,7 +51,7 @@ class TimesheetLockdownValidatorTest extends ConstraintValidatorTestCase
         );
 
         $loader = $this->createMock(ConfigLoaderInterface::class);
-        $config = new SystemConfiguration($loader, [
+        $config = SystemConfigurationFactory::create($loader, [
             'timesheet' => [
                 'rules' => [
                     'lockdown_period_start' => $start,
@@ -74,7 +75,7 @@ class TimesheetLockdownValidatorTest extends ConstraintValidatorTestCase
     {
         $this->expectException(UnexpectedTypeException::class);
 
-        $this->validator->validate(new NotBlank(), new TimesheetLockdown(['message' => 'myMessage']));
+        $this->validator->validate(new NotBlank(), new TimesheetLockdown(['message' => 'myMessage'])); // @phpstan-ignore-line
     }
 
     public function testValidatorWithoutNowConstraint()
@@ -92,7 +93,7 @@ class TimesheetLockdownValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate($timesheet, $constraint);
 
         $this->buildViolation('This period is locked, please choose a later date.')
-            ->atPath('property.path.begin')
+            ->atPath('property.path.begin_date')
             ->setCode(TimesheetLockdown::PERIOD_LOCKED)
             ->assertRaised();
     }
@@ -162,7 +163,7 @@ class TimesheetLockdownValidatorTest extends ConstraintValidatorTestCase
 
         if ($isViolation) {
             $this->buildViolation('This period is locked, please choose a later date.')
-                ->atPath('property.path.begin')
+                ->atPath('property.path.begin_date')
                 ->setCode(TimesheetLockdown::PERIOD_LOCKED)
                 ->assertRaised();
         } else {

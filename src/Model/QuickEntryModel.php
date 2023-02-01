@@ -19,32 +19,24 @@ use App\Entity\User;
  */
 class QuickEntryModel
 {
-    private $user;
-    private $project;
-    private $activity;
+    private bool $prototype = false;
     /**
      * @var Timesheet[]
      */
-    private $timesheets = [];
+    private array $timesheets = [];
 
-    public function __construct(?User $user = null, ?Project $project = null, ?Activity $activity = null)
+    public function __construct(private ?User $user = null, private ?Project $project = null, private ?Activity $activity = null)
     {
-        $this->user = $user;
-        $this->project = $project;
-        $this->activity = $activity;
+    }
+
+    public function markAsPrototype(): void
+    {
+        $this->prototype = true;
     }
 
     public function isPrototype(): bool
     {
-        if ($this->hasExistingTimesheet()) {
-            return false;
-        }
-
-        if ($this->hasNewTimesheet()) {
-            return false;
-        }
-
-        return $this->getUser() === null && $this->getProject() === null && $this->getActivity() === null;
+        return $this->prototype;
     }
 
     public function getUser(): ?User

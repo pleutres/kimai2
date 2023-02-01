@@ -9,7 +9,7 @@
 
 namespace App\Controller;
 
-use App\Configuration\SystemConfiguration;
+use App\Customer\CustomerService;
 use App\Customer\CustomerStatisticService;
 use App\Entity\Customer;
 use App\Entity\CustomerComment;
@@ -34,45 +34,36 @@ use App\Repository\ProjectRepository;
 use App\Repository\Query\CustomerQuery;
 use App\Repository\Query\ProjectQuery;
 use App\Repository\TeamRepository;
-use Pagerfanta\Pagerfanta;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\Utils\DataTable;
+use App\Utils\FileHelper;
+use App\Utils\PageSetup;
+use JeroenDesloovere\VCard\VCard;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Controller used to manage customer in the admin part of the site.
- *
- * @Route(path="/admin/customer")
- * @Security("is_granted('view_customer') or is_granted('view_teamlead_customer') or is_granted('view_team_customer')")
  */
+#[Route(path: '/admin/customer')]
+#[IsGranted(new Expression("is_granted('view_customer') or is_granted('view_teamlead_customer') or is_granted('view_team_customer')"))]
 final class CustomerController extends AbstractController
 {
-    /**
-     * @var CustomerRepository
-     */
-    private $repository;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    public function __construct(CustomerRepository $repository, EventDispatcherInterface $dispatcher)
+    public function __construct(private CustomerRepository $repository, private EventDispatcherInterface $dispatcher)
     {
-        $this->repository = $repository;
-        $this->dispatcher = $dispatcher;
     }
 
-    /**
-     * @Route(path="/", defaults={"page": 1}, name="admin_customer", methods={"GET"})
-     * @Route(path="/page/{page}", requirements={"page": "[1-9]\d*"}, name="admin_customer_paginated", methods={"GET"})
-     */
-    public function indexAction($page, Request $request)
+    #[Route(path: '/', defaults: ['page' => 1], name: 'admin_customer', methods: ['GET'])]
+    #[Route(path: '/page/{page}', requirements: ['page' => '[1-9]\d*'], name: 'admin_customer_paginated', methods: ['GET'])]
+    public function indexAction(int $page, Request $request): Response
     {
         $query = new CustomerQuery();
         $query->setCurrentUser($this->getUser());
@@ -84,12 +75,54 @@ final class CustomerController extends AbstractController
         }
 
         $entries = $this->repository->getPagerfantaForQuery($query);
+        $metaColumns = $this->findMetaColumns($query);
+
+        $table = new DataTable('customer_admin', $query);
+        $table->setPagination($entries);
+        $table->setSearchForm($form);
+        $table->setPaginationRoute('admin_customer_paginated');
+        $table->setReloadEvents('kimai.customerUpdate kimai.customerDelete kimai.customerTeamUpdate');
+
+        $table->addColumn('name', ['class' => 'alwaysVisible']);
+        $table->addColumn('comment', ['class' => 'd-none', 'title' => 'description']);
+        $table->addColumn('number', ['class' => 'd-none w-min']);
+        $table->addColumn('company', ['class' => 'd-none']);
+        $table->addColumn('vat_id', ['class' => 'd-none w-min']);
+        $table->addColumn('contact', ['class' => 'd-none']);
+        $table->addColumn('address', ['class' => 'd-none']);
+        $table->addColumn('country', ['class' => 'd-none w-min']);
+        $table->addColumn('currency', ['class' => 'd-none w-min']);
+        $table->addColumn('phone', ['class' => 'd-none']);
+        $table->addColumn('fax', ['class' => 'd-none']);
+        $table->addColumn('mobile', ['class' => 'd-none']);
+        $table->addColumn('email', ['class' => 'd-none']);
+        $table->addColumn('homepage', ['class' => 'd-none']);
+
+        foreach ($metaColumns as $metaColumn) {
+            $table->addColumn('mf_' . $metaColumn->getName(), ['title' => $metaColumn->getLabel(), 'class' => 'd-none', 'orderBy' => false, 'data' => $metaColumn]);
+        }
+
+        if ($this->isGranted('budget_money', 'customer')) {
+            $table->addColumn('budget', ['class' => 'd-none text-end w-min', 'title' => 'budget']);
+        }
+
+        if ($this->isGranted('budget_time', 'customer')) {
+            $table->addColumn('timeBudget', ['class' => 'd-none text-end w-min', 'title' => 'timeBudget']);
+        }
+
+        $table->addColumn('billable', ['class' => 'd-none text-center w-min', 'orderBy' => false]);
+        $table->addColumn('team', ['class' => 'text-center w-min', 'orderBy' => false]);
+        $table->addColumn('visible', ['class' => 'd-none text-center w-min']);
+        $table->addColumn('actions', ['class' => 'actions']);
+
+        $page = $this->createPageSetup();
+        $page->setDataTable($table);
+        $page->setActionName('customers');
 
         return $this->render('customer/index.html.twig', [
-            'entries' => $entries,
-            'query' => $query,
-            'toolbarForm' => $form->createView(),
-            'metaColumns' => $this->findMetaColumns($query),
+            'page_setup' => $page,
+            'dataTable' => $table,
+            'metaColumns' => $metaColumns,
             'now' => $this->getDateTimeFactory()->createDateTime(),
         ]);
     }
@@ -106,30 +139,18 @@ final class CustomerController extends AbstractController
         return $event->getFields();
     }
 
-    /**
-     * @Route(path="/create", name="admin_customer_create", methods={"GET", "POST"})
-     * @Security("is_granted('create_customer')")
-     */
-    public function createAction(Request $request, SystemConfiguration $configuration)
+    #[Route(path: '/create', name: 'admin_customer_create', methods: ['GET', 'POST'])]
+    #[IsGranted('create_customer')]
+    public function createAction(Request $request, CustomerService $customerService): Response
     {
-        $timezone = date_default_timezone_get();
-        if (null !== $configuration->getCustomerDefaultTimezone()) {
-            $timezone = $configuration->getCustomerDefaultTimezone();
-        }
+        $customer = $customerService->createNewCustomer('');
 
-        $customer = new Customer();
-        $customer->setCountry($configuration->getCustomerDefaultCountry());
-        $customer->setCurrency($configuration->getCustomerDefaultCurrency());
-        $customer->setTimezone($timezone);
-
-        return $this->renderCustomerForm($customer, $request);
+        return $this->renderCustomerForm($customer, $request, true);
     }
 
-    /**
-     * @Route(path="/{id}/permissions", name="admin_customer_permissions", methods={"GET", "POST"})
-     * @Security("is_granted('permissions', customer)")
-     */
-    public function teamPermissionsAction(Customer $customer, Request $request)
+    #[Route(path: '/{id}/permissions', name: 'admin_customer_permissions', methods: ['GET', 'POST'])]
+    #[IsGranted('permissions', 'customer')]
+    public function teamPermissionsAction(Customer $customer, Request $request): Response
     {
         $form = $this->createForm(CustomerTeamPermissionForm::class, $customer, [
             'action' => $this->generateUrl('admin_customer_permissions', ['id' => $customer->getId()]),
@@ -154,16 +175,15 @@ final class CustomerController extends AbstractController
         }
 
         return $this->render('customer/permissions.html.twig', [
+            'page_setup' => $this->createPageSetup(),
             'customer' => $customer,
             'form' => $form->createView()
         ]);
     }
 
-    /**
-     * @Route(path="/{id}/comment_delete/{token}", name="customer_comment_delete", methods={"GET"})
-     * @Security("is_granted('edit', comment.getCustomer()) and is_granted('comments', comment.getCustomer())")
-     */
-    public function deleteCommentAction(CustomerComment $comment, string $token, CsrfTokenManagerInterface $csrfTokenManager)
+    #[Route(path: '/{id}/comment_delete/{token}', name: 'customer_comment_delete', methods: ['GET'])]
+    #[IsGranted(new Expression("is_granted('edit', subject.getCustomer()) and is_granted('comments', subject.getCustomer())"), 'comment')]
+    public function deleteCommentAction(CustomerComment $comment, string $token, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $customerId = $comment->getCustomer()->getId();
 
@@ -184,14 +204,12 @@ final class CustomerController extends AbstractController
         return $this->redirectToRoute('customer_details', ['id' => $customerId]);
     }
 
-    /**
-     * @Route(path="/{id}/comment_add", name="customer_comment_add", methods={"POST"})
-     * @Security("is_granted('comments_create', customer)")
-     */
-    public function addCommentAction(Customer $customer, Request $request)
+    #[Route(path: '/{id}/comment_add', name: 'customer_comment_add', methods: ['POST'])]
+    #[IsGranted('comments', 'customer')]
+    public function addCommentAction(Customer $customer, Request $request): Response
     {
-        $comment = new CustomerComment();
-        $form = $this->getCommentForm($customer, $comment);
+        $comment = new CustomerComment($customer);
+        $form = $this->getCommentForm($comment);
 
         $form->handleRequest($request);
 
@@ -206,11 +224,9 @@ final class CustomerController extends AbstractController
         return $this->redirectToRoute('customer_details', ['id' => $customer->getId()]);
     }
 
-    /**
-     * @Route(path="/{id}/comment_pin/{token}", name="customer_comment_pin", methods={"GET"})
-     * @Security("is_granted('edit', comment.getCustomer()) and is_granted('comments', comment.getCustomer())")
-     */
-    public function pinCommentAction(CustomerComment $comment, string $token, CsrfTokenManagerInterface $csrfTokenManager)
+    #[Route(path: '/{id}/comment_pin/{token}', name: 'customer_comment_pin', methods: ['GET'])]
+    #[IsGranted(new Expression("is_granted('edit', subject.getCustomer()) and is_granted('comments', subject.getCustomer())"), 'comment')]
+    public function pinCommentAction(CustomerComment $comment, string $token, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $customerId = $comment->getCustomer()->getId();
 
@@ -232,21 +248,17 @@ final class CustomerController extends AbstractController
         return $this->redirectToRoute('customer_details', ['id' => $customerId]);
     }
 
-    /**
-     * @Route(path="/{id}/create_team", name="customer_team_create", methods={"GET"})
-     * @Security("is_granted('create_team') and is_granted('permissions', customer)")
-     */
-    public function createDefaultTeamAction(Customer $customer, TeamRepository $teamRepository)
+    #[Route(path: '/{id}/create_team', name: 'customer_team_create', methods: ['GET'])]
+    #[IsGranted('create_team')]
+    #[IsGranted('permissions', 'customer')]
+    public function createDefaultTeamAction(Customer $customer, TeamRepository $teamRepository): Response
     {
         $defaultTeam = $teamRepository->findOneBy(['name' => $customer->getName()]);
-        if (null !== $defaultTeam) {
-            $this->flashError('action.update.error', ['%reason%' => 'Team already existing']);
 
-            return $this->redirectToRoute('customer_details', ['id' => $customer->getId()]);
+        if (null === $defaultTeam) {
+            $defaultTeam = new Team($customer->getName());
         }
 
-        $defaultTeam = new Team();
-        $defaultTeam->setName($customer->getName());
         $defaultTeam->addTeamlead($this->getUser());
         $defaultTeam->addCustomer($customer);
 
@@ -259,11 +271,9 @@ final class CustomerController extends AbstractController
         return $this->redirectToRoute('customer_details', ['id' => $customer->getId()]);
     }
 
-    /**
-     * @Route(path="/{id}/projects/{page}", defaults={"page": 1}, name="customer_projects", methods={"GET", "POST"})
-     * @Security("is_granted('view', customer)")
-     */
-    public function projectsAction(Customer $customer, int $page, ProjectRepository $projectRepository)
+    #[Route(path: '/{id}/projects/{page}', defaults: ['page' => 1], name: 'customer_projects', methods: ['GET', 'POST'])]
+    #[IsGranted('view', 'customer')]
+    public function projectsAction(Customer $customer, int $page, ProjectRepository $projectRepository): Response
     {
         $query = new ProjectQuery();
         $query->setCurrentUser($this->getUser());
@@ -274,7 +284,6 @@ final class CustomerController extends AbstractController
         $query->addOrderGroup('visible', ProjectQuery::ORDER_DESC);
         $query->addOrderGroup('name', ProjectQuery::ORDER_ASC);
 
-        /* @var $entries Pagerfanta */
         $entries = $projectRepository->getPagerfantaForQuery($query);
 
         return $this->render('customer/embed_projects.html.twig', [
@@ -285,11 +294,9 @@ final class CustomerController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route(path="/{id}/details", name="customer_details", methods={"GET", "POST"})
-     * @Security("is_granted('view', customer)")
-     */
-    public function detailsAction(Customer $customer, TeamRepository $teamRepository, CustomerRateRepository $rateRepository, CustomerStatisticService $statisticService)
+    #[Route(path: '/{id}/details', name: 'customer_details', methods: ['GET', 'POST'])]
+    #[IsGranted('view', 'customer')]
+    public function detailsAction(Customer $customer, TeamRepository $teamRepository, CustomerRateRepository $rateRepository, CustomerStatisticService $statisticService): Response
     {
         $event = new CustomerMetaDefinitionEvent($customer);
         $this->dispatcher->dispatch($event);
@@ -315,16 +322,13 @@ final class CustomerController extends AbstractController
             $timezone = new \DateTimeZone($customer->getTimezone());
         }
 
-        if ($this->isGranted('budget', $customer)) {
+        if ($this->isGranted('budget', $customer) || $this->isGranted('time', $customer)) {
             $stats = $statisticService->getBudgetStatisticModel($customer, $now);
         }
 
         if ($this->isGranted('comments', $customer)) {
             $comments = $this->repository->getComments($customer);
-        }
-
-        if ($this->isGranted('comments_create', $customer)) {
-            $commentForm = $this->getCommentForm($customer, new CustomerComment())->createView();
+            $commentForm = $this->getCommentForm(new CustomerComment($customer))->createView();
         }
 
         if ($this->isGranted('permissions', $customer) || $this->isGranted('details', $customer) || $this->isGranted('view_team')) {
@@ -336,7 +340,13 @@ final class CustomerController extends AbstractController
         $this->dispatcher->dispatch($event);
         $boxes = $event->getController();
 
+        $page = $this->createPageSetup();
+        $page->setActionName('customer');
+        $page->setActionView('customer_details');
+        $page->setActionPayload(['customer' => $customer]);
+
         return $this->render('customer/details.html.twig', [
+            'page_setup' => $page,
             'customer' => $customer,
             'comments' => $comments,
             'commentForm' => $commentForm,
@@ -351,17 +361,80 @@ final class CustomerController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route(path="/{id}/rate", name="admin_customer_rate_add", methods={"GET", "POST"})
-     * @Security("is_granted('edit', customer)")
-     */
-    public function addRateAction(Customer $customer, Request $request, CustomerRateRepository $repository)
+    #[Route(path: '/{id}/vcard', name: 'customer_vcard', methods: ['GET'])]
+    #[IsGranted('view', 'customer')]
+    public function downloadVCard(Customer $customer): Response
+    {
+        $vcard = new VCard();
+
+        $contact = $customer->getContact() ?? $customer->getName();
+        $contact = explode(' ', $contact);
+        $lastname = array_pop($contact);
+        $firstname = \count($contact) > 0 ? $contact[0] : $lastname;
+        $note = $customer->getComment();
+        if ($note !== null) {
+            $note .= PHP_EOL;
+        }
+
+        $vcard->addName($lastname, $firstname);
+        $vcard->addNote($note . $customer->getAddress());
+        $vcard->addAddress(null, null, null, null, null, null, Countries::getName($customer->getCountry()));
+
+        $vcard->addCompany($customer->getCompany() ?? $customer->getName());
+        $vcard->addEmail($customer->getEmail());
+
+        $hasPref = false;
+
+        if ($customer->getPhone() !== null) {
+            $hasPref = true;
+            $vcard->addPhoneNumber($customer->getPhone(), 'PREF;WORK');
+        }
+
+        if ($customer->getMobile() !== null) {
+            $type = $hasPref ? 'CELL' : 'PREF;CELL';
+            $vcard->addPhoneNumber($customer->getMobile(), $type);
+        }
+
+        if ($customer->getFax() !== null) {
+            $vcard->addPhoneNumber($customer->getFax(), 'FAX');
+        }
+
+        if ($customer->getHomepage() !== null) {
+            $vcard->addURL($customer->getHomepage(), 'WORK');
+        }
+
+        $response = new Response($vcard->getOutput());
+
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            FileHelper::convertToAsciiFilename($customer->getName()) . '.vcf'
+        );
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
+    }
+
+    #[Route(path: '/{id}/rate/{rate}', name: 'admin_customer_rate_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('edit', 'customer')]
+    public function editRateAction(Customer $customer, CustomerRate $rate, Request $request, CustomerRateRepository $repository): Response
+    {
+        return $this->rateFormAction($customer, $rate, $request, $repository, $this->generateUrl('admin_customer_rate_edit', ['id' => $customer->getId(), 'rate' => $rate->getId()]));
+    }
+
+    #[Route(path: '/{id}/rate', name: 'admin_customer_rate_add', methods: ['GET', 'POST'])]
+    #[IsGranted('edit', 'customer')]
+    public function addRateAction(Customer $customer, Request $request, CustomerRateRepository $repository): Response
     {
         $rate = new CustomerRate();
         $rate->setCustomer($customer);
 
+        return $this->rateFormAction($customer, $rate, $request, $repository, $this->generateUrl('admin_customer_rate_add', ['id' => $customer->getId()]));
+    }
+
+    private function rateFormAction(Customer $customer, CustomerRate $rate, Request $request, CustomerRateRepository $repository, string $formUrl): Response
+    {
         $form = $this->createForm(CustomerRateForm::class, $rate, [
-            'action' => $this->generateUrl('admin_customer_rate_add', ['id' => $customer->getId()]),
+            'action' => $formUrl,
             'method' => 'POST',
         ]);
 
@@ -379,25 +452,22 @@ final class CustomerController extends AbstractController
         }
 
         return $this->render('customer/rates.html.twig', [
+            'page_setup' => $this->createPageSetup(),
             'customer' => $customer,
             'form' => $form->createView()
         ]);
     }
 
-    /**
-     * @Route(path="/{id}/edit", name="admin_customer_edit", methods={"GET", "POST"})
-     * @Security("is_granted('edit', customer)")
-     */
-    public function editAction(Customer $customer, Request $request)
+    #[Route(path: '/{id}/edit', name: 'admin_customer_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('edit', 'customer')]
+    public function editAction(Customer $customer, Request $request): Response
     {
         return $this->renderCustomerForm($customer, $request);
     }
 
-    /**
-     * @Route(path="/{id}/delete", name="admin_customer_delete", methods={"GET", "POST"})
-     * @Security("is_granted('delete', customer)")
-     */
-    public function deleteAction(Customer $customer, Request $request, CustomerStatisticService $statisticService)
+    #[Route(path: '/{id}/delete', name: 'admin_customer_delete', methods: ['GET', 'POST'])]
+    #[IsGranted('delete', 'customer')]
+    public function deleteAction(Customer $customer, Request $request, CustomerStatisticService $statisticService): Response
     {
         $stats = $statisticService->getCustomerStatistics($customer);
 
@@ -431,16 +501,15 @@ final class CustomerController extends AbstractController
         }
 
         return $this->render('customer/delete.html.twig', [
+            'page_setup' => $this->createPageSetup(),
             'customer' => $customer,
             'stats' => $stats,
             'form' => $deleteForm->createView(),
         ]);
     }
 
-    /**
-     * @Route(path="/export", name="customer_export", methods={"GET"})
-     */
-    public function exportAction(Request $request, EntityWithMetaFieldsExporter $exporter)
+    #[Route(path: '/export', name: 'customer_export', methods: ['GET'])]
+    public function exportAction(Request $request, EntityWithMetaFieldsExporter $exporter): Response
     {
         $query = new CustomerQuery();
         $query->setCurrentUser($this->getUser());
@@ -465,12 +534,7 @@ final class CustomerController extends AbstractController
         return $writer->getFileResponse($spreadsheet);
     }
 
-    /**
-     * @param Customer $customer
-     * @param Request $request
-     * @return RedirectResponse|Response
-     */
-    private function renderCustomerForm(Customer $customer, Request $request)
+    private function renderCustomerForm(Customer $customer, Request $request, bool $create = false): Response
     {
         $editForm = $this->createEditForm($customer);
 
@@ -481,13 +545,18 @@ final class CustomerController extends AbstractController
                 $this->repository->saveCustomer($customer);
                 $this->flashSuccess('action.update.success');
 
+                if ($create) {
+                    return $this->redirectToRouteAfterCreate('customer_details', ['id' => $customer->getId()]);
+                }
+
                 return $this->redirectToRoute('customer_details', ['id' => $customer->getId()]);
             } catch (\Exception $ex) {
-                $this->flashUpdateException($ex);
+                $this->handleFormUpdateException($ex, $editForm);
             }
         }
 
         return $this->render('customer/edit.html.twig', [
+            'page_setup' => $this->createPageSetup(),
             'customer' => $customer,
             'form' => $editForm->createView()
         ]);
@@ -495,23 +564,21 @@ final class CustomerController extends AbstractController
 
     private function getToolbarForm(CustomerQuery $query): FormInterface
     {
-        return $this->createForm(CustomerToolbarForm::class, $query, [
+        return $this->createSearchForm(CustomerToolbarForm::class, $query, [
             'action' => $this->generateUrl('admin_customer', [
                 'page' => $query->getPage(),
-            ]),
-            'method' => 'GET',
+            ])
         ]);
     }
 
-    private function getCommentForm(Customer $customer, CustomerComment $comment): FormInterface
+    private function getCommentForm(CustomerComment $comment): FormInterface
     {
         if (null === $comment->getId()) {
-            $comment->setCustomer($customer);
             $comment->setCreatedBy($this->getUser());
         }
 
         return $this->createForm(CustomerCommentForm::class, $comment, [
-            'action' => $this->generateUrl('customer_comment_add', ['id' => $customer->getId()]),
+            'action' => $this->generateUrl('customer_comment_add', ['id' => $comment->getCustomer()->getId()]),
             'method' => 'POST',
         ]);
     }
@@ -530,7 +597,16 @@ final class CustomerController extends AbstractController
         return $this->createForm(CustomerEditForm::class, $customer, [
             'action' => $url,
             'method' => 'POST',
-            'include_budget' => $this->isGranted('budget', $customer)
+            'include_budget' => $this->isGranted('budget', $customer),
+            'include_time' => $this->isGranted('time', $customer),
         ]);
+    }
+
+    private function createPageSetup(): PageSetup
+    {
+        $page = new PageSetup('customers');
+        $page->setHelp('customer.html');
+
+        return $page;
     }
 }

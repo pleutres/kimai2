@@ -13,16 +13,16 @@ use App\Controller\AbstractController;
 use App\Project\ProjectStatisticService;
 use App\Reporting\ProjectInactive\ProjectInactiveForm;
 use App\Reporting\ProjectInactive\ProjectInactiveQuery;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProjectInactiveController extends AbstractController
 {
-    /**
-     * @Route(path="/reporting/project_inactive", name="report_project_inactive", methods={"GET","POST"})
-     * @Security("is_granted('view_reporting') and is_granted('budget_project')")
-     */
+    #[Route(path: '/reporting/project_inactive', name: 'report_project_inactive', methods: ['GET', 'POST'])]
+    #[IsGranted('report:project')]
+    #[IsGranted(new Expression("is_granted('budget_any', 'project')"))]
     public function __invoke(Request $request, ProjectStatisticService $service)
     {
         $dateFactory = $this->getDateTimeFactory();
@@ -30,7 +30,7 @@ final class ProjectInactiveController extends AbstractController
         $now = $dateFactory->createDateTime();
 
         $query = new ProjectInactiveQuery($dateFactory->createDateTime('-1 year'), $user);
-        $form = $this->createForm(ProjectInactiveForm::class, $query, [
+        $form = $this->createFormForGetRequest(ProjectInactiveForm::class, $query, [
             'timezone' => $user->getTimezone()
         ]);
         $form->submit($request->query->all(), false);
@@ -47,10 +47,10 @@ final class ProjectInactiveController extends AbstractController
             $byCustomer[$customer->getId()]['projects'][] = $entry;
         }
 
-        return $this->render('reporting/project_view.html.twig', [
+        return $this->render('reporting/project_inactive.html.twig', [
             'entries' => $byCustomer,
             'form' => $form->createView(),
-            'title' => 'report_inactive_project',
+            'report_title' => 'report_inactive_project',
             'tableName' => 'inactive_project_reporting',
             'now' => $now,
             'skipColumns' => ['today', 'week', 'month', 'projectStart', 'projectEnd', 'comment'],

@@ -6,9 +6,17 @@
         <source>plugin.none_installed</source>
         <target>Aucune extension d'installée pour le moment.</target>
       </trans-unit>
+      <trans-unit id="6Bl7IPj" resname="buy">
+        <source>Buy now</source>
+        <target state="translated">Acheter maintenant</target>
+      </trans-unit>
+      <trans-unit id="jZAB0yx" resname="shop">
+        <source>Plugin Shop</source>
+        <target state="translated">Plus d’extensions</target>
+      </trans-unit>
       <trans-unit id="zVtBsSo" resname="plugin.marketplace">
         <source>plugin.marketplace</source>
-        <target>Magasin de Kimai</target>
+        <target state="translated">Nouveaux greffons du marché</target>
       </trans-unit>
     </body>
   </file>

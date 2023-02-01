@@ -20,10 +20,11 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 /**
  * @covers \App\Validator\Constraints\Role
  * @covers \App\Validator\Constraints\RoleValidator
+ * @extends ConstraintValidatorTestCase<RoleValidator>
  */
 class RoleValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator()
+    protected function createValidator(): RoleValidator
     {
         $factory = new RoleServiceFactory($this);
         $roleService = $factory->create();
@@ -93,7 +94,7 @@ class RoleValidatorTest extends ConstraintValidatorTestCase
 
         $this->validator->validate($role, $constraint);
 
-        $expectedFormat = \is_string($role) ? '"' . $role . '"' : $role;
+        $expectedFormat = \is_string($role) ? '"' . $role . '"' : (string) $role;
 
         $this->buildViolation('myMessage')
             ->setParameter('{{ value }}', $expectedFormat)

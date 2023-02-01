@@ -22,17 +22,13 @@
         <source>timesheet.start.error</source>
         <target>Snimanje vremena se nije moglo pokrenuti</target>
       </trans-unit>
-      <trans-unit id="srhs0gp" resname="timesheet.start.exceeded_limit">
-        <source>timesheet.start.exceeded_limit</source>
-        <target>Dosegnut je maksimalni broj aktivnih snimanja vremena. Najprije prekini barem jedno mjerenje vremena.</target>
-      </trans-unit>
       <trans-unit id="kPINWEK" resname="timesheet.locked.warning">
         <source>timesheet.locked.warning</source>
         <target>Uređuješ izvezeni zapis</target>
       </trans-unit>
       <trans-unit id="72Ih8zO" resname="action.update.success">
         <source>action.update.success</source>
-        <target>Promjene spremljene</target>
+        <target state="translated">Promjene su spremljene</target>
       </trans-unit>
       <trans-unit id="xeu1LSy" resname="action.update.error">
         <source>action.update.error</source>
@@ -44,7 +40,7 @@
       </trans-unit>
       <trans-unit id="mW91Tmb" resname="action.delete.error">
         <source>action.delete.error</source>
-        <target>Unos se nisu mogao izbrisati: %reason%</target>
+        <target state="translated">Unos se nije mogao izbrisati: %reason%</target>
       </trans-unit>
       <trans-unit id="B_cz49z" resname="invoice.first_template">
         <source>invoice.first_template</source>
@@ -56,7 +52,7 @@
       </trans-unit>
       <trans-unit resname="action.csrf.error" id="bOE_q5R">
         <source>action.csrf.error</source>
-        <target>Radnja se nije mogla izvesti: nevažeći sigurnosni token.</target>
+        <target state="translated">Radnja se nije mogla izvesti: neispravan sigurnosni token.</target>
       </trans-unit>
     </body>
   </file>

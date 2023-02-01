@@ -22,10 +22,6 @@
         <source>timesheet.start.error</source>
         <target>No se pudo iniciar el registro de tiempo</target>
       </trans-unit>
-      <trans-unit id="srhs0gp" resname="timesheet.start.exceeded_limit">
-        <source>timesheet.start.exceeded_limit</source>
-        <target>Se ha alcanzado el limite de registro activos, por favor detenga uno de los registros en marcha primero.</target>
-      </trans-unit>
       <trans-unit id="kPINWEK" resname="timesheet.locked.warning">
         <source>timesheet.locked.warning</source>
         <target>Está editando un registro exportado</target>
@@ -53,6 +49,10 @@
       <trans-unit id="wejAEcR" resname="action.upload.error">
         <source>action.upload.error</source>
         <target>No se pudo cargar ni guardar el archivo: %reason%</target>
+      </trans-unit>
+      <trans-unit resname="action.csrf.error" id="bOE_q5R">
+        <source>action.csrf.error</source>
+        <target state="translated">La acción no puede realizarse: el token de seguridad no es válido.</target>
       </trans-unit>
     </body>
   </file>

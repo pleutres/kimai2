@@ -19,10 +19,11 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 /**
  * @covers \App\Validator\Constraints\Duration
  * @covers \App\Validator\Constraints\DurationValidator
+ * @extends ConstraintValidatorTestCase<DurationValidator>
  */
 class DurationValidatorTest extends ConstraintValidatorTestCase
 {
-    protected function createValidator()
+    protected function createValidator(): DurationValidator
     {
         return new DurationValidator();
     }
@@ -63,13 +64,14 @@ class DurationValidatorTest extends ConstraintValidatorTestCase
 
     /**
      * @dataProvider getValidData
-     * @param string $input
      */
-    public function testConstraintWithValidData($input)
+    public function testConstraintWithValidData(string|int|null $input)
     {
         $constraint = new Duration();
         $this->validator->validate($input, $constraint);
-        $this->validator->validate(strtoupper($input), $constraint);
+        if ($input !== null) {
+            $this->validator->validate(strtoupper($input), $constraint);
+        }
         $this->assertNoViolation();
     }
 
@@ -93,9 +95,8 @@ class DurationValidatorTest extends ConstraintValidatorTestCase
 
     /**
      * @dataProvider getInvalidData
-     * @param mixed $input
      */
-    public function testValidationError($input)
+    public function testValidationError(string $input)
     {
         $constraint = new Duration([
             'message' => 'myMessage',
@@ -111,9 +112,8 @@ class DurationValidatorTest extends ConstraintValidatorTestCase
 
     /**
      * @dataProvider getInvalidData
-     * @param mixed $input
      */
-    public function testValidationErrorUpperCase($input)
+    public function testValidationErrorUpperCase(string $input)
     {
         $input = strtoupper($input);
         $constraint = new Duration([

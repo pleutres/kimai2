@@ -16,30 +16,13 @@ use App\Event\CalendarDragAndDropSourceEvent;
 use App\Event\CalendarGoogleSourceEvent;
 use App\Event\RecentActivityEvent;
 use App\Repository\TimesheetRepository;
-use App\Timesheet\DateTimeFactory;
 use App\Utils\Color;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class CalendarService
 {
-    /**
-     * @var SystemConfiguration
-     */
-    private $configuration;
-    /**
-     * @var TimesheetRepository
-     */
-    private $repository;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    public function __construct(SystemConfiguration $configuration, TimesheetRepository $repository, EventDispatcherInterface $dispatcher)
+    public function __construct(private SystemConfiguration $configuration, private TimesheetRepository $repository, private EventDispatcherInterface $dispatcher)
     {
-        $this->configuration = $configuration;
-        $this->repository = $repository;
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -56,19 +39,16 @@ final class CalendarService
             return [];
         }
 
-        $data = $this->repository->getRecentActivities(
-            $user,
-            DateTimeFactory::createByUser($user)->createDateTime('-1 year'),
-            $maxAmount
-        );
+        $data = $this->repository->getRecentActivities($user, null, $maxAmount);
 
         $recentActivity = new RecentActivityEvent($user, $data);
         $this->dispatcher->dispatch($recentActivity);
 
         $entries = [];
         $colorHelper = new Color();
+        $copy = $this->configuration->isCalendarDragAndDropCopyData();
         foreach ($recentActivity->getRecentActivities() as $timesheet) {
-            $entries[] = new TimesheetEntry($timesheet, $colorHelper->getTimesheetColor($timesheet));
+            $entries[] = new TimesheetEntry($timesheet, $colorHelper->getTimesheetColor($timesheet), $copy);
         }
 
         $event->addSource(new RecentActivitiesSource($entries));
@@ -107,13 +87,13 @@ final class CalendarService
             'dayLimit' => $this->configuration->getCalendarDayLimit(),
             'showWeekNumbers' => $this->configuration->isCalendarShowWeekNumbers(),
             'showWeekends' => $this->configuration->isCalendarShowWeekends(),
-            'businessDays' => $this->configuration->getCalendarBusinessDays(),
             'businessTimeBegin' => $this->configuration->getCalendarBusinessTimeBegin(),
             'businessTimeEnd' => $this->configuration->getCalendarBusinessTimeEnd(),
             'slotDuration' => $this->configuration->getCalendarSlotDuration(),
             'timeframeBegin' => $this->configuration->getCalendarTimeframeBegin(),
             'timeframeEnd' => $this->configuration->getCalendarTimeframeEnd(),
             'dragDropAmount' => $this->configuration->getCalendarDragAndDropMaxEntries(),
+            'entryTitlePattern' => $this->configuration->find('calendar.title_pattern'),
         ];
 
         $event = new CalendarConfigurationEvent($config);

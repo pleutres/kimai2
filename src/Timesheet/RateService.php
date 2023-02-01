@@ -19,19 +19,8 @@ use App\Repository\TimesheetRepository;
  */
 final class RateService implements RateServiceInterface
 {
-    /**
-     * @var array
-     */
-    private $rates;
-    /**
-     * @var TimesheetRepository
-     */
-    private $repository;
-
-    public function __construct(array $rates, TimesheetRepository $repository)
+    public function __construct(private array $rates, private TimesheetRepository $repository)
     {
-        $this->rates = $rates;
-        $this->repository = $repository;
     }
 
     public function calculate(Timesheet $record): Rate
@@ -49,13 +38,13 @@ final class RateService implements RateServiceInterface
 
         if (null !== $rate) {
             if ($rate->isFixed()) {
-                $fixedRate = $fixedRate ?? $rate->getRate();
+                $fixedRate ??= $rate->getRate();
                 $fixedInternalRate = $rate->getRate();
                 if (null !== $rate->getInternalRate()) {
                     $fixedInternalRate = $rate->getInternalRate();
                 }
             } else {
-                $hourlyRate = $hourlyRate ?? $rate->getRate();
+                $hourlyRate ??= $rate->getRate();
                 $internalRate = $rate->getRate();
                 if (null !== $rate->getInternalRate()) {
                     $internalRate = $rate->getInternalRate();
@@ -65,7 +54,7 @@ final class RateService implements RateServiceInterface
 
         if (null !== $fixedRate) {
             if (null === $fixedInternalRate) {
-                $fixedInternalRate = (float) $record->getUser()->getPreferenceValue(UserPreference::INTERNAL_RATE, $fixedRate);
+                $fixedInternalRate = (float) $record->getUser()->getPreferenceValue(UserPreference::INTERNAL_RATE, $fixedRate, false);
             }
 
             return new Rate($fixedRate, $fixedInternalRate, null, $fixedRate);
@@ -73,26 +62,21 @@ final class RateService implements RateServiceInterface
 
         // user preferences => fallback if nothing else was configured
         if (null === $hourlyRate) {
-            $hourlyRate = (float) $record->getUser()->getPreferenceValue(UserPreference::HOURLY_RATE, 0.00);
+            $hourlyRate = (float) $record->getUser()->getPreferenceValue(UserPreference::HOURLY_RATE, 0.00, false);
         }
 
         if (null === $internalRate) {
-            $internalRate = $record->getUser()->getPreferenceValue(UserPreference::INTERNAL_RATE, 0.00);
-            if (null === $internalRate) {
-                $internalRate = $hourlyRate;
-            } else {
-                $internalRate = (float) $internalRate;
-            }
+            $internalRate = (float) $record->getUser()->getPreferenceValue(UserPreference::INTERNAL_RATE, $hourlyRate, false);
         }
 
         $factor = 1.00;
-        // do not apply once a value was calculated - see https://github.com/kevinpapst/kimai2/issues/1988
+        // do not apply once a value was calculated - see https://github.com/kimai/kimai/issues/1988
         if ($record->getFixedRate() === null && $record->getHourlyRate() === null) {
             $factor = $this->getRateFactor($record);
         }
 
-        $factoredHourlyRate = (float) ($hourlyRate * $factor);
-        $factoredInternalRate = (float) ($internalRate * $factor);
+        $factoredHourlyRate = $hourlyRate * $factor;
+        $factoredInternalRate = $internalRate * $factor;
         $totalRate = 0;
         $totalInternalRate = 0;
 
@@ -135,7 +119,7 @@ final class RateService implements RateServiceInterface
             $weekday = $record->getEnd()->format('l');
             $days = array_map('strtolower', $rateFactor['days']);
             if (\in_array(strtolower($weekday), $days)) {
-                $factor += $rateFactor['factor'];
+                $factor += (float) $rateFactor['factor'];
             }
         }
 
@@ -143,6 +127,6 @@ final class RateService implements RateServiceInterface
             $factor = 1.00;
         }
 
-        return (float) $factor;
+        return $factor;
     }
 }

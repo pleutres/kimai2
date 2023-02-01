@@ -9,14 +9,10 @@
 
 namespace App\Validator\Constraints;
 
-use Doctrine\Common\Annotations\Annotation\Target;
 use Symfony\Component\Validator\Constraint;
 
-/**
- * @Annotation
- * @Target({"CLASS", "PROPERTY", "METHOD", "ANNOTATION"})
- */
-class TimesheetMultiUpdate extends Constraint
+#[\Attribute(\Attribute::TARGET_CLASS)]
+final class TimesheetMultiUpdate extends Constraint
 {
     public const MISSING_ACTIVITY_ERROR = 'ts-multi-update-84';
     public const MISSING_PROJECT_ERROR = 'ts-multi-update-85';
@@ -26,7 +22,7 @@ class TimesheetMultiUpdate extends Constraint
     public const DISABLED_CUSTOMER_ERROR = 'ts-multi-update-89';
     public const HOURLY_RATE_FIXED_RATE = 'ts-multi-update-90';
 
-    protected static $errorNames = [
+    protected const ERROR_NAMES = [
         self::MISSING_ACTIVITY_ERROR => 'You need to choose an activity, if the project should be changed.',
         self::MISSING_PROJECT_ERROR => 'A project needs to be selected.',
         self::ACTIVITY_PROJECT_MISMATCH_ERROR => 'Project mismatch: chosen project does not match the activity project.',
@@ -36,9 +32,9 @@ class TimesheetMultiUpdate extends Constraint
         self::HOURLY_RATE_FIXED_RATE => 'Cannot set hourly rate and fixed rate at the same time.',
     ];
 
-    public $message = 'This form has invalid settings.';
+    public string $message = 'This form has invalid settings.';
 
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return self::CLASS_CONSTRAINT;
     }

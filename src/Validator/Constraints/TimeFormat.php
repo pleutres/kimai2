@@ -11,17 +11,17 @@ namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
-class TimeFormat extends Constraint
+final class TimeFormat extends Constraint
 {
     public const INVALID_FORMAT = 'kimai-time-00';
 
-    protected static $errorNames = [
+    protected const ERROR_NAMES = [
         self::INVALID_FORMAT => 'The given value is not a valid time.',
     ];
 
-    public $message = 'This time format is invalid.';
+    public string $message = 'This time format is invalid.';
 
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return self::PROPERTY_CONSTRAINT;
     }

@@ -14,26 +14,26 @@ use App\Form\Model\DateRange;
 use App\Project\ProjectStatisticService;
 use App\Reporting\ProjectDateRange\ProjectDateRangeForm;
 use App\Reporting\ProjectDateRange\ProjectDateRangeQuery;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProjectDateRangeController extends AbstractController
 {
-    /**
-     * @Route(path="/reporting/project_daterange", name="report_project_daterange", methods={"GET","POST"})
-     * @Security("is_granted('view_reporting') and is_granted('budget_project')")
-     */
+    #[Route(path: '/reporting/project_daterange', name: 'report_project_daterange', methods: ['GET', 'POST'])]
+    #[IsGranted('report:project')]
+    #[IsGranted(new Expression("is_granted('budget_any', 'project')"))]
     public function __invoke(Request $request, ProjectStatisticService $service)
     {
         $dateFactory = $this->getDateTimeFactory();
         $user = $this->getUser();
 
         $query = new ProjectDaterangeQuery($dateFactory->getStartOfMonth(), $user);
-        $form = $this->createForm(ProjectDateRangeForm::class, $query, [
+        $form = $this->createFormForGetRequest(ProjectDateRangeForm::class, $query, [
             'timezone' => $user->getTimezone()
         ]);
-        $form->handleRequest($request);
+        $form->submit($request->query->all(), false);
 
         $dateRange = new DateRange(true);
         $dateRange->setBegin($query->getMonth());
@@ -52,6 +52,7 @@ final class ProjectDateRangeController extends AbstractController
         }
 
         return $this->render('reporting/project_daterange.html.twig', [
+            'report_title' => 'report_project_daterange',
             'entries' => $byCustomer,
             'form' => $form->createView(),
             'queryEnd' => $dateRange->getEnd(),

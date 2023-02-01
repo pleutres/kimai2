@@ -7,8 +7,8 @@
         <target>此值不是有效角色。</target>
       </trans-unit>
       <trans-unit id="CLHaByy" resname="End date must not be earlier then start date.">
-        <source>End date must not be earlier then start date.</source>
-        <target>结束日期必须早于开始日期。</target>
+        <source>The end date must not be before the start date.</source>
+        <target state="translated">结束日期不得早于开始日期。</target>
       </trans-unit>
       <trans-unit id="ePrqiLM" resname="The begin date cannot be in the future.">
         <source>The begin date cannot be in the future.</source>
@@ -16,11 +16,11 @@
       </trans-unit>
       <trans-unit id="6rO8GZ1" resname="Maximum duration of {{ value }} hours exceeded.">
         <source>Maximum duration of {{ value }} hours exceeded.</source>
-        <target>允许的最大{{ 值 }}小时数。</target>
+        <target state="translated">最多允许 {{ value }} 个小时。</target>
       </trans-unit>
       <trans-unit id="1oKCOa5" resname="The budget is completely used.">
         <source>The budget is completely used.</source>
-        <target>预算用完了。在可用的%budget%，%used%目前已被预订，%free%仍然可以使用。</target>
+        <target state="translated">预算用完了。在可用的 %budget% 中， %used%目前已被预订，%free%仍然可以使用。</target>
       </trans-unit>
       <trans-unit id="VJSZSD0" resname="The given value is not a valid time.">
         <source>The given value is not a valid time.</source>
@@ -77,6 +77,34 @@
       <trans-unit id="rHd9_aA" resname="A project needs to be selected.">
         <source>A project needs to be selected.</source>
         <target>需要选中一个项目。</target>
+      </trans-unit>
+      <trans-unit id="Jz1y3yB" resname="Duration cannot be zero.">
+        <source>Duration cannot be zero.</source>
+        <target state="translated">不允许使用空持续时间。</target>
+      </trans-unit>
+      <trans-unit id="dcPei9G" resname="Sorry, the budget is used up.">
+        <source>Sorry, the budget is used up.</source>
+        <target state="translated">抱歉，预算用完了。</target>
+      </trans-unit>
+      <trans-unit id="gSAwscA" resname="Validation Failed">
+        <source>Validation Failed</source>
+        <target state="translated">保存时出现问题。</target>
+      </trans-unit>
+      <trans-unit id="xp0lmgm" resname="The given code is not the correct TOTP token.">
+        <source>The given code is not the correct TOTP token.</source>
+        <target state="translated">给定的代码不是正确的 TOTP 令牌。</target>
+      </trans-unit>
+      <trans-unit resname="Cannot stop running timesheet" id="7HYTefs">
+        <source>Cannot stop running timesheet</source>
+        <target state="translated">你有一个活跃的时间记录不能自动停止。</target>
+      </trans-unit>
+      <trans-unit id="8L_7O31" resname="The given value is not a valid datetime format.">
+        <source>The given value is not a valid datetime format.</source>
+        <target state="translated">给定的值不是有效的日间格式。</target>
+      </trans-unit>
+      <trans-unit id="7mqg3TC" resname="This value is not a valid role name.">
+        <source>This value is not a valid role name.</source>
+        <target state="translated">这不是一个有效的用户角色名称。</target>
       </trans-unit>
     </body>
   </file>

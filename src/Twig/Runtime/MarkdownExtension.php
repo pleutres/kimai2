@@ -15,23 +15,10 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class MarkdownExtension implements RuntimeExtensionInterface
 {
-    /**
-     * @var Markdown
-     */
-    private $markdown;
-    /**
-     * @var SystemConfiguration
-     */
-    private $configuration;
-    /**
-     * @var bool|null
-     */
-    private $markdownEnabled;
+    private ?bool $markdownEnabled = null;
 
-    public function __construct(Markdown $parser, SystemConfiguration $configuration)
+    public function __construct(private Markdown $markdown, private SystemConfiguration $configuration)
     {
-        $this->markdown = $parser;
-        $this->configuration = $configuration;
     }
 
     private function isMarkdownEnabled(): bool
@@ -63,7 +50,7 @@ final class MarkdownExtension implements RuntimeExtensionInterface
         if ($this->isMarkdownEnabled()) {
             $content = $this->markdown->toHtml($content);
         } elseif ($fullLength) {
-            $content = '<p>' . nl2br($content) . '</p>';
+            $content = '<p>' . nl2br(htmlspecialchars($content)) . '</p>';
         }
 
         return $content;
@@ -115,7 +102,7 @@ final class MarkdownExtension implements RuntimeExtensionInterface
             return $this->markdown->toHtml($content);
         }
 
-        return nl2br($content);
+        return nl2br(htmlspecialchars($content));
     }
 
     /**

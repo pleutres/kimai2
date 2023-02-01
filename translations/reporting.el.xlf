@@ -26,10 +26,6 @@
         <source>report_inactive_project</source>
         <target>Ανενεργά έργα</target>
       </trans-unit>
-      <trans-unit id="ns_jU13" resname="reporting.initial_view">
-        <source>reporting.initial_view</source>
-        <target>Αρχική αναφορά</target>
-      </trans-unit>
       <trans-unit id="518eY_l" resname="report_project_details">
         <source>report_project_details</source>
         <target>Λεπτομέρειες Έργου</target>
@@ -45,6 +41,10 @@
       <trans-unit id="3JLmvfB" resname="report_user_year">
         <source>report_user_year</source>
         <target>Ετήσια προβολή ενός χρήστη</target>
+      </trans-unit>
+      <trans-unit id="8RaUHlW" resname="report_customer_monthly_projects">
+        <source>report_customer_monthly_projects</source>
+        <target state="translated">Έργα ανά μήνα, δραστηριότητα και χρήστη</target>
       </trans-unit>
     </body>
   </file>

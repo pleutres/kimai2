@@ -9,30 +9,26 @@
 
 namespace App\Controller\Reporting;
 
-use App\Entity\User;
 use App\Model\DailyStatistic;
-use App\Reporting\MonthByUser;
-use App\Reporting\MonthByUserForm;
+use App\Reporting\MonthByUser\MonthByUser;
+use App\Reporting\MonthByUser\MonthByUserForm;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Route(path="/reporting/user")
- * @Security("is_granted('view_reporting')")
- */
+#[Route(path: '/reporting/user')]
+#[IsGranted('report:user')]
 final class UserMonthController extends AbstractUserReportController
 {
     /**
-     * @Route(path="/month", name="report_user_month", methods={"GET","POST"})
-     *
      * @param Request $request
      * @return Response
      * @throws Exception
      */
+    #[Route(path: '/month', name: 'report_user_month', methods: ['GET', 'POST'])]
     public function monthByUser(Request $request): Response
     {
         return $this->render('reporting/report_by_user.html.twig', $this->getData($request));
@@ -48,7 +44,7 @@ final class UserMonthController extends AbstractUserReportController
         $values->setUser($currentUser);
         $values->setDate($dateTimeFactory->getStartOfMonth());
 
-        $form = $this->createForm(MonthByUserForm::class, $values, [
+        $form = $this->createFormForGetRequest(MonthByUserForm::class, $values, [
             'include_user' => $canChangeUser,
             'timezone' => $dateTimeFactory->getTimezone()->getName(),
             'start_date' => $values->getDate(),

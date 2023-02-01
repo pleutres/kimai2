@@ -35,10 +35,8 @@ class TimesheetEntryTest extends TestCase
         $timesheet->addTag((new Tag())->setName('action test'));
 
         $expectedData = [
-            'description' => 'hello foo bar',
             'activity' => null,
             'project' => null,
-            'tags' => 'bulb,action test',
         ];
 
         $sut = new TimesheetEntry($timesheet, '#cccccc');
@@ -49,6 +47,17 @@ class TimesheetEntryTest extends TestCase
         $this->assertSame($activity, $sut->getActivity());
         $this->assertEquals('dd_timesheet', $sut->getBlockName());
         $this->assertEquals($expectedData, $sut->getData());
+
+        $expectedData = [
+            'activity' => null,
+            'project' => null,
+            'tags' => 'bulb,action test',
+            'description' => 'hello foo bar',
+        ];
+
+        $sut = new TimesheetEntry($timesheet, '#cccccc', true);
+
+        $this->assertEquals($expectedData, $sut->getData());
     }
 
     public function testEmpty()
@@ -56,10 +65,8 @@ class TimesheetEntryTest extends TestCase
         $timesheet = new Timesheet();
 
         $expectedData = [
-            'description' => null,
             'activity' => null,
             'project' => null,
-            'tags' => '',
         ];
 
         $sut = new TimesheetEntry($timesheet, '#ddd');

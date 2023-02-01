@@ -15,9 +15,9 @@ use App\Timesheet\CalculatorInterface;
 /**
  * Implementation to calculate the billable field for a timesheet record.
  */
-class BillableCalculator implements CalculatorInterface
+final class BillableCalculator implements CalculatorInterface
 {
-    public function calculate(Timesheet $record)
+    public function calculate(Timesheet $record, array $changeset): void
     {
         switch ($record->getBillableMode()) {
             case Timesheet::BILLABLE_NO:
@@ -49,5 +49,10 @@ class BillableCalculator implements CalculatorInterface
                 $record->setBillable($billable);
                 break;
         }
+    }
+
+    public function getPriority(): int
+    {
+        return 100;
     }
 }

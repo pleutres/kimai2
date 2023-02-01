@@ -2,13 +2,13 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" target-language="tr" datatype="plaintext" original="invoice-calculator.en.xlf">
     <body>
-      <trans-unit id="1inO2IF" resname="label.invoice_calculator">
-        <source>label.invoice_calculator</source>
+      <trans-unit id="MviRJeB" resname="invoice_calculator">
+        <source>invoice_calculator</source>
         <target state="translated">Toplam hesabı</target>
       </trans-unit>
       <trans-unit id="N6juwc4" resname="default">
         <source>default</source>
-        <target state="translated">Varsayılan: her zaman kaydı için bir kayıt</target>
+        <target state="translated">Öntanımlı: her zaman kaydı için bir kayıt</target>
       </trans-unit>
       <trans-unit id="_bAHi13" resname="short">
         <source>short</source>
@@ -20,7 +20,7 @@
       </trans-unit>
       <trans-unit id="BlGGO.X" resname="activity">
         <source>activity</source>
-        <target state="translated">Aktivite: her aktivite için bir kayıt</target>
+        <target state="translated">Etkinlik: her etkinlik için bir kayıt</target>
       </trans-unit>
       <trans-unit id="JEIQ5IQ" resname="project">
         <source>project</source>

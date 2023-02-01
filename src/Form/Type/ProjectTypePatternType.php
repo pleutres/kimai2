@@ -9,6 +9,7 @@
 
 namespace App\Form\Type;
 
+use App\Form\Helper\ProjectHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,44 +18,37 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Select the pattern that will be used when rendering a project select.
  */
-class ProjectTypePatternType extends AbstractType
+final class ProjectTypePatternType extends AbstractType
 {
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $name = $this->translator->trans('label.name');
-        $comment = $this->translator->trans('label.description');
-        $orderNumber = $this->translator->trans('label.orderNumber');
-        $projectStart = $this->translator->trans('label.project_start');
-        $projectEnd = $this->translator->trans('label.project_end');
+        $name = $this->translator->trans('name');
+        $comment = $this->translator->trans('description');
+        $orderNumber = $this->translator->trans('orderNumber');
+        $projectStart = $this->translator->trans('project_start');
+        $projectEnd = $this->translator->trans('project_end');
+        $customer = $this->translator->trans('customer');
 
-        $spacer = ProjectType::SPACER;
+        $spacer = ProjectHelper::SPACER;
 
         $resolver->setDefaults([
-            'label' => 'label.choice_pattern',
+            'label' => 'choice_pattern',
             'choices' => [
-                $name => ProjectType::PATTERN_NAME,
-                $comment => ProjectType::PATTERN_COMMENT,
-                $name . $spacer . $orderNumber => ProjectType::PATTERN_NAME . ProjectType::PATTERN_SPACER . ProjectType::PATTERN_ORDERNUMBER,
-                $name . $spacer . $comment => ProjectType::PATTERN_NAME . ProjectType::PATTERN_SPACER . ProjectType::PATTERN_COMMENT,
-                $name . $spacer . $projectStart . '-' . $projectEnd => ProjectType::PATTERN_NAME . ProjectType::PATTERN_SPACER . ProjectType::PATTERN_DATERANGE,
+                $name => ProjectHelper::PATTERN_NAME,
+                $comment => ProjectHelper::PATTERN_COMMENT,
+                $name . $spacer . $customer => ProjectHelper::PATTERN_NAME . ProjectHelper::PATTERN_SPACER . ProjectHelper::PATTERN_CUSTOMER,
+                $name . $spacer . $orderNumber => ProjectHelper::PATTERN_NAME . ProjectHelper::PATTERN_SPACER . ProjectHelper::PATTERN_ORDERNUMBER,
+                $name . $spacer . $comment => ProjectHelper::PATTERN_NAME . ProjectHelper::PATTERN_SPACER . ProjectHelper::PATTERN_COMMENT,
+                $name . $spacer . $projectStart . '-' . $projectEnd => ProjectHelper::PATTERN_NAME . ProjectHelper::PATTERN_SPACER . ProjectHelper::PATTERN_DATERANGE,
             ]
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function getParent(): string
     {
         return ChoiceType::class;
     }

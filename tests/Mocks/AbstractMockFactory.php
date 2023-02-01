@@ -14,19 +14,18 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractMockFactory
 {
-    /**
-     * @var TestCase
-     */
-    private $testCase;
-
-    public function __construct(TestCase $testCase)
+    public function __construct(private TestCase $testCase)
     {
-        $this->testCase = $testCase;
     }
 
     protected function getTestCase(): TestCase
     {
         return $this->testCase;
+    }
+
+    protected function createMock(string $className)
+    {
+        return $this->getMockBuilder($className)->disableOriginalConstructor()->getMock();
     }
 
     protected function getMockBuilder(string $className): MockBuilder

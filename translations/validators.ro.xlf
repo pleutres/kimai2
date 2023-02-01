@@ -380,7 +380,7 @@
       </trans-unit>
       <trans-unit id="6rO8GZ1" resname="Maximum duration of {{ value }} hours exceeded.">
         <source>Maximum duration of {{ value }} hours exceeded.</source>
-        <target>Numărul maxim de ore {{ valoare }} permise.</target>
+        <target state="translated">Numărul maxim de ore {{ value }} permise.</target>
       </trans-unit>
       <trans-unit id="1oKCOa5" resname="The budget is completely used.">
         <source>The budget is completely used.</source>
@@ -421,6 +421,14 @@
       <trans-unit id="to1Q85W" resname="An activity needs to be selected.">
         <source>An activity needs to be selected.</source>
         <target>Trebuie să se selecteze o activitate.</target>
+      </trans-unit>
+      <trans-unit id="Jz1y3yB" resname="Duration cannot be zero.">
+        <source>Duration cannot be zero.</source>
+        <target state="translated">Nu se admite o durată goală.</target>
+      </trans-unit>
+      <trans-unit id="dcPei9G" resname="Sorry, the budget is used up.">
+        <source>Sorry, the budget is used up.</source>
+        <target state="translated">Ne pare rău, bugetul este epuizat.</target>
       </trans-unit>
     </body>
   </file>

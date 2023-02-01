@@ -9,8 +9,8 @@
 
 namespace App\Form\Type;
 
-use App\Configuration\SystemConfiguration;
 use App\Entity\Customer;
+use App\Form\Helper\CustomerHelper;
 use App\Repository\CustomerRepository;
 use App\Repository\Query\CustomerFormTypeQuery;
 use App\Repository\Query\ProjectQuery;
@@ -24,54 +24,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Custom form field type to select a customer.
  */
-class CustomerType extends AbstractType
+final class CustomerType extends AbstractType
 {
-    public const PATTERN_NAME = '{name}';
-    public const PATTERN_NUMBER = '{number}';
-    public const PATTERN_COMPANY = '{company}';
-    public const PATTERN_COMMENT = '{comment}';
-    public const PATTERN_SPACER = '{spacer}';
-    public const SPACER = ' - ';
-
-    private $configuration;
-    private $pattern;
-
-    public function __construct(SystemConfiguration $configuration)
+    public function __construct(private CustomerHelper $customerHelper)
     {
-        $this->configuration = $configuration;
-    }
-
-    private function getPattern(): string
-    {
-        if ($this->pattern === null) {
-            $this->pattern = $this->configuration->find('customer.choice_pattern');
-
-            if ($this->pattern === null || stripos($this->pattern, '{') === false || stripos($this->pattern, '}') === false) {
-                $this->pattern = self::PATTERN_NAME;
-            }
-
-            $this->pattern = str_replace(self::PATTERN_SPACER, self::SPACER, $this->pattern);
-        }
-
-        return $this->pattern;
     }
 
     public function getChoiceLabel(Customer $customer): string
     {
-        $name = $this->getPattern();
-        $name = str_replace(self::PATTERN_NAME, $customer->getName(), $name);
-        $name = str_replace(self::PATTERN_COMMENT, $customer->getComment() ?? '', $name);
-        $name = str_replace(self::PATTERN_NUMBER, $customer->getNumber() ?? '', $name);
-        $name = str_replace(self::PATTERN_COMPANY, $customer->getCompany() ?? '', $name);
-
-        $name = ltrim($name, self::SPACER);
-        $name = rtrim($name, self::SPACER);
-
-        if ($name === '' || $name === self::SPACER) {
-            $name = $customer->getName();
-        }
-
-        return substr($name, 0, 110);
+        return $this->customerHelper->getChoiceLabel($customer);
     }
 
     public function getChoiceAttributes(Customer $customer, $key, $value): array
@@ -79,10 +40,7 @@ class CustomerType extends AbstractType
         return ['data-currency' => $customer->getCurrency()];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             // documentation is for NelmioApiDocBundle
@@ -90,15 +48,15 @@ class CustomerType extends AbstractType
                 'type' => 'integer',
                 'description' => 'Customer ID',
             ],
-            'label' => 'label.customer',
+            'label' => 'customer',
             'class' => Customer::class,
             'choice_label' => [$this, 'getChoiceLabel'],
             'choice_attr' => [$this, 'getChoiceAttributes'],
             'query_builder_for_user' => true,
             'project_enabled' => false,
             'project_select' => 'project',
-            'start_date_param' => '%begin%',
-            'end_date_param' => '%end%',
+            'start_date_param' => '%begin_date%',
+            'end_date_param' => '%end_date%',
             'ignore_date' => false,
             'project_visibility' => ProjectQuery::SHOW_VISIBLE,
             // @var Customer|null
@@ -144,6 +102,7 @@ class CustomerType extends AbstractType
                 }
 
                 return [
+                    'reload' => 'get_customers',
                     'select' => $options['project_select'],
                     'route' => 'get_projects',
                     'route_params' => $routeParams,
@@ -155,17 +114,14 @@ class CustomerType extends AbstractType
         });
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['attr'] = array_merge($view->vars['attr'], [
-            'data-option-pattern' => $this->getPattern(),
+            'data-option-pattern' => $this->customerHelper->getChoicePattern(),
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
+    public function getParent(): string
     {
         return EntityType::class;
     }

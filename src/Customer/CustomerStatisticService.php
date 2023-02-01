@@ -27,13 +27,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class CustomerStatisticService
 {
-    private $timesheetRepository;
-    private $dispatcher;
-
-    public function __construct(TimesheetRepository $timesheetRepository, EventDispatcherInterface $dispatcher)
+    public function __construct(private TimesheetRepository $timesheetRepository, private EventDispatcherInterface $dispatcher)
     {
-        $this->timesheetRepository = $timesheetRepository;
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -97,10 +92,20 @@ class CustomerStatisticService
                 $statistic->setInternalRate($statistic->getInternalRate() + $resultRow['internalRate']);
                 $statistic->setCounter($statistic->getCounter() + $resultRow['counter']);
                 if ($resultRow['billable']) {
-                    $statistic->setDurationBillable($resultRow['duration']);
-                    $statistic->setRateBillable($resultRow['rate']);
-                    $statistic->setInternalRateBillable($resultRow['internalRate']);
-                    $statistic->setCounterBillable($resultRow['counter']);
+                    $statistic->setDurationBillable($statistic->getDurationBillable() + $resultRow['duration']);
+                    $statistic->setRateBillable($statistic->getRateBillable() + $resultRow['rate']);
+                    $statistic->setInternalRateBillable($statistic->getInternalRateBillable() + $resultRow['internalRate']);
+                    $statistic->setCounterBillable($statistic->getCounterBillable() + $resultRow['counter']);
+                    if ($resultRow['exported']) {
+                        $statistic->setDurationBillableExported($statistic->getDurationBillableExported() + $resultRow['duration']);
+                        $statistic->setRateBillableExported($statistic->getRateBillableExported() + $resultRow['rate']);
+                    }
+                }
+                if ($resultRow['exported']) {
+                    $statistic->setDurationExported($statistic->getDurationExported() + $resultRow['duration']);
+                    $statistic->setRateExported($statistic->getRateExported() + $resultRow['rate']);
+                    $statistic->setInternalRateExported($statistic->getInternalRateExported() + $resultRow['internalRate']);
+                    $statistic->setCounterExported($statistic->getCounterExported() + $resultRow['counter']);
                 }
             }
         }
@@ -119,9 +124,11 @@ class CustomerStatisticService
             ->addSelect('COALESCE(SUM(t.internalRate), 0) as internalRate')
             ->addSelect('COUNT(t.id) as counter')
             ->addSelect('t.billable as billable')
+            ->addSelect('t.exported as exported')
             ->andWhere($qb->expr()->isNotNull('t.end'))
             ->groupBy('id')
             ->addGroupBy('billable')
+            ->addGroupBy('exported')
             ->andWhere($qb->expr()->in('p.customer', ':customer'))
             ->setParameter('customer', $customers)
         ;

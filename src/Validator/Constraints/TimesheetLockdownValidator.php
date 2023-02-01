@@ -11,27 +11,22 @@ namespace App\Validator\Constraints;
 
 use App\Entity\Timesheet as TimesheetEntity;
 use App\Timesheet\LockdownService;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 final class TimesheetLockdownValidator extends ConstraintValidator
 {
-    private $lockdownService;
-    private $security;
-
-    public function __construct(Security $security, LockdownService $lockdownService)
+    public function __construct(private Security $security, private LockdownService $lockdownService)
     {
-        $this->security = $security;
-        $this->lockdownService = $lockdownService;
     }
 
     /**
      * @param TimesheetEntity $timesheet
      * @param Constraint $constraint
      */
-    public function validate($timesheet, Constraint $constraint)
+    public function validate(mixed $timesheet, Constraint $constraint): void
     {
         if (!($constraint instanceof TimesheetLockdown)) {
             throw new UnexpectedTypeException($constraint, TimesheetLockdown::class);
@@ -78,7 +73,7 @@ final class TimesheetLockdownValidator extends ConstraintValidator
 
         // raise a violation for all entries before the start of lockdown period
         $this->context->buildViolation('This period is locked, please choose a later date.')
-            ->atPath('begin')
+            ->atPath('begin_date')
             ->setTranslationDomain('validators')
             ->setCode(TimesheetLockdown::PERIOD_LOCKED)
             ->addViolation();

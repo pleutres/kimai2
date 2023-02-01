@@ -14,15 +14,15 @@ final class TimesheetLongRunning extends TimesheetConstraint
     public const LONG_RUNNING = 'kimai-timesheet-long-running-01';
     public const MAXIMUM = 'kimai-timesheet-long-running-02';
 
-    protected static $errorNames = [
+    protected const ERROR_NAMES = [
         self::LONG_RUNNING => 'TIMESHEET_LONG_RUNNING',
         self::MAXIMUM => 'MAXIMUM',
     ];
 
-    public $message = 'Maximum duration of {{ value }} hours exceeded.';
-    public $maximumMessage = 'Maximum duration exceeded.';
+    public string $message = 'Maximum duration of {{ value }} hours exceeded.';
+    public string $maximumMessage = 'Maximum duration exceeded.';
 
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return self::CLASS_CONSTRAINT;
     }

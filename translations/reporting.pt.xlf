@@ -38,13 +38,13 @@
         <source>report_inactive_project</source>
         <target>Projetos inativos</target>
       </trans-unit>
-      <trans-unit id="ns_jU13" resname="reporting.initial_view">
-        <source>reporting.initial_view</source>
-        <target>Relatório inicial</target>
-      </trans-unit>
       <trans-unit id="3JLmvfB" resname="report_user_year">
         <source>report_user_year</source>
         <target>Visualização anual para um utilizador</target>
+      </trans-unit>
+      <trans-unit id="8RaUHlW" resname="report_customer_monthly_projects">
+        <source>report_customer_monthly_projects</source>
+        <target>Projetos por mês, atividade e utilizador</target>
       </trans-unit>
     </body>
   </file>

@@ -18,10 +18,6 @@
         <source>report_project_view</source>
         <target>Projeye genel bakış</target>
       </trans-unit>
-      <trans-unit id="ns_jU13" resname="reporting.initial_view">
-        <source>reporting.initial_view</source>
-        <target>İlk rapor</target>
-      </trans-unit>
       <trans-unit id="1gBKwGH" resname="report_inactive_project">
         <source>report_inactive_project</source>
         <target>Etkin olmayan projeler</target>
@@ -45,6 +41,10 @@
       <trans-unit id="3JLmvfB" resname="report_user_year">
         <source>report_user_year</source>
         <target>Bir kullanıcı için yıllık görünüm</target>
+      </trans-unit>
+      <trans-unit id="8RaUHlW" resname="report_customer_monthly_projects">
+        <source>report_customer_monthly_projects</source>
+        <target>Ay, etkinlik ve kullanıcıya göre projeler</target>
       </trans-unit>
     </body>
   </file>

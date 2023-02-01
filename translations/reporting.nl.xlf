@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" target-language="nl" datatype="plaintext" original="reporting.en.xlf">
     <body>
@@ -13,10 +13,6 @@
       <trans-unit id="zk30bmP" resname="report_monthly_users">
         <source>report_monthly_users</source>
         <target>Maandoverzicht voor alle gebruikers</target>
-      </trans-unit>
-      <trans-unit id="ns_jU13" resname="reporting.initial_view">
-        <source>reporting.initial_view</source>
-        <target>Initieel rapport</target>
       </trans-unit>
       <trans-unit id="1gBKwGH" resname="report_inactive_project">
         <source>report_inactive_project</source>
@@ -41,6 +37,14 @@
       <trans-unit id="R.9yUkf" resname="report_project_view">
         <source>report_project_view</source>
         <target>Project overzicht</target>
+      </trans-unit>
+      <trans-unit id="3JLmvfB" resname="report_user_year">
+        <source>report_user_year</source>
+        <target state="translated">Jaaroverzicht voor één gebruiker</target>
+      </trans-unit>
+      <trans-unit id="8RaUHlW" resname="report_customer_monthly_projects">
+        <source>report_customer_monthly_projects</source>
+        <target state="translated">Projecten per maand, activiteit en gebruiker</target>
       </trans-unit>
     </body>
   </file>
