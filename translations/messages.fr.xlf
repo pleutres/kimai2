@@ -198,8 +198,8 @@
         <target>Activité</target>
       </trans-unit>
       <trans-unit id="JEIQ5IQ" resname="project">
-        <source>project</source>
-        <target>Projet</target>
+        <source>Projet</source>
+        <target state="translated">Projet</target>
       </trans-unit>
       <trans-unit id="KhBzpuZ" resname="tag">
         <source>tag</source>
@@ -894,6 +894,18 @@
         <source>status.new</source>
         <target>Nouveau</target>
       </trans-unit>
+      <trans-unit id="Zngu6M9" resname="status.planned">
+        <source>status.planned</source>
+        <target>Planifiée</target>
+      </trans-unit>
+      <trans-unit id="m8V2yFG" resname="status.progress">
+        <source>status.progress</source>
+        <target>En progrès</target>
+      </trans-unit>
+      <trans-unit id="HF70hZq" resname="status.closed">
+        <source>status.closed</source>
+        <target>Fermée</target>
+      </trans-unit>
       <trans-unit id="BzwWNMS" resname="status">
         <source>status</source>
         <target>État</target>
@@ -1380,7 +1392,7 @@
       </trans-unit>
       <trans-unit id="WbT2QLP" resname="extended_settings">
         <source>extended_settings</source>
-        <target state="translated">Paramètres avancer</target>
+        <target state="translated">Paramètres avancés</target>
       </trans-unit>
       <trans-unit id="ZZaqTEr" resname="no_activity">
         <source>no_activity</source>
@@ -1445,6 +1457,30 @@
       <trans-unit id="EI5gPkp" resname="stats.userDurationToday">
         <source>stats.userDurationToday</source>
         <target state="translated">Mes heures de travail aujourd'hui</target>
+      </trans-unit>
+      <trans-unit id="i_XOmN4" resname="help_locales">
+        <source>help_locales</source>
+        <target state="translated">Langues prises en charge avec règles de formatage</target>
+      </trans-unit>
+      <trans-unit id="JmkKf48" resname="user.language.help">
+        <source>user.language.help</source>
+        <target state="translated">Outre la traduction de l'interface, ce paramètre est également responsable des formats d'heure, de date et de devise.</target>
+      </trans-unit>
+      <trans-unit id="ulgdXdi" resname="hour_24">
+        <source>hour_24</source>
+        <target state="translated">24 heures</target>
+      </trans-unit>
+      <trans-unit id="M2B0gF." resname="time">
+        <source>time</source>
+        <target state="translated">Heure</target>
+      </trans-unit>
+      <trans-unit id="NOEx3FF" resname="invoice_date.help">
+        <source>invoice_date.help</source>
+        <target state="translated">Vous pouvez modifier la date de la facture ici</target>
+      </trans-unit>
+      <trans-unit id="F7xeAn4" resname="invoice_date">
+        <source>invoice_date</source>
+        <target state="translated">Date de la facture</target>
       </trans-unit>
     </body>
   </file>

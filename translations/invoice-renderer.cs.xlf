@@ -12,15 +12,11 @@
       </trans-unit>
       <trans-unit id="lt2Y2LO" resname="timesheet">
         <source>timesheet</source>
-        <target>Pracovní výkaz</target>
+        <target state="translated">Timesheet</target>
       </trans-unit>
       <trans-unit id="m1UyfD9" resname="service-date">
         <source>service-date</source>
         <target>Živnostník</target>
-      </trans-unit>
-      <trans-unit id="1GruCMx" resname="export">
-        <source>export</source>
-        <target>Export dat</target>
       </trans-unit>
       <trans-unit id="7mEUv6C" resname="help.upload">
         <source>help.upload</source>
@@ -30,10 +26,6 @@
         <source>programmatic</source>
         <target state="translated">K dalšímu zpracování</target>
       </trans-unit>
-      <trans-unit id="nA.KOyM" resname="Html">
-        <source>Html</source>
-        <target state="translated">HTMP (pro tisk pomocí prohlížeče)</target>
-      </trans-unit>
       <trans-unit id="N6juwc4" resname="default">
         <source>default</source>
         <target state="translated">Faktura</target>
@@ -41,6 +33,10 @@
       <trans-unit id="mC2ePrm" resname="text">
         <source>text</source>
         <target state="translated">Text</target>
+      </trans-unit>
+      <trans-unit id="22pt8Gs" resname="download_invoice_renderer">
+        <source>download_invoice_renderer</source>
+        <target state="translated">Další šablony si můžete stáhnout zde</target>
       </trans-unit>
     </body>
   </file>

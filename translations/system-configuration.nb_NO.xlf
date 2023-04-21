@@ -190,10 +190,6 @@
         <source>timesheet.default_begin</source>
         <target>Forvalgt starttid (ikke brukt i alle tidsregistreringsmodus)</target>
       </trans-unit>
-      <trans-unit id="bKumt5c" resname="simple_form">
-        <source>simple_form</source>
-        <target>Enkelt søk</target>
-      </trans-unit>
       <trans-unit id="UTurPF1" resname="invoice.number_format">
         <source>invoice.number_format</source>
         <target>Fakturanummer-format</target>
@@ -301,6 +297,10 @@
       <trans-unit id="12sQGSo" resname="activity.allow_inline_create">
         <source>activity.allow_inline_create</source>
         <target state="translated">Tillat opprettelse av aktiviteter i tidssporingsskjema</target>
+      </trans-unit>
+      <trans-unit id="1cAQPNS" resname="customer.allow_duplicate_number">
+        <source>customer.allow_duplicate_number</source>
+        <target state="needs-translation">Tillat duplisert kontonummer</target>
       </trans-unit>
     </body>
   </file>

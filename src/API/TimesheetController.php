@@ -76,6 +76,7 @@ final class TimesheetController extends BaseApiController
     #[ApiSecurity(name: 'apiUser')]
     #[ApiSecurity(name: 'apiToken')]
     #[Rest\QueryParam(name: 'user', requirements: '\d+|all', strict: true, nullable: true, description: "User ID to filter timesheets. Needs permission 'view_other_timesheet', pass 'all' to fetch data for all user (default: current user)")]
+    #[Rest\QueryParam(name: 'users', map: true, requirements: '\d+', strict: true, nullable: true, default: [], description: 'List of user IDs to filter, e.g.: users[]=1&users[]=2 (ignored if user=all)')]
     #[Rest\QueryParam(name: 'customer', requirements: '\d+', strict: true, nullable: true, description: 'Customer ID to filter timesheets')]
     #[Rest\QueryParam(name: 'customers', map: true, requirements: '\d+', strict: true, nullable: true, default: [], description: 'List of customer IDs to filter, e.g.: customers[]=1&customers[]=2')]
     #[Rest\QueryParam(name: 'project', requirements: '\d+', strict: true, nullable: true, description: 'Project ID to filter timesheets')]
@@ -98,21 +99,30 @@ final class TimesheetController extends BaseApiController
     public function cgetAction(ParamFetcherInterface $paramFetcher, CustomerRepository $customerRepository, ProjectRepository $projectRepository, ActivityRepository $activityRepository, UserRepository $userRepository): Response
     {
         $query = new TimesheetQuery(false);
-        $query->setUser($this->getUser());
+        $seeAll = false;
 
         if ($this->isGranted('view_other_timesheet')) {
+            /** @var array<int> $users */
+            $users = $paramFetcher->get('users');
             $userId = $paramFetcher->get('user');
-            if (\is_string($userId) && $userId !== '') {
-                if ('all' === $userId) {
-                    $query->setUser(null);
-                } else {
-                    $user = $userRepository->find($userId);
-                    if ($user === null) {
-                        throw $this->createNotFoundException('Unknown user: ' . $userId);
-                    }
-                    $query->setUser($user);
+
+            if ('all' === $userId) {
+                $seeAll = true;
+            } elseif (\is_string($userId) && $userId !== '') {
+                $users[] = (int) $userId;
+            }
+
+            if (!$seeAll) {
+                foreach ($userRepository->findByIds($users) as $user) {
+                    $query->addUser($user);
                 }
             }
+        }
+
+        if ($seeAll) {
+            $query->setUser(null);
+        } elseif (!$query->hasUsers()) {
+            $query->setUser($this->getUser());
         }
 
         /** @var array<int> $customers */
@@ -447,11 +457,15 @@ final class TimesheetController extends BaseApiController
     }
 
     /**
-     * Stops an active timesheet record
+     * Stops an active timesheet record.
+     *
+     * This route is available via GET and PATCH, as users over and over again run into errors when stopping.
+     * Likely caused by a slow JS engine and a fast-click after page reload.
      */
     #[IsGranted('stop', 'timesheet')]
     #[OA\Response(response: 200, description: 'Stops an active timesheet record and returns it afterwards.', content: new OA\JsonContent(ref: '#/components/schemas/TimesheetEntity'))]
     #[OA\Parameter(name: 'id', in: 'path', description: 'Timesheet record ID to stop', required: true)]
+    #[Rest\Get(path: '/{id}/stop', name: 'stop_timesheet_get', requirements: ['id' => '\d+'])]
     #[Rest\Patch(path: '/{id}/stop', name: 'stop_timesheet', requirements: ['id' => '\d+'])]
     #[ApiSecurity(name: 'apiUser')]
     #[ApiSecurity(name: 'apiToken')]
@@ -471,6 +485,7 @@ final class TimesheetController extends BaseApiController
     #[IsGranted('start', 'timesheet')]
     #[OA\Response(response: 200, description: 'Restarts a timesheet record for the same customer, project, activity combination. The current user will be the owner of the new record. Kimai tries to stop running records, which is expected to fail depending on the configured rules. Data will be copied from the original record if requested.', content: new OA\JsonContent(ref: '#/components/schemas/TimesheetEntity'))]
     #[OA\Parameter(name: 'id', in: 'path', description: 'Timesheet record ID to restart', required: true)]
+    #[Rest\Get(path: '/{id}/restart', name: 'restart_timesheet_get', requirements: ['id' => '\d+'])]
     #[Rest\Patch(path: '/{id}/restart', name: 'restart_timesheet', requirements: ['id' => '\d+'])]
     #[ApiSecurity(name: 'apiUser')]
     #[ApiSecurity(name: 'apiToken')]

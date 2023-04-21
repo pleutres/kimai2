@@ -1,6 +1,4 @@
 security:
-    enable_authenticator_manager: true
-
     password_hashers:
         App\Entity\User: auto
 
@@ -62,6 +60,10 @@ security:
             logout:
                 path: logout
                 target: homepage
+
+            login_throttling:
+                max_attempts: 5
+                interval: '5 minutes'
 
     access_decision_manager:
         strategy: unanimous

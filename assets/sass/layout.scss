@@ -5,11 +5,13 @@
         border-right: 0;
     }
 }
+
 @media (min-width: 360px) {
     .inline-search {
         max-width: 235px;
     }
 }
+
 @include media-breakpoint-up(md) {
     .inline-search {
         max-width: 325px;

@@ -81,9 +81,12 @@ final class InvoiceController extends AbstractController
         $query = $this->getDefaultQuery();
 
         $form = $this->getToolbarForm($query);
-        if ($this->handleSearch($form, $request)) {
+        if ($this->handleSearch($form, $request, ['invoiceDate'])) {
             return $this->redirectToRoute('invoice');
         }
+
+        // this can be deleted in the future, but for now invalid bookmarks exists, which contain an old invoice date
+        $query->setInvoiceDate($this->getDateTimeFactory()->createDateTime());
 
         $models = [];
         $total = 0;
@@ -106,7 +109,7 @@ final class InvoiceController extends AbstractController
             $total += \count($model->getCalculator()->getEntries());
 
             $values = [
-                'invoiceDate' => $query->getInvoiceDate(),
+                'invoiceDate' => null,
                 'template' => $customerTpl
             ];
 
@@ -116,6 +119,8 @@ final class InvoiceController extends AbstractController
                 ->add('template', InvoiceTemplateType::class)
                 ->add('invoiceDate', DatePickerType::class, [
                     'required' => true,
+                    'label' => 'invoice_date',
+                    'help' => 'invoice_date.help'
                 ])
                 ->createView();
         }
@@ -359,10 +364,10 @@ final class InvoiceController extends AbstractController
             $table->addColumn('mf_' . $metaColumn->getName(), ['title' => $metaColumn->getLabel(), 'class' => 'd-none', 'orderBy' => false]);
         }
 
-        $table->addColumn('invoice_number', ['class' => 'd-none d-md-table-cell w-min', 'title' => 'invoice.number', 'orderBy' => false]);
+        $table->addColumn('invoice_number', ['class' => 'd-none d-md-table-cell w-min', 'title' => 'invoice.number', 'orderBy' => 'invoice.number']);
         $table->addColumn('due_date', ['class' => 'd-none w-min', 'title' => 'invoice.due_days', 'orderBy' => false]);
         $table->addColumn('payment_date', ['class' => 'd-none w-min', 'title' => 'invoice.payment_date', 'orderBy' => false]);
-        $table->addColumn('status', ['class' => 'd-none d-sm-table-cell w-min', 'orderBy' => false]);
+        $table->addColumn('status', ['class' => 'd-none d-sm-table-cell w-min', 'orderBy' => 'status']);
         $table->addColumn('subtotal', ['class' => 'd-none text-end w-min', 'title' => 'invoice.subtotal', 'orderBy' => false]);
         $table->addColumn('tax', ['class' => 'd-none text-end w-min', 'title' => 'invoice.tax']);
         $table->addColumn('total_rate', ['class' => 'd-none d-md-table-cell text-end w-min']);
@@ -445,6 +450,52 @@ final class InvoiceController extends AbstractController
     public function editTemplateAction(InvoiceTemplate $template, Request $request): Response
     {
         return $this->renderTemplateForm($template, $request);
+    }
+
+    #[Route(path: '/document_download/{document}', name: 'admin_invoice_document_download', methods: ['GET'])]
+    #[IsGranted('upload_invoice_template')]
+    public function downloadDocument(string $document, Environment $twig): Response
+    {
+        $event = new InvoiceDocumentsEvent($this->service->getDocuments(true));
+        $this->dispatcher->dispatch($event);
+
+        foreach ($event->getInvoiceDocuments() as $doc) {
+            if ($document === $doc->getId()) {
+                return $this->file($doc->getFilename());
+            }
+        }
+
+        throw $this->createNotFoundException('Unknown document: ' . $document);
+    }
+
+    #[Route(path: '/document_reload/{document}', name: 'admin_invoice_document_reload', methods: ['GET', 'POST'])]
+    #[IsGranted('upload_invoice_template')]
+    public function reloadDocument(string $document, Environment $twig): Response
+    {
+        $event = new InvoiceDocumentsEvent($this->service->getDocuments(true));
+        $this->dispatcher->dispatch($event);
+
+        $reloaded = false;
+
+        foreach ($event->getInvoiceDocuments() as $doc) {
+            if ($document === $doc->getId() && $doc->isTwig()) {
+                $reloaded = true;
+                try {
+                    $twig->enableAutoReload();
+                    $twig->load('@invoice/' . basename($doc->getFilename()));
+                    $twig->disableAutoReload();
+                    $this->flashSuccess('Reloaded template');
+                } catch (Exception $ex) {
+                    $this->flashException($ex, 'Failed to reload template: ' . $ex->getMessage());
+                }
+            }
+        }
+
+        if (!$reloaded) {
+            throw $this->createNotFoundException('Unknown document: ' . $document);
+        }
+
+        return $this->redirectToRoute('admin_invoice_document_upload');
     }
 
     #[Route(path: '/document_upload', name: 'admin_invoice_document_upload', methods: ['GET', 'POST'])]

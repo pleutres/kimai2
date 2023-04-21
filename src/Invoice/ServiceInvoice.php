@@ -278,7 +278,7 @@ final class ServiceInvoice
     {
         $document = $this->getDocumentByName($model->getTemplate()->getRenderer());
         if (null === $document) {
-            throw new \Exception('Unknown invoice document: ' . $model->getTemplate()->getRenderer());
+            throw new \Exception('Please adjust your invoice template, the renderer is invalid: ' . $model->getTemplate()->getRenderer());
         }
 
         foreach ($this->getRenderer() as $renderer) {
@@ -421,12 +421,12 @@ final class ServiceInvoice
 
         $generator = $this->getNumberGeneratorByName($template->getNumberGenerator());
         if (null === $generator) {
-            throw new \Exception('Unknown number generator: ' . $template->getNumberGenerator());
+            throw new \Exception('Please adjust your invoice template, the number generator is invalid: ' . $template->getNumberGenerator());
         }
 
         $calculator = $this->getCalculatorByName($template->getCalculator());
         if (null === $calculator) {
-            throw new \Exception('Unknown invoice calculator: ' . $template->getCalculator());
+            throw new \Exception('Please adjust your invoice template, the sum calculator is invalid: ' . $template->getCalculator());
         }
 
         $model->setCalculator($calculator);
@@ -531,10 +531,6 @@ final class ServiceInvoice
             $model = $this->createModelWithoutEntries($customerQuery);
             $model->addEntries($settings['entries']);
             $this->prepareModelQueryDates($model);
-
-            if ($model->getCalculator()->getTotal() < 0.0) {
-                continue;
-            }
 
             $models[] = $model;
         }

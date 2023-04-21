@@ -959,19 +959,19 @@
       </trans-unit>
       <trans-unit id="X_NRsed" resname="status.new">
         <source>status.new</source>
-        <target>Novi</target>
+        <target state="translated">Novo</target>
       </trans-unit>
       <trans-unit id="Uvo1CbP" resname="status.pending">
         <source>status.pending</source>
-        <target>Nepodmireni</target>
+        <target state="translated">Neobavljeno</target>
       </trans-unit>
       <trans-unit id="PHJwR4w" resname="status.paid">
         <source>status.paid</source>
-        <target>Plaćeni</target>
+        <target state="translated">Plaćeno</target>
       </trans-unit>
       <trans-unit id="crrlEUA" resname="preview.skipped_rows">
-        <source>preview.skipped_rows</source>
-        <target>Preskočen je pregled od još %rows% retka …</target>
+        <source>Skipped preview of %rows% more rows …</source>
+        <target state="translated">Preskočen je pregled od još %rows% redaka …</target>
       </trans-unit>
       <!--
               Export
@@ -979,10 +979,6 @@
       <trans-unit id="1GruCMx" resname="export">
         <source>export</source>
         <target>Izvoz</target>
-      </trans-unit>
-      <trans-unit id="KxuVIAw" resname="export.subtitle">
-        <source>export.subtitle</source>
-        <target>Izvezi podatke vremenske tablice u razne formate</target>
       </trans-unit>
       <trans-unit id="iwWaUoa" resname="export.filter">
         <source>export.filter</source>
@@ -1164,7 +1160,7 @@
       </trans-unit>
       <trans-unit id="gT9W2pZ" resname="status.canceled">
         <source>status.canceled</source>
-        <target state="translated">Anulirani</target>
+        <target state="translated">Prekinuto</target>
       </trans-unit>
       <trans-unit id="GzWKgBk" resname="error.directory_missing">
         <source>error.directory_missing</source>
@@ -1449,6 +1445,42 @@
       <trans-unit id="WbT2QLP" resname="extended_settings">
         <source>extended_settings</source>
         <target state="translated">Proširene postavke</target>
+      </trans-unit>
+      <trans-unit id="i_XOmN4" resname="help_locales">
+        <source>help_locales</source>
+        <target state="translated">Podržani jezici s pravilima formatiranja</target>
+      </trans-unit>
+      <trans-unit id="JmkKf48" resname="user.language.help">
+        <source>user.language.help</source>
+        <target state="translated">Osim prevođenja sučelja, ova je postavka također odgovorna za formate vremena, datuma i valute.</target>
+      </trans-unit>
+      <trans-unit id="ulgdXdi" resname="hour_24">
+        <source>hour_24</source>
+        <target state="translated">24 sati</target>
+      </trans-unit>
+      <trans-unit id="M2B0gF." resname="time">
+        <source>time</source>
+        <target state="translated">Vrijeme</target>
+      </trans-unit>
+      <trans-unit id="m8V2yFG" resname="status.progress">
+        <source>status.progress</source>
+        <target state="translated">Obavlja se</target>
+      </trans-unit>
+      <trans-unit id="HF70hZq" resname="status.closed">
+        <source>status.closed</source>
+        <target state="translated">Završeno</target>
+      </trans-unit>
+      <trans-unit id="Zngu6M9" resname="status.planned">
+        <source>status.planned</source>
+        <target state="translated">Planirano</target>
+      </trans-unit>
+      <trans-unit id="NOEx3FF" resname="invoice_date.help">
+        <source>invoice_date.help</source>
+        <target state="translated">Datum računa možeš ovdje promijeniti</target>
+      </trans-unit>
+      <trans-unit id="F7xeAn4" resname="invoice_date">
+        <source>invoice_date</source>
+        <target state="translated">Datum računa</target>
       </trans-unit>
     </body>
   </file>

@@ -508,7 +508,7 @@
       </trans-unit>
       <trans-unit id="qvIyBkY" resname="title">
         <source>title</source>
-        <target>תואר</target>
+        <target state="translated">תפקיד</target>
       </trans-unit>
       <trans-unit id="h7voece" resname="avatar">
         <source>avatar</source>
@@ -1381,6 +1381,42 @@
       <trans-unit id="3WHV.yf" resname="activated">
         <source>Activated</source>
         <target state="translated">פעיל</target>
+      </trans-unit>
+      <trans-unit id="i_XOmN4" resname="help_locales">
+        <source>help_locales</source>
+        <target state="translated">שפות נתמכות עם כללי עיצוב</target>
+      </trans-unit>
+      <trans-unit id="JmkKf48" resname="user.language.help">
+        <source>user.language.help</source>
+        <target state="translated">בנוסף לתרגום המנשק, הגדרה זו אחראית גם על תבניות השעה, התאריך והמטבע.</target>
+      </trans-unit>
+      <trans-unit id="ulgdXdi" resname="hour_24">
+        <source>hour_24</source>
+        <target state="translated">24 שעות</target>
+      </trans-unit>
+      <trans-unit id="M2B0gF." resname="time">
+        <source>time</source>
+        <target state="translated">שעה</target>
+      </trans-unit>
+      <trans-unit id="F7xeAn4" resname="invoice_date">
+        <source>invoice_date</source>
+        <target state="translated">תאריך החשבונית</target>
+      </trans-unit>
+      <trans-unit id="NOEx3FF" resname="invoice_date.help">
+        <source>invoice_date.help</source>
+        <target state="translated">כאן ניתן לערוך את תאריך החשבונית</target>
+      </trans-unit>
+      <trans-unit id="Zngu6M9" resname="status.planned">
+        <source>status.planned</source>
+        <target state="translated">מתוכננת</target>
+      </trans-unit>
+      <trans-unit id="m8V2yFG" resname="status.progress">
+        <source>status.progress</source>
+        <target state="translated">מתבצעת</target>
+      </trans-unit>
+      <trans-unit id="HF70hZq" resname="status.closed">
+        <source>status.closed</source>
+        <target state="translated">הושלמה</target>
       </trans-unit>
     </body>
   </file>

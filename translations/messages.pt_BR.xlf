@@ -97,7 +97,7 @@
       </trans-unit>
       <trans-unit id="ebTjBb9" resname="my_times">
         <source>my_times</source>
-        <target>Meus tempos</target>
+        <target state="translated">Meus horários</target>
       </trans-unit>
       <trans-unit id="yxQop43" resname="all_times">
         <source>all_times</source>
@@ -198,8 +198,8 @@
         <target>Atividade</target>
       </trans-unit>
       <trans-unit id="JEIQ5IQ" resname="project">
-        <source>project</source>
-        <target>Projeto</target>
+        <source>Project</source>
+        <target state="translated">Projeto</target>
       </trans-unit>
       <trans-unit id="KhBzpuZ" resname="tag">
         <source>tag</source>
@@ -271,7 +271,7 @@
             -->
       <trans-unit id="VXj0Y3h" resname="timesheet.title">
         <source>timesheet.title</source>
-        <target>Meus Tempos</target>
+        <target state="translated">Meus horários</target>
       </trans-unit>
       <trans-unit id="dwEVXUR" resname="timesheet.edit">
         <source>timesheet.edit</source>
@@ -476,23 +476,23 @@
             -->
       <trans-unit id="TdBJBAl" resname="stats.durationToday">
         <source>stats.durationToday</source>
-        <target>Horas de trabalho hoje</target>
+        <target state="translated">Horas trabalhadas hoje</target>
       </trans-unit>
       <trans-unit id="XhKalZH" resname="stats.durationWeek">
         <source>stats.durationWeek</source>
-        <target>Horas de trabalho esta semana</target>
+        <target state="translated">Horas trabalhadas esta semana</target>
       </trans-unit>
       <trans-unit id="uaOwf_P" resname="stats.durationMonth">
         <source>stats.durationMonth</source>
-        <target>Horas de trabalho este mês</target>
+        <target state="translated">Horas trabalhadas este mês</target>
       </trans-unit>
       <trans-unit id="WqF84KR" resname="stats.durationYear">
         <source>stats.durationYear</source>
-        <target>Horas de trabalho este ano</target>
+        <target state="translated">Horas trabalhadas este ano</target>
       </trans-unit>
       <trans-unit id="YtvPnl1" resname="stats.durationTotal">
         <source>stats.durationTotal</source>
-        <target>Total de horas de trabalho</target>
+        <target state="translated">Total de horas trabalhadas</target>
       </trans-unit>
       <trans-unit id="IFOLMgp" resname="stats.yourWorkingHours">
         <source>stats.yourWorkingHours</source>
@@ -792,7 +792,7 @@
       </trans-unit>
       <trans-unit id="ypVQO7o" resname="menu.reporting">
         <source>menu.reporting</source>
-        <target>Reportando</target>
+        <target state="translated">Relatórios</target>
       </trans-unit>
       <trans-unit id=".372.o7" resname="login_required">
         <source>login_required</source>
@@ -1060,7 +1060,7 @@
       </trans-unit>
       <trans-unit id="xkugSAA" resname="stats.durationFinancialYear">
         <source>stats.durationFinancialYear</source>
-        <target>Horário de trabalho neste ano fiscal</target>
+        <target state="translated">Horários de trabalho neste ano fiscal</target>
       </trans-unit>
       <trans-unit id="HWB4OGJ" resname="stats.workingTimeFinancialYear">
         <source>stats.workingTimeFinancialYear</source>
@@ -1396,7 +1396,7 @@
       </trans-unit>
       <trans-unit id="wwrREDg" resname="pagination">
         <source>pagination</source>
-        <target state="translated">Mostrar as entradas %start% a %end% do %total%.</target>
+        <target state="translated">Mostrar as entradas de %start% até %end% de %total%.</target>
       </trans-unit>
       <trans-unit id="mjKOAgQ" resname="skin.light">
         <source>skin.light</source>
@@ -1445,6 +1445,42 @@
       <trans-unit id="3WHV.yf" resname="activated">
         <source>Activated</source>
         <target state="translated">Ativado</target>
+      </trans-unit>
+      <trans-unit id="ulgdXdi" resname="hour_24">
+        <source>hour_24</source>
+        <target state="translated">24 horas</target>
+      </trans-unit>
+      <trans-unit id="M2B0gF." resname="time">
+        <source>time</source>
+        <target state="translated">Hora</target>
+      </trans-unit>
+      <trans-unit id="i_XOmN4" resname="help_locales">
+        <source>help_locales</source>
+        <target state="translated">Idiomas compatíveis com as regras de formatação</target>
+      </trans-unit>
+      <trans-unit id="JmkKf48" resname="user.language.help">
+        <source>user.language.help</source>
+        <target state="translated">Além de traduzir a interface, esta configuração também é responsável pelos formatos de hora, data e moeda.</target>
+      </trans-unit>
+      <trans-unit id="NOEx3FF" resname="invoice_date.help">
+        <source>invoice_date.help</source>
+        <target state="translated">Você pode mudar a data da fatura aqui</target>
+      </trans-unit>
+      <trans-unit id="F7xeAn4" resname="invoice_date">
+        <source>invoice_date</source>
+        <target state="translated">Data da fatura</target>
+      </trans-unit>
+      <trans-unit id="m8V2yFG" resname="status.progress">
+        <source>status.progress</source>
+        <target state="translated">Em andamento</target>
+      </trans-unit>
+      <trans-unit id="HF70hZq" resname="status.closed">
+        <source>status.closed</source>
+        <target state="translated">Concluído</target>
+      </trans-unit>
+      <trans-unit id="Zngu6M9" resname="status.planned">
+        <source>status.planned</source>
+        <target state="translated">Planejado</target>
       </trans-unit>
     </body>
   </file>

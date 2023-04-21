@@ -227,8 +227,6 @@ export default class KimaiDateUtils extends KimaiPlugin {
     }
 
     /**
-     * TODO remove seconds
-     *
      * @param {int} hours
      * @param {int} minutes
      * @return {string}
@@ -243,8 +241,7 @@ export default class KimaiDateUtils extends KimaiPlugin {
             format = '-' + format;
         }
 
-        return format.replace('%h', (hours < 10 ? '0' + hours : hours)).replace('%m', ('0' + minutes).slice(-2));
-        //return format.replace('%h', (hours < 10 ? '0' + hours : hours)).replace('%m', ('0' + minutes).slice(-2)).replace('%s', ('0' + seconds).slice(-2));
+        return format.replace('%h', hours.toString()).replace('%m', ('0' + minutes).slice(-2));
     }
 
     /**
@@ -296,6 +293,11 @@ export default class KimaiDateUtils extends KimaiPlugin {
 
         if (luxonDuration === null || !luxonDuration.isValid) {
             return new Duration({seconds: 0});
+        }
+
+        // actually, the parsing above should be improved, but that works as well
+        if (duration[0] === '-' && luxonDuration.valueOf() > 0) {
+            return luxonDuration.negate();
         }
 
         return luxonDuration;

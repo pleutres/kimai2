@@ -1,4 +1,8 @@
 framework:
+    exceptions:
+        App\Validator\ValidationFailedException:
+            log_level: debug
+
     secret: '%env(APP_SECRET)%'
     default_locale: en
     csrf_protection: true
@@ -19,16 +23,20 @@ framework:
         log: true
 
     mailer:
-        # prevent that emails are sent out in dev systems
-        dsn: 'null://null'
+        dsn: '%env(MAILER_URL)%'
 
-when@prod:
+    validation:
+        email_validation_mode: html5
+
+when@dev:
     framework:
         mailer:
-            dsn: '%env(MAILER_URL)%'
+            dsn: 'null://null'
 
 when@test:
     framework:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+        mailer:
+            dsn: 'null://null'

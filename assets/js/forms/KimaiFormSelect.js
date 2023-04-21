@@ -115,18 +115,24 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
         if (node.dataset['renderer'] !== undefined && node.dataset['renderer'] === 'color') {
             options.render = {...render, ...{
                 option: function(data, escape) {
-                    let color = data.value;
+                    let item = '<div class="list-group-item border-0 p-1 ps-2 text-nowrap">';
                     if (data.color !== undefined) {
-                        color = data.color;
+                        item += '<span style="background-color:' + data.color + '" class="color-choice-item">&nbsp;</span>';
+                    } else {
+                        item += '<span class="color-choice-item">&nbsp;</span>';
                     }
-                    return '<div class="list-group-item border-0 p-1 ps-2 text-nowrap"><span style="background-color:' + color + '" class="color-choice-item">&nbsp;</span>' + escape(data.text) + '</div>';
+                    item += escape(data.text) + '</div>';
+                    return item;
                 },
                 item: function(data, escape) {
-                    let color = data.value;
+                    let item = '<div class="text-nowrap">';
                     if (data.color !== undefined) {
-                        color = data.color;
+                        item += '<span style="background-color:' + data.color + '" class="color-choice-item">&nbsp;</span>';
+                    } else {
+                        item += '<span class="color-choice-item">&nbsp;</span>';
                     }
-                    return '<div class="text-nowrap"><span style="background-color:' + color + '" class="color-choice-item">&nbsp;</span>' + escape(data.text) + '</div>';
+                    item += escape(data.text) + '</div>';
+                    return item;
                 }
             }};
         } else {
@@ -278,7 +284,7 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
             const optionLength = allOptions.length;
             let selectOption = '';
 
-            if (optionLength === 1) {
+            if (optionLength === 1 && node.dataset['autoselect'] === undefined) {
                 selectOption = allOptions[0].value;
             } else if (optionLength === 2 && emptyOption !== null) {
                 selectOption = allOptions[1].value;
@@ -416,9 +422,10 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
                 const targetSelect = document.getElementById(apiSelect.dataset['relatedSelect']);
 
                 // if the related target select does not exist, we do not need to load the related data
-                if (targetSelect === null) {
+                if (targetSelect === null || targetSelect.dataset['reloading'] === '1') {
                     return;
                 }
+                targetSelect.dataset['reloading'] = '1';
 
                 if (targetSelect.tomselect !== undefined) {
                     targetSelect.tomselect.disable();
@@ -441,6 +448,7 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
                 if (selectValue === undefined || selectValue === null || selectValue === '' || (Array.isArray(selectValue) && selectValue.length === 0)) {
                     if (apiSelect.dataset['emptyUrl'] === undefined) {
                         this._updateSelect(targetSelectId, {});
+                        targetSelect.dataset['reloading'] = '0';
                         return;
                     }
                     newApiUrl = this._buildUrlWithFormFields(apiSelect.dataset['emptyUrl'], formPrefix);
@@ -454,6 +462,7 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
                     if (targetSelect.tomselect !== undefined) {
                         targetSelect.tomselect.enable();
                     }
+                    targetSelect.dataset['reloading'] = '0';
                     targetSelect.disabled = false;
                 });
             }
@@ -533,10 +542,16 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
                 if (Array.isArray(newValue)) {
                     let urlParams = [];
                     for (let tmpValue of newValue) {
+                        if (tmpValue === null) {
+                            tmpValue = '';
+                        }
                         urlParams.push(originalFieldName + '=' + tmpValue);
                     }
                     newApiUrl = newApiUrl.replace(item, urlParams.join('&'));
                 } else {
+                    if (newValue === null) {
+                        newValue = '';
+                    }
                     newApiUrl = newApiUrl.replace(value, newValue);
                 }
             }

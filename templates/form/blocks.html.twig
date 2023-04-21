@@ -1,3 +1,35 @@
+{# added for the team project form, to show divider for the customer name between all projects #}
+{% block choice_widget_expanded -%}
+    {%- if '-inline' in label_attr.class|default('') -%}
+        {%- for child in form %}
+            {{- form_widget(child, {
+                parent_label_class: label_attr.class|default(''),
+                translation_domain: choice_translation_domain,
+            }) -}}
+        {% endfor -%}
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {% if form.vars.choices|length != form.children|length %}
+                {% for name, choices in form.vars.choices %}
+                    <fieldset class="form-fieldset">
+                        <legend>{{ name }}</legend>
+                    {% for key, choice in choices %}
+                        {{- form_widget(form[key]) -}}
+                        {{- form_label(form[key]) -}}
+                    {% endfor %}
+                    </fieldset>
+                {% endfor %}
+            {% else %}
+                {%- for child in form %}
+                    {{- form_widget(child, {
+                        parent_label_class: label_attr.class|default(''),
+                        translation_domain: choice_translation_domain,
+                    }) -}}
+                {% endfor -%}
+            {% endif %}
+        </div>
+    {%- endif -%}
+{%- endblock choice_widget_expanded %}
 
 {% block quick_entry_week_row %}
     <tr{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' form-group qe-entry-week-row' ~ (not valid ? ' is-invalid'))|trim})} %}{{ block('attributes') }}{% endwith %}>
@@ -350,3 +382,23 @@
         {{ form_row(meta.value, {'row_attr': {'class': 'mb-3 ' ~  form.parent.vars.name ~ '_row_' ~ form.vars.name ~ '_' ~ meta.vars.name}}) }}
     {% endfor %}
 {%- endblock meta_fields_collection_widget %}
+
+{% block form_help_content -%}
+    {%- if help_translation_domain is defined and help_translation_domain is not null -%}
+        {%- set translation_domain = help_translation_domain -%}
+    {%- endif -%}
+    {# following copied from form_div_layout.html.twig #}
+    {%- if translation_domain is same as(false) -%}
+        {%- if help_html is same as(false) -%}
+            {{- help -}}
+        {%- else -%}
+            {{- help|raw -}}
+        {%- endif -%}
+    {%- else -%}
+        {%- if help_html is same as(false) -%}
+            {{- help|trans(help_translation_parameters, translation_domain) -}}
+        {%- else -%}
+            {{- help|trans(help_translation_parameters, translation_domain)|raw -}}
+        {%- endif -%}
+    {%- endif -%}
+{%- endblock form_help_content %}

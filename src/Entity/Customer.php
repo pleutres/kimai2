@@ -45,7 +45,7 @@ class Customer implements EntityWithMetaFields, EntityWithBudget
     #[Serializer\Expose]
     #[Serializer\Groups(['Default'])]
     #[Exporter\Expose(label: 'name')]
-    private ?string $name;
+    private ?string $name = null;
     #[ORM\Column(name: 'number', type: 'string', length: 50, nullable: true)]
     #[Assert\Length(max: 50)]
     #[Serializer\Expose]
@@ -171,7 +171,7 @@ class Customer implements EntityWithMetaFields, EntityWithBudget
     #[ORM\JoinTable(name: 'kimai2_customers_teams')]
     #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'team_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToMany(targetEntity: 'App\Entity\Team', cascade: ['persist', 'remove'], inversedBy: 'customers')]
+    #[ORM\ManyToMany(targetEntity: 'App\Entity\Team', cascade: ['persist'], inversedBy: 'customers')]
     #[Serializer\Expose]
     #[Serializer\Groups(['Customer'])]
     #[OA\Property(type: 'array', items: new OA\Items(ref: '#/components/schemas/Team'))]

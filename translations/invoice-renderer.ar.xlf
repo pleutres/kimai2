@@ -18,14 +18,6 @@
         <source>service-date</source>
         <target>مستقل</target>
       </trans-unit>
-      <trans-unit id="1GruCMx" resname="export">
-        <source>export</source>
-        <target>تصدير البيانات</target>
-      </trans-unit>
-      <trans-unit id="nA.KOyM" resname="Html">
-        <source>Html</source>
-        <target>HTML (للطباعة عبر المتصفح)</target>
-      </trans-unit>
       <trans-unit id="N6juwc4" resname="default">
         <source>default</source>
         <target>فاتورة</target>
@@ -41,6 +33,10 @@
       <trans-unit id="E5BwZHT" resname="programmatic">
         <source>programmatic</source>
         <target state="translated">لمزيد من المعالجة</target>
+      </trans-unit>
+      <trans-unit id="22pt8Gs" resname="download_invoice_renderer">
+        <source>download_invoice_renderer</source>
+        <target state="translated">يمكنك تنزيل المزيد من النماذج هنا</target>
       </trans-unit>
     </body>
   </file>

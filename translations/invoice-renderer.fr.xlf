@@ -18,14 +18,6 @@
         <source>service-date</source>
         <target>Freelancer</target>
       </trans-unit>
-      <trans-unit id="1GruCMx" resname="export">
-        <source>export</source>
-        <target>Export des données</target>
-      </trans-unit>
-      <trans-unit id="nA.KOyM" resname="Html">
-        <source>Html</source>
-        <target>HTML (pour l'impression via le navigateur)</target>
-      </trans-unit>
       <trans-unit id="7mEUv6C" resname="help.upload">
         <source>help.upload</source>
         <target>Attention : les fichiers existants seront écrasés. Les types de fichiers autorisés sont : %extensions%.</target>
@@ -41,6 +33,10 @@
       <trans-unit id="mC2ePrm" resname="text">
         <source>text</source>
         <target>Texte</target>
+      </trans-unit>
+      <trans-unit id="22pt8Gs" resname="download_invoice_renderer">
+        <source>download_invoice_renderer</source>
+        <target state="translated">Vous pouvez télécharger davantage de modèles ici</target>
       </trans-unit>
     </body>
   </file>

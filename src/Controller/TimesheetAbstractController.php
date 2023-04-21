@@ -88,6 +88,7 @@ abstract class TimesheetAbstractController extends AbstractController
 
         if ($canSeeRate) {
             $table->addColumn('hourlyRate', ['class' => 'text-end d-none text-nowrap']);
+            $table->addColumn('internalRate', ['class' => 'text-end text-nowrap d-none d-md-table-cell']);
             $table->addColumn('rate', ['class' => 'text-end text-nowrap']);
         }
 
@@ -113,6 +114,7 @@ abstract class TimesheetAbstractController extends AbstractController
         $page->setActionName($this->getActionName());
 
         return $this->render('timesheet/index.html.twig', [
+            'view_rate' => $canSeeRate,
             'page_setup' => $page,
             'dataTable' => $table,
             'action_single' => $this->getActionNameSingle(),
@@ -278,15 +280,19 @@ abstract class TimesheetAbstractController extends AbstractController
         ]);
     }
 
-    protected function multiUpdate(Request $request)
+    protected function multiUpdate(Request $request): Response
     {
         $dto = new TimesheetMultiUpdateDTO();
 
         // initial request from the listing posts a different form
         $form = $this->getMultiUpdateActionForm();
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $dto->setEntities($form->getData()->getEntities());
+            $data = $form->getData();
+            if ($data instanceof MultiUpdateTableDTO) {
+                $dto->setEntities($data->getEntities());
+            }
         }
 
         // using a new timesheet to make sure we ONLY use meta-fields which are registered via events
@@ -319,14 +325,14 @@ abstract class TimesheetAbstractController extends AbstractController
 
         $dto->setEntities($timesheets);
 
-        if (\count($dto->getEntities()) === 0) {
+        if (\count($timesheets) === 0) {
             return $this->redirectToRoute($this->getTimesheetRoute());
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Timesheet $timesheet */
             $execute = false;
-            foreach ($dto->getEntities() as $timesheet) {
+            /** @var Timesheet $timesheet */
+            foreach ($timesheets as $timesheet) {
                 if ($dto->isReplaceTags()) {
                     foreach ($timesheet->getTags() as $tag) {
                         $timesheet->removeTag($tag);
@@ -389,13 +395,17 @@ abstract class TimesheetAbstractController extends AbstractController
 
             if ($execute) {
                 try {
-                    $this->service->updateMultipleTimesheets($dto->getEntities());
+                    $this->service->updateMultipleTimesheets($timesheets);
                     $this->flashSuccess('action.update.success');
 
                     return $this->redirectToRoute($this->getTimesheetRoute());
                 } catch (\Exception $ex) {
                     $this->flashUpdateException($ex);
                 }
+            } else {
+                $this->flashSuccess(sprintf('No changes for %s entries detected.', \count($timesheets)));
+
+                return $this->redirectToRoute($this->getTimesheetRoute());
             }
         }
 

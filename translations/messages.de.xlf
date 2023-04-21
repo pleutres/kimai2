@@ -1081,6 +1081,14 @@
         <source>invoice.service_date</source>
         <target>Leistungsdatum</target>
       </trans-unit>
+      <trans-unit id="NOEx3FF" resname="invoice_date.help">
+        <source>invoice_date.help</source>
+        <target>Hier können Sie das Rechnungsdatum ändern</target>
+      </trans-unit>
+      <trans-unit id="F7xeAn4" resname="invoice_date">
+        <source>invoice_date</source>
+        <target>Rechnungsdatum</target>
+      </trans-unit>
       <trans-unit id="zzjZXJx" resname="amount">
         <source>amount</source>
         <target>Anzahl</target>
@@ -1144,6 +1152,18 @@
       <trans-unit id="gT9W2pZ" resname="status.canceled">
         <source>status.canceled</source>
         <target>Storniert</target>
+      </trans-unit>
+      <trans-unit id="Zngu6M9" resname="status.planned">
+        <source>status.planned</source>
+        <target>Geplant</target>
+      </trans-unit>
+      <trans-unit id="m8V2yFG" resname="status.progress">
+        <source>status.progress</source>
+        <target>In Bearbeitung</target>
+      </trans-unit>
+      <trans-unit id="HF70hZq" resname="status.closed">
+        <source>status.closed</source>
+        <target>Erledigt</target>
       </trans-unit>
       <trans-unit id="crrlEUA" resname="preview.skipped_rows">
         <source>preview.skipped_rows</source>
@@ -1367,7 +1387,7 @@
       </trans-unit>
       <trans-unit id="JSBReoa" resname="api_password.intro">
         <source>api_password.intro</source>
-        <target>Das API Passwort dient zur Kommunikation zwischen Kimai und von Ihnen genutzten Apps.</target>
+        <target state="translated">Das API Passwort dient zur Kommunikation zwischen Kimai und von Ihnen genutzten Apps</target>
       </trans-unit>
       <trans-unit id="QT8.BCN" resname="api_password.missing_title">
         <source>api_password.missing_title</source>
@@ -1408,6 +1428,22 @@
       <trans-unit id="3Clo55j" resname="about.title">
         <source>about.title</source>
         <target>Über Kimai</target>
+      </trans-unit>
+      <trans-unit id="i_XOmN4" resname="help_locales">
+        <source>help_locales</source>
+        <target>Unterstützte Sprachen mit Formatierungsregeln</target>
+      </trans-unit>
+      <trans-unit id="JmkKf48" resname="user.language.help">
+        <source>user.language.help</source>
+        <target state="translated">Diese Einstellung ist neben der Übersetzung der Oberfläche ebenso zuständig für die Zeit-, Datums-, und Währungsformate.</target>
+      </trans-unit>
+      <trans-unit id="ulgdXdi" resname="hour_24">
+        <source>hour_24</source>
+        <target>24-Stunden</target>
+      </trans-unit>
+      <trans-unit id="M2B0gF." resname="time">
+        <source>time</source>
+        <target>Uhrzeit</target>
       </trans-unit>
     </body>
   </file>

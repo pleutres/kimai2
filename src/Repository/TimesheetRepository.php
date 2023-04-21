@@ -51,10 +51,10 @@ class TimesheetRepository extends EntityRepository
     /**
      * Fetches the raw data of a timesheet, to allow comparison e.g. of submitted and previously stored data.
      *
-     * @param Timesheet $id
+     * @param int $id
      * @return array
      */
-    public function getRawData(Timesheet $id): array
+    public function getRawData(int $id): array
     {
         $qb = $this->createQueryBuilder('t');
         $qb
@@ -76,26 +76,6 @@ class TimesheetRepository extends EntityRepository
         ;
 
         return $qb->getQuery()->getOneOrNullResult();
-    }
-
-    /**
-     * @param mixed $id
-     * @param null $lockMode
-     * @param null $lockVersion
-     * @return Timesheet|null
-     */
-    public function find($id, $lockMode = null, $lockVersion = null): ?Timesheet
-    {
-        /** @var Timesheet|null $timesheet */
-        $timesheet = parent::find($id, $lockMode, $lockVersion);
-        if (null === $timesheet) {
-            return null;
-        }
-
-        $loader = new TimesheetLoader($this->getEntityManager());
-        $loader->loadResults([$timesheet]);
-
-        return $timesheet;
     }
 
     public function delete(Timesheet $timesheet): void
@@ -378,7 +358,9 @@ class TimesheetRepository extends EntityRepository
      *
      * Should a teamlead:
      * 1. see all records of his team-members, even if they recorded times for projects invisible to him
-     * 2. only see records for projects which can be accessed by hom (current situation)
+     * 2. only see records for projects which can be accessed by him (current situation)
+     *
+     * @param array<Team> $teams
      */
     private function addPermissionCriteria(QueryBuilder $qb, ?User $user = null, array $teams = []): bool
     {
@@ -657,6 +639,7 @@ class TimesheetRepository extends EntityRepository
     public function getRecentActivities(User $user, DateTime $startFrom = null, int $limit = 10): array
     {
         return $this->findTimesheetsById(
+            $user,
             $this->getRecentActivityIds($user, $startFrom, $limit)
         );
     }
@@ -673,13 +656,11 @@ class TimesheetRepository extends EntityRepository
 
         // do NOT join the customer and do NOT check the customer visibility, as this
         // will dramatically increase the speed of this (otherwise slow) query
-        // ->join('p.customer', 'c')
         // ->andWhere($qb->expr()->eq('c.visible', ':visible'))
 
         // you might want to join activity and project to check their visibility
         // but for now this is way slower than simply fetching more items
         //
-        // ->join('t.project', 'p')
         // ->andWhere($qb->expr()->eq('p.visible', ':visible'))
         // ->join('t.activity', 'a')
         // ->andWhere($qb->expr()->eq('a.visible', ':visible'))
@@ -700,6 +681,11 @@ class TimesheetRepository extends EntityRepository
                 ->setParameter('begin', $startFrom);
         }
 
+        $qb->join('t.project', 'p');
+        $qb->join('p.customer', 'c');
+
+        $this->addPermissionCriteria($qb, $user);
+
         $results = $qb->getQuery()->getScalarResult();
 
         if (empty($results)) {
@@ -710,10 +696,13 @@ class TimesheetRepository extends EntityRepository
     }
 
     /**
+     * @param User $user
      * @param array<int> $ids
+     * @param bool $fullyHydrated
+     * @param bool $basicHydrated
      * @return array<Timesheet>
      */
-    public function findTimesheetsById(array $ids, bool $fullyHydrated = false, bool $basicHydrated = true): array
+    public function findTimesheetsById(User $user, array $ids, bool $fullyHydrated = false, bool $basicHydrated = true): array
     {
         if (\count($ids) === 0) {
             return [];
@@ -725,6 +714,11 @@ class TimesheetRepository extends EntityRepository
             ->andWhere($qb->expr()->in('t.id', $ids))
             ->orderBy('t.end', 'DESC')
         ;
+
+        $qb->join('t.project', 'p');
+        $qb->join('p.customer', 'c');
+
+        $this->addPermissionCriteria($qb, $user);
 
         return $this->getHydratedResultsByQuery($qb, $fullyHydrated, $basicHydrated);
     }

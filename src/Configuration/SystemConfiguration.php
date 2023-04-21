@@ -13,7 +13,7 @@ final class SystemConfiguration
 {
     private bool $initialized = false;
 
-    public function __construct(private ConfigLoaderInterface $repository, private ?array $settings)
+    public function __construct(private ConfigLoaderInterface $repository, private array $settings = [])
     {
     }
 
@@ -23,8 +23,8 @@ final class SystemConfiguration
             return;
         }
 
-        foreach ($this->repository->getConfigurations() as $configuration) {
-            $this->set($configuration->getName(), $configuration->getValue());
+        foreach ($this->repository->getConfigurations() as $key => $value) {
+            $this->set($key, $value);
         }
 
         $this->initialized = true;
@@ -35,7 +35,6 @@ final class SystemConfiguration
      *
      * If no key is given to the method, the entire array will be replaced.
      *
-     * @see https://github.com/divineomega/array_undot
      * @param string $key
      * @param mixed $value
      * @return void
@@ -70,6 +69,7 @@ final class SystemConfiguration
     /**
      * This method should be avoided if possible, use plain keys instead.
      *
+     * @see https://github.com/divineomega/array_undot
      * @param string $key
      * @return array
      */
@@ -216,6 +216,40 @@ final class SystemConfiguration
     public function isSamlRolesResetOnLogin(): bool
     {
         return (bool) $this->find('saml.roles.resetOnLogin');
+    }
+
+    /**
+     * @return array<int, array<'saml'|'kimai', string>>
+     */
+    public function getSamlRolesMapping(): array
+    {
+        return $this->findArray('saml.roles.mapping');
+    }
+
+    /**
+     * @return array<string, array<mixed>|bool>
+     */
+    public function getSamlConnection(): array
+    {
+        return $this->findArray('saml.connection');
+    }
+
+    /**
+     * @return array<int, array<'saml'|'kimai', string>>
+     */
+    public function getSamlAttributeMapping(): array
+    {
+        return $this->findArray('saml.mapping');
+    }
+
+    public function getSamlRolesAttribute(): ?string
+    {
+        $attr = $this->find('saml.roles.attribute');
+        if (empty($attr)) {
+            return null;
+        }
+
+        return (string) $attr;
     }
 
     public function isLdapActive(): bool

@@ -14,6 +14,7 @@ Perform EACH version specific task between your version and the new one, otherwi
 
 Developer read the full documentation at [https://www.kimai.org/documentation/migration-v2.html](https://www.kimai.org/documentation/migration-v2.html).
 
+- **All plugins need to be updated**: delete all previous version from your installation (`rm -r var/plugins/*`) before updating!
 - Invoice renderer and templates for XML, JSON and TEXT were moved to the [Extended invoicing plugin](https://www.kimai.org/store/invoice-bundle.html) (install if you use one of those)
 - Moved `company.docx` to [external repo](https://github.com/kimai/invoice-templates/tree/main/docx-company) (needs to be re-uploaded if you want to keep on using it!)
 - Role names are forced to be uppercase 
@@ -22,7 +23,7 @@ Developer read the full documentation at [https://www.kimai.org/documentation/mi
   - dashboard default config
   - removed: theme.branding.translation
   - removed: kimai.plugin_dir
-- Time-tracking mode `duration_only` was removed, existing installations will be switched to `default`
+- Time-tracking mode `duration_only` was removed, existing installations will be switched to `duration_fixed_begin`
 - Removed Twig filters. You might have to replace them in your custom export/invoice templates:
   - `date_full` => `date_time`
   - `duration_decimal` => `duration(true)`

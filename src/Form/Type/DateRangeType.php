@@ -62,6 +62,7 @@ final class DateRangeType extends AbstractType
         $factory = DateTimeFactory::createByUser($user);
 
         $view->vars['ranges'] = [
+            'today' => [$factory->createDateTime('00:00:00'), $factory->createDateTime('23:59:59')],
             'yesterday' => [$factory->createDateTime('-1 day 00:00:00'), $factory->createDateTime('-1 day 23:59:59')],
             'thisWeek' => [$factory->getStartOfWeek(), $factory->getEndOfWeek()],
             'lastWeek' => [$factory->getStartOfWeek('-1 week'), $factory->getEndOfWeek('-1 week')],
@@ -131,6 +132,10 @@ final class DateRangeType extends AbstractType
 
                 if (empty($dates) && $allowEmpty) {
                     return $range;
+                }
+
+                if ($dates === null) {
+                    throw new TransformationFailedException('Date range missing');
                 }
 
                 if (preg_match($pattern, $dates) !== 1) {

@@ -22,17 +22,9 @@
         <source>service-date</source>
         <target state="translated">Frilansare</target>
       </trans-unit>
-      <trans-unit id="1GruCMx" resname="export">
-        <source>export</source>
-        <target state="translated">Exportera data</target>
-      </trans-unit>
       <trans-unit id="E5BwZHT" resname="programmatic">
         <source>programmatic</source>
         <target state="translated">För ytterligare bearbetning</target>
-      </trans-unit>
-      <trans-unit id="nA.KOyM" resname="Html">
-        <source>Html</source>
-        <target state="translated">HTML (för utskrift från webbläsare)</target>
       </trans-unit>
       <trans-unit id="N6juwc4" resname="default">
         <source>default</source>
@@ -41,6 +33,10 @@
       <trans-unit id="mC2ePrm" resname="text">
         <source>text</source>
         <target state="translated">Text</target>
+      </trans-unit>
+      <trans-unit id="22pt8Gs" resname="download_invoice_renderer">
+        <source>download_invoice_renderer</source>
+        <target state="translated">Du kan ladda ner ytterligare mallar här</target>
       </trans-unit>
     </body>
   </file>

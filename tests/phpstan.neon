@@ -1043,11 +1043,6 @@ parameters:
             path: API/ProjectControllerTest.php
 
         -
-            message: "#^Parameter \\#1 \\$customer of method App\\\\Entity\\\\Project\\:\\:setCustomer\\(\\) expects App\\\\Entity\\\\Customer, App\\\\Entity\\\\Customer\\|null given\\.$#"
-            count: 3
-            path: API/ProjectControllerTest.php
-
-        -
             message: "#^Parameter \\#1 \\$customer of method App\\\\Entity\\\\Team\\:\\:addCustomer\\(\\) expects App\\\\Entity\\\\Customer, App\\\\Entity\\\\Customer\\|null given\\.$#"
             count: 1
             path: API/ProjectControllerTest.php
@@ -1208,151 +1203,6 @@ parameters:
             path: API/TeamControllerTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:getRoleTestData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteActionWithUnknownTeam\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteActivityAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteActivityActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteCustomerAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteCustomerActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteMemberAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteMemberActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteProjectAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testDeleteProjectActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testGetCollection\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testGetEntity\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testIsSecureForRole\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPatchAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPatchActionWithValidationErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostActionWithInvalidUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostActionWithValidationErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostActivityAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostActivityActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostCustomerAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostCustomerActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostMemberAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostMemberActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostProjectAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TeamControllerTest\\:\\:testPostProjectActionErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TeamControllerTest.php
-
-        -
             message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
             count: 38
             path: API/TeamControllerTest.php
@@ -1424,286 +1274,6 @@ parameters:
 
         -
             message: "#^Cannot call method isExported\\(\\) on App\\\\Entity\\\\Timesheet\\|null\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testActiveAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDeleteAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDeleteActionForDifferentUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDeleteActionForExportedRecordIsAllowedForAdmin\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDeleteActionForExportedRecordIsNotAllowed\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDeleteActionWithUnknownTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDeleteActionWithoutAuthorization\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDuplicateAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testDuplicateThrowsNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testExportAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testExportNotAllowedForUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testExportThrowsNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testExportedFilter\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollection\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionForAllUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionForEmptyResult\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionForOtherUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionFull\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionWithQuery\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionWithQueryFailsWith404OnOutOfRangedPage\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionWithSingleParamsQuery\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetCollectionWithTags\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetEntity\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetEntityAccessAllowedForAdmin\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetEntityAccessDenied\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetEntityNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testGetRecentAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testInvalidPatchAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testMetaAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testMetaActionThrowsExceptionOnMissingMetafield\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testMetaActionThrowsExceptionOnMissingName\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testMetaActionThrowsExceptionOnMissingValue\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testMetaActionThrowsNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPatchAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPatchActionWithInvalidUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPatchActionWithUnknownTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPostAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPostActionForDifferentUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPostActionWithFullExpandedResponse\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPostActionWithInvisibleActivity\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPostActionWithInvisibleProject\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPostActionWithNonBillableCustomer\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testPostActionWithNonBillableCustomerExplicit\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testRestartAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testRestartActionWithBegin\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testRestartActionWithCopyData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testRestartNotAllowedForUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testRestartThrowsNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testStopAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testStopActionTriggersValidationOnLongRunning\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testStopNotAllowedForUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TimesheetControllerTest\\:\\:testStopThrowsNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Parameter \\#1 \\$activity of method App\\\\Entity\\\\Timesheet\\:\\:setActivity\\(\\) expects App\\\\Entity\\\\Activity, App\\\\Entity\\\\Activity\\|null given\\.$#"
-            count: 1
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-            count: 32
-            path: API/TimesheetControllerTest.php
-
-        -
-            message: "#^Parameter \\#1 \\$project of method App\\\\Entity\\\\Timesheet\\:\\:setProject\\(\\) expects App\\\\Entity\\\\Project, App\\\\Entity\\\\Project\\|null given\\.$#"
             count: 1
             path: API/TimesheetControllerTest.php
 
@@ -2868,11 +2438,6 @@ parameters:
             path: Controller/CalendarControllerTest.php
 
         -
-            message: "#^Cannot call method findOneBy\\(\\) on object\\|null\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
             message: "#^Cannot call method getRepository\\(\\) on object\\|null\\.$#"
             count: 1
             path: Controller/ControllerBaseTest.php
@@ -2884,11 +2449,6 @@ parameters:
 
         -
             message: "#^Cannot call method push\\(\\) on object\\|null\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Cannot call method saveConfiguration\\(\\) on object\\|null\\.$#"
             count: 1
             path: Controller/ControllerBaseTest.php
 
@@ -3044,11 +2604,6 @@ parameters:
 
         -
             message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:clearConfigCache\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:getClientForAuthenticatedUser\\(\\) should return Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelBrowser but returns Symfony\\\\Bundle\\\\FrameworkBundle\\\\KernelBrowser\\|null\\.$#"
             count: 1
             path: Controller/ControllerBaseTest.php
 
@@ -3361,21 +2916,6 @@ parameters:
             message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
             count: 2
             path: Controller/ExportControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\FavoriteControllerTest\\:\\:testIndexAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/FavoriteControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\FavoriteControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/FavoriteControllerTest.php
-
-        -
-            message: "#^Parameter \\#2 \\$haystack of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
-            count: 2
-            path: Controller/FavoriteControllerTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Controller\\\\HomepageControllerTest\\:\\:testIndexAction\\(\\) has no return type specified\\.$#"
@@ -4268,73 +3808,8 @@ parameters:
             path: Controller/TagControllerTest.php
 
         -
-            message: "#^Cannot call method getCustomers\\(\\) on App\\\\Entity\\\\Team\\|null\\.$#"
-            count: 2
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Cannot call method getProjects\\(\\) on App\\\\Entity\\\\Team\\|null\\.$#"
-            count: 2
-            path: Controller/TeamControllerTest.php
-
-        -
             message: "#^Cannot call method getValue\\(\\) on array\\<array\\<Symfony\\\\Component\\\\DomCrawler\\\\Field\\\\FormField\\>\\|Symfony\\\\Component\\\\DomCrawler\\\\Field\\\\FormField\\>\\|Symfony\\\\Component\\\\DomCrawler\\\\Field\\\\FormField\\.$#"
             count: 4
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:assertHasCustomerAndProjectPermissionBoxes\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testCreateAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testDuplicateAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testEditAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testEditCustomerAccessAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testEditMemberAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testEditProjectAccessAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testIndexAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testIndexActionWithSearchTermQuery\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/TeamControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\TeamControllerTest\\:\\:testIsSecureForRole\\(\\) has no return type specified\\.$#"
-            count: 1
             path: Controller/TeamControllerTest.php
 
         -
@@ -4763,36 +4238,6 @@ parameters:
             path: Doctrine/TimesheetSubscriberTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Doctrine\\\\UTCDateTimeTypeTest\\:\\:getPlatforms\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Doctrine/UTCDateTimeTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Doctrine\\\\UTCDateTimeTypeTest\\:\\:testConvertToDatabaseValue\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Doctrine/UTCDateTimeTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Doctrine\\\\UTCDateTimeTypeTest\\:\\:testConvertToPHPValue\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Doctrine/UTCDateTimeTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Doctrine\\\\UTCDateTimeTypeTest\\:\\:testConvertToPHPValueWithInvalidValue\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Doctrine/UTCDateTimeTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Doctrine\\\\UTCDateTimeTypeTest\\:\\:testGetUtc\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Doctrine/UTCDateTimeTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Doctrine\\\\UTCDateTimeTypeTest\\:\\:testRequiresSQLCommentHint\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Doctrine/UTCDateTimeTypeTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Entity\\\\AbstractCommentEntityTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
             count: 1
             path: Entity/AbstractCommentEntityTest.php
@@ -5199,46 +4644,6 @@ parameters:
 
         -
             message: "#^Cannot call method getValue\\(\\) on App\\\\Entity\\\\MetaTableTypeInterface\\|null\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:getEntity\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:testBillable\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:testCategory\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:testClone\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:testMetaFields\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:testTags\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\TimesheetTest\\:\\:testValueCanBeNull\\(\\) has no return type specified\\.$#"
             count: 1
             path: Entity/TimesheetTest.php
 
@@ -7018,21 +6423,6 @@ parameters:
             path: Form/Extension/IconExtensionTest.php
 
         -
-            message: "#^Cannot call method format\\(\\) on DateTime\\|null\\.$#"
-            count: 2
-            path: Form/Model/DateRangeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Form\\\\Model\\\\DateRangeTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Form/Model/DateRangeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Form\\\\Model\\\\DateRangeTest\\:\\:testSetterAndGetter\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Form/Model/DateRangeTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Form\\\\Model\\\\SystemConfigurationTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
             count: 1
             path: Form/Model/SystemConfigurationTest.php
@@ -7568,31 +6958,6 @@ parameters:
             path: Invoice/InvoiceModelTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\NumberGenerator\\\\ConfigurableNumberGeneratorTest\\:\\:getInvalidTestData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/NumberGenerator/ConfigurableNumberGeneratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\NumberGenerator\\\\ConfigurableNumberGeneratorTest\\:\\:getSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/NumberGenerator/ConfigurableNumberGeneratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\NumberGenerator\\\\ConfigurableNumberGeneratorTest\\:\\:getTestData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/NumberGenerator/ConfigurableNumberGeneratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\NumberGenerator\\\\ConfigurableNumberGeneratorTest\\:\\:testGetInvoiceNumber\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/NumberGenerator/ConfigurableNumberGeneratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\NumberGenerator\\\\ConfigurableNumberGeneratorTest\\:\\:testInvalidGetInvoiceNumber\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/NumberGenerator/ConfigurableNumberGeneratorTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\NumberGenerator\\\\DateNumberGeneratorTest\\:\\:getSut\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/NumberGenerator/DateNumberGeneratorTest.php
@@ -8014,56 +7379,11 @@ parameters:
 
         -
             message: "#^Cannot call method getTotal\\(\\) on App\\\\Invoice\\\\CalculatorInterface\\|null\\.$#"
-            count: 2
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
+            count: 4
             path: Invoice/ServiceInvoiceTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:getSut\\(\\) has parameter \\$paths with no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testAdd\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testBeginAndEndDateFallback\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testCreateModelThrowsOnMissingTemplate\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testCreateModelUsesTemplateLanguage\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testCreateModelsSkipsModelsWithNegativeTotal\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testEmptyObject\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testInvalidExceptionOnChangeState\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/ServiceInvoiceTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\ServiceInvoiceTest\\:\\:testWithDocumentDirectory\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/ServiceInvoiceTest.php
 
@@ -9103,16 +8423,6 @@ parameters:
             path: Repository/TagRepositoryTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Repository\\\\TagRepositoryTest\\:\\:testFindIds\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Repository/TagRepositoryTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Repository\\\\TagRepositoryTest\\:\\:testFindNoIds\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Repository/TagRepositoryTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Repository\\\\TagRepositoryTest\\:\\:testFindNoTagNames\\(\\) has no return type specified\\.$#"
             count: 1
             path: Repository/TagRepositoryTest.php
@@ -9150,16 +8460,6 @@ parameters:
         -
             message: "#^Method App\\\\Tests\\\\Repository\\\\TimesheetRepositoryTest\\:\\:testSaveWithTags\\(\\) has no return type specified\\.$#"
             count: 1
-            path: Repository/TimesheetRepositoryTest.php
-
-        -
-            message: "#^Parameter \\#1 \\$activity of method App\\\\Entity\\\\Timesheet\\:\\:setActivity\\(\\) expects App\\\\Entity\\\\Activity, App\\\\Entity\\\\Activity\\|null given\\.$#"
-            count: 2
-            path: Repository/TimesheetRepositoryTest.php
-
-        -
-            message: "#^Parameter \\#1 \\$project of method App\\\\Entity\\\\Timesheet\\:\\:setProject\\(\\) expects App\\\\Entity\\\\Project, App\\\\Entity\\\\Project\\|null given\\.$#"
-            count: 2
             path: Repository/TimesheetRepositoryTest.php
 
         -

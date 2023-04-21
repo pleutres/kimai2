@@ -9,11 +9,11 @@
 
 namespace App\Tests\Controller;
 
+use App\Configuration\ConfigurationService;
 use App\DataFixtures\UserFixtures;
 use App\Entity\Configuration;
 use App\Entity\User;
 use App\Form\Type\DateRangeType;
-use App\Repository\ConfigurationRepository;
 use App\Repository\UserRepository;
 use App\Tests\KernelTestTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -89,9 +89,10 @@ abstract class ControllerBaseTest extends WebTestCase
 
     protected function setSystemConfiguration(string $name, $value): void
     {
-        $repository = self::getContainer()->get(ConfigurationRepository::class);
+        /** @var ConfigurationService $repository */
+        $repository = self::getContainer()->get(ConfigurationService::class);
 
-        $entity = $repository->findOneBy(['name' => $name]);
+        $entity = $repository->getConfiguration($name);
         if ($entity === null) {
             $entity = new Configuration();
             $entity->setName($name);
@@ -103,45 +104,32 @@ abstract class ControllerBaseTest extends WebTestCase
 
     protected function clearConfigCache()
     {
-        /** @var ConfigurationRepository $repository */
-        $repository = self::getContainer()->get(ConfigurationRepository::class);
-        $repository->clearCache();
+        /** @var ConfigurationService $service */
+        $service = self::getContainer()->get(ConfigurationService::class);
+        $service->clearCache();
     }
 
     protected function getClientForAuthenticatedUser(string $role = User::ROLE_USER): HttpKernelBrowser
     {
-        switch ($role) {
-            case User::ROLE_SUPER_ADMIN:
-                $client = self::createClient([], [
-                    'PHP_AUTH_USER' => UserFixtures::USERNAME_SUPER_ADMIN,
-                    'PHP_AUTH_PW' => UserFixtures::DEFAULT_PASSWORD,
-                ]);
-                break;
+        $username = match ($role) {
+            User::ROLE_SUPER_ADMIN => UserFixtures::USERNAME_SUPER_ADMIN,
+            User::ROLE_ADMIN => UserFixtures::USERNAME_ADMIN,
+            User::ROLE_TEAMLEAD => UserFixtures::USERNAME_TEAMLEAD,
+            User::ROLE_USER => UserFixtures::USERNAME_USER,
+            default => null,
+        };
 
-            case User::ROLE_ADMIN:
-                $client = self::createClient([], [
-                    'PHP_AUTH_USER' => UserFixtures::USERNAME_ADMIN,
-                    'PHP_AUTH_PW' => UserFixtures::DEFAULT_PASSWORD,
-                ]);
-                break;
+        $client = static::createClient();
 
-            case User::ROLE_TEAMLEAD:
-                $client = self::createClient([], [
-                    'PHP_AUTH_USER' => UserFixtures::USERNAME_TEAMLEAD,
-                    'PHP_AUTH_PW' => UserFixtures::DEFAULT_PASSWORD,
-                ]);
-                break;
+        if ($username !== null) {
+            /** @var UserRepository $userRepository */
+            $userRepository = $this->getPrivateService(UserRepository::class);
+            $user = $userRepository->findByUsername($username);
+            if ($user === null) {
+                throw new \Exception('Unknown user: ' . $username);
+            }
 
-            case User::ROLE_USER:
-                $client = self::createClient([], [
-                    'PHP_AUTH_USER' => UserFixtures::USERNAME_USER,
-                    'PHP_AUTH_PW' => UserFixtures::DEFAULT_PASSWORD,
-                ]);
-                break;
-
-            default:
-                $client = null;
-                break;
+            $client->loginUser($user, 'secured_area');
         }
 
         return $client;
