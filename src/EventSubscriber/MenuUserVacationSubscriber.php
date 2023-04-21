@@ -25,7 +25,7 @@ class MenuUserVacationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ConfigureMainMenuEvent::CONFIGURE => ['onAdminMenuConfigure', 100],
+            ConfigureMainMenuEvent::class => ['onAdminMenuConfigure', 100],
         ];
     }
 

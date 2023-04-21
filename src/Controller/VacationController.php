@@ -14,15 +14,13 @@ use App\Export\UserInvoice\XlsxRenderer;
 use App\Repository\UserRepository;
 use DateTime;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Route(path="/admin/uservacation")
- * @Security("is_granted('view_activity')")
- */
+#[Route(path: '/admin/uservacation')]
+#[IsGranted ('view_activity')]
 class VacationController extends AbstractController
 {
 
@@ -42,12 +40,12 @@ class VacationController extends AbstractController
     }
 
     /**
-     * @Route(path="/", defaults={"page": 1}, name="vacation_user_admin", methods={"GET"})
-     * @Security("is_granted('view_other_timesheet')")
      *
      * @param Request $request
      * @return Response
      */
+    #[Route(path: '/', name: 'vacation_user_admin', methods: ['GET'])]
+    #[IsGranted('view_other_timesheet')]
     public function index($page, Request $request)
     {
         $years = [];
