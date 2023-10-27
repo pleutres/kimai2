@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/admin/userinvoice')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[IsGranted ('view_activity')]
 class UserInvoiceController extends AbstractController
 {
@@ -35,19 +36,18 @@ class UserInvoiceController extends AbstractController
      * @param TimesheetRepository $timesheet
      * @param ServiceExport $export
      */
-    public function __construct(XlsxRenderer $renderer, LoggerInterface $logger = null)
+    public function __construct(private TimesheetRepository $timesheetRepository, XlsxRenderer $renderer, LoggerInterface $logger = null)
     {
         $this->renderer = $renderer;
         $this->logger = $logger;
     }
 
     /**
-     * @param Request $request
      * @return Response
      */
     #[Route(path: '/', name: 'invoice_user_admin', methods: ['GET'])]
     #[IsGranted('view_other_timesheet')]
-    public function index($page, Request $request)
+    public function indexAction(): Response
     {
 
         $monthlyStats = $this->getMonthlyStatsWithFees();
@@ -84,10 +84,9 @@ class UserInvoiceController extends AbstractController
      */
     public function getMonthlyStatsWithFees(User $user = null, ?DateTime $begin = null, ?DateTime $end = null)
     {
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $qb = $this->timesheetRepository->createQueryBuilder('t');
 
         $qb->select('SUM(t.rate) as rate, SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, user.alias as ualias, SUM(meta.value) as fees')
-            ->from(Timesheet::class, 't')
             ->leftJoin('t.user', 'user')
             ->leftJoin('t.meta', 'meta')
         ;

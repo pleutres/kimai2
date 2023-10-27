@@ -20,23 +20,25 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(path: '/admin/uservacation')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[IsGranted ('view_activity')]
 class VacationController extends AbstractController
 {
 
     private $renderer;
     private $logger;
-    private $userRepository;
 
     /**
      * @param TimesheetRepository $timesheet
      * @param ServiceExport $export
      */
-    public function __construct(XlsxRenderer $renderer, LoggerInterface $logger = null, UserRepository $repository)
+    public function __construct(private TimesheetRepository $timesheetRepository,
+                                private UserRepository $userRepository,
+                                XlsxRenderer $renderer,
+                                LoggerInterface $logger = null,)
     {
         $this->renderer = $renderer;
         $this->logger = $logger;
-        $this->userRepository = $repository;
     }
 
     /**
@@ -46,17 +48,18 @@ class VacationController extends AbstractController
      */
     #[Route(path: '/', name: 'vacation_user_admin', methods: ['GET'])]
     #[IsGranted('view_other_timesheet')]
-    public function index($page, Request $request)
+    public function indexAction(): Response
     {
         $years = [];
         $startDate = DateTime::createFromFormat('Y-m-d H:i:s', '2021-06-29 00:00:00');
-        $user = $this->userRepository->loadUserbyUsername('simon');
+        $user = $this->userRepository->loadUserbyIdentifier('simon');
         $this->getMonthlyActivity($years, 'vacation', 'Vacation', 'Vacation', $user, $startDate);
         $this->getMonthlyActivity($years, 'rtt', 'Vacation','RTT', $user, $startDate);
 
         $yearsGlobal = [];
         $this->getMonthlyActivity($yearsGlobal, 'total', null, null, $user, $startDate);
 
+        krsort($years);
         $viewVars = [
             'years' => $years,
             'yearsGlobal' => $years,
@@ -75,10 +78,9 @@ class VacationController extends AbstractController
      */
     public function getMonthlyActivity(&$years, $setter, $project = null, $activity = null, User $user = null, ?DateTime $begin = null, ?DateTime $end = null)
     {
-        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $qb = $this->timesheetRepository->createQueryBuilder('t');
 
         $qb->select('SUM(t.duration) as duration, MONTH(t.begin) as month, YEAR(t.begin) as year, DAY(t.begin) as day, user.alias as ualias')
-            ->from(Timesheet::class, 't')
             ->leftJoin('t.user', 'user')
             ->leftJoin('t.activity', 'activity')
             ->leftJoin('t.project', 'project')

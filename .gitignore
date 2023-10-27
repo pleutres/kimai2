@@ -67,4 +67,5 @@ php.ini
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
-/nbproject/*
+/nbproject/*public/build
+public/build/*

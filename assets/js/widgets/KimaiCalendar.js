@@ -129,6 +129,7 @@ export default class KimaiCalendar {
                 center: 'dayGridMonth,timeGridWeek,timeGridDay',
                 end: 'today prev,next'
             },
+            displayEventTime: false,
             direction: this.kimai.getConfiguration().get('direction'),
             locale: this.kimai.getConfiguration().getLanguage().toLowerCase(),
 
@@ -186,12 +187,15 @@ export default class KimaiCalendar {
                 }
             },
 
+
+
             // ============= POPOVER =============
             viewClassNames: () => {
                 document.querySelector('.fc-dayGridMonth-button').classList.remove('btn-icon');
                 document.querySelector('.fc-timeGridWeek-button').classList.remove('btn-icon');
                 document.querySelector('.fc-timeGridDay-button').classList.remove('btn-icon');
             },
+
 
             // DESTROY TO PREVENT MEMORY LEAKS
             eventWillUnmount: (unmountInfo) => {
@@ -245,9 +249,27 @@ export default class KimaiCalendar {
                 this.hidePopover(mouseLeaveInfo.el);
             },
 
+            /* Add Hexagon */
+            datesSet: function(dateInfo) {
+                document.querySelector(".fc-col-header-cell.fc-day").forEach(element => {
+                    var dateYMD = element.attr("data-date");
+                    element.append("<div class='fc-dailytotal' id='dailytotal-" + dateYMD + "'></div>");
+                });
+                document.querySelector(".fc-dailytotal").html(0);
+            },
+            /* Add Hexagon */
+
             // ContextMenu
             eventDidMount: (arg) => {
-                arg.el.addEventListener('contextmenu', (jsEvent) => {
+                    /* Add Hexagon */
+                    var currentday = DATES.formatAsDuration(arg.event.start);
+                    if (info.event._def.extendedProps.totalhrs > 0) {
+                        var prev = parseInt($("#dailytotal-" + currentday).html()) || 0;
+                        document.querySelector("#dailytotal-" + currentday).html(prev + arg.event._def.extendedProps.totalhrs);
+                        console.log(arg.event._def.extendedProps.totalhrs);
+                    }
+                    /* Add Hexagon */
+                    arg.el.addEventListener('contextmenu', (jsEvent) => {
                     jsEvent.preventDefault();
                     const event = arg.event;
                     if (!event.allDay) {
