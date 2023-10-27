@@ -4,6 +4,26 @@
 {% import "user/actions.html.twig" as actions %}
 
 
+{% block table_actions %}
+{{ form_start(form) }}
+    <div class="fx-row-center-center">
+        <div class="hx-form-field">
+            {{ form_row(form.username) }}
+        </div>
+        <div  class="hx-form-field">
+            {{ form_row(form.year) }}
+        </div>
+        <div class="hx-form-field hx-form-submit">
+            {{ form_row(form.save) }}
+        </div>
+    </div>
+{{ form_end(form) }}
+
+
+
+{% endblock %}
+
+
 {% block main %}
 
 <table class="table">

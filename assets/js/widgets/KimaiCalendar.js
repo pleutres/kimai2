@@ -8,14 +8,14 @@
 /*!
  * [KIMAI] KimaiCalendar: wrapping Fullcalendar.io
  */
-import { Popover } from 'bootstrap';
-import { Calendar } from '@fullcalendar/core';
+import {Popover} from 'bootstrap';
+import {Calendar} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import bootstrap5Plugin, { BootstrapTheme } from '@fullcalendar/bootstrap5';
+import bootstrap5Plugin, {BootstrapTheme} from '@fullcalendar/bootstrap5';
 import googlePlugin from '@fullcalendar/google-calendar';
 import iCalendarPlugin from '@fullcalendar/icalendar'
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import interactionPlugin, {Draggable} from '@fullcalendar/interaction';
 import arLocale from '@fullcalendar/core/locales/ar';
 import csLocale from '@fullcalendar/core/locales/cs';
 import daLocale from '@fullcalendar/core/locales/da';
@@ -49,6 +49,7 @@ import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import enUsLocale from '@fullcalendar/core/locales/en-gb';
 import KimaiColor from './KimaiColor';
 import KimaiContextMenu from "./KimaiContextMenu";
+import {DateTime} from 'luxon';
 
 export default class KimaiCalendar {
 
@@ -116,10 +117,10 @@ export default class KimaiCalendar {
         };
 
         let calendarOptions = {
-            locales: [ enGbLocale, enUsLocale, arLocale, csLocale, daLocale, deLocale, deAtLocale, elLocale,
+            locales: [enGbLocale, enUsLocale, arLocale, csLocale, daLocale, deLocale, deAtLocale, elLocale,
                 esLocale, euLocale, faLocale, fiLocale, frLocale, heLocale, hrLocale, huLocale, itLocale, jaLocale, koLocale,
-                nbLocale, nlLocale, plLocale, ptLocale, ptBrLocale, roLocale, ruLocale, skLocale, svLocale, trLocale, zhLocale, viLocale ],
-            plugins: [ bootstrap5Plugin, dayGridPlugin, timeGridPlugin, googlePlugin, iCalendarPlugin, interactionPlugin ],
+                nbLocale, nlLocale, plLocale, ptLocale, ptBrLocale, roLocale, ruLocale, skLocale, svLocale, trLocale, zhLocale, viLocale],
+            plugins: [bootstrap5Plugin, dayGridPlugin, timeGridPlugin, googlePlugin, iCalendarPlugin, interactionPlugin],
             initialView: initialView,
             // https://fullcalendar.io/docs/theming
             themeSystem: 'bootstrap5',
@@ -186,7 +187,6 @@ export default class KimaiCalendar {
                     dayMaxEventRows: this.options['dayLimit']
                 }
             },
-
 
 
             // ============= POPOVER =============
@@ -258,26 +258,21 @@ export default class KimaiCalendar {
             },
 
             /* Add Hexagon */
-            datesSet: function(dateInfo) {
-                document.querySelector(".fc-col-header-cell.fc-day").forEach(element => {
-                    var dateYMD = element.attr("data-date");
-                    element.append("<div class='fc-dailytotal' id='dailytotal-" + dateYMD + "'></div>");
-                });
-                document.querySelector(".fc-dailytotal").html(0);
-            },
-            /* Add Hexagon */
+            eventContent: (arg) => {
+                var currentDuration = DateTime.fromJSDate(arg.event.end).diff(DateTime.fromJSDate(arg.event.start), ['hours', 'minutes']);
+                var durationAsTest = DATES.formatAsDuration(currentDuration.get('hours'), currentDuration.get('minutes'));
 
-            // ContextMenu
+                let content= '<div style="width:100%; overflow:hidden; background-color:' + arg.event.backgroundColor + '">'  ;
+                content+='<div>' + arg.event.extendedProps.activity  + '</div>';
+                content+='<div><i>' + arg.event.extendedProps.project  + '</i></div>';
+                content+='<div style="width:100%; text-align:right"><b>' + durationAsTest  + '</b></div>';
+                content+='</div>';
+                return {html: content};
+            },
+            /* End Add Hexagon */
+
             eventDidMount: (arg) => {
-                    /* Add Hexagon */
-                    var currentday = DATES.formatAsDuration(arg.event.start);
-                    if (info.event._def.extendedProps.totalhrs > 0) {
-                        var prev = parseInt($("#dailytotal-" + currentday).html()) || 0;
-                        document.querySelector("#dailytotal-" + currentday).html(prev + arg.event._def.extendedProps.totalhrs);
-                        console.log(arg.event._def.extendedProps.totalhrs);
-                    }
-                    /* Add Hexagon */
-                    arg.el.addEventListener('contextmenu', (jsEvent) => {
+                arg.el.addEventListener('contextmenu', (jsEvent) => {
                     jsEvent.preventDefault();
                     const event = arg.event;
                     if (!event.allDay) {
@@ -285,7 +280,9 @@ export default class KimaiCalendar {
                         API.get(url, {}, result => {
                             const contextMenu = new KimaiContextMenu('calendar_contextMenu');
                             contextMenu.createFromApi(jsEvent, result);
-                        }, (e) => { console.log('Failed to load actions for context menu', e); });
+                        }, (e) => {
+                            console.log('Failed to load actions for context menu', e);
+                        });
                     }
                 })
             },
@@ -301,156 +298,166 @@ export default class KimaiCalendar {
                 });
             });
 
-            calendarOptions = {...calendarOptions, ...{
-                droppable: true,
-                // drop function handles external draggable events
-                drop: (dropInfo) => {
-                    const entry = dropInfo.draggedEl;
-                    const source = entry.parentElement;
-                    let data = JSON.parse(entry.dataset.entry);
+            calendarOptions = {
+                ...calendarOptions, ...{
+                    droppable: true,
+                    // drop function handles external draggable events
+                    drop: (dropInfo) => {
+                        const entry = dropInfo.draggedEl;
+                        const source = entry.parentElement;
+                        let data = JSON.parse(entry.dataset.entry);
 
-                    const urlReplacer = JSON.parse(source.dataset.routeReplacer);
-                    let apiUrl = source.dataset.route;
+                        const urlReplacer = JSON.parse(source.dataset.routeReplacer);
+                        let apiUrl = source.dataset.route;
 
-                    for (const [key, value] of Object.entries(urlReplacer)) {
-                        apiUrl = apiUrl.replace(key, data[value]);
-                    }
-
-                    let begin = dropInfo.date;
-
-                    if (dropInfo.view.type === 'dayGridMonth') {
-                        let defaultStartTime = this.options.defaultStartTime;
-                        if (defaultStartTime === null) {
-                            const now = new Date();
-                            defaultStartTime = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+                        for (const [key, value] of Object.entries(urlReplacer)) {
+                            apiUrl = apiUrl.replace(key, data[value]);
                         }
-                        begin = DATES.addHumanDuration(begin, defaultStartTime);
-                    }
 
-                    let end = DATES.addHumanDuration(begin, this.options['slotDuration']);
+                        let begin = dropInfo.date;
 
-                    if (!this.hasPermission('punch')) {
-                        if (this.hasPermission('edit_begin')) {
-                            data.begin = DATES.formatForAPI(begin);
-                        }
-                        if (this.hasPermission('edit_end')) {
-                            data.end = DATES.formatForAPI(end);
-                        }
-                    }
-
-                    data = this.options.preparePayloadForUpdate(data);
-
-                    if (source.dataset.method === 'PATCH') {
-                        API.patch(
-                            apiUrl,
-                            JSON.stringify(data),
-                            (result) => {
-                                const newItem = this.convertSourceForCalendar(result);
-                                this.getCalendar().addEvent(newItem, true);
-                                ALERT.success('action.update.success');
+                        if (dropInfo.view.type === 'dayGridMonth') {
+                            let defaultStartTime = this.options.defaultStartTime;
+                            if (defaultStartTime === null) {
+                                const now = new Date();
+                                defaultStartTime = (now.getHours() < 10 ? '0' : '') + now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
                             }
-                        );
-                    } else {
-                        API.post(
-                            apiUrl,
-                            JSON.stringify(data),
-                            (result) => {
-                                const newItem = this.convertSourceForCalendar(result);
-                                this.getCalendar().addEvent(newItem, true);
-                                ALERT.success('action.update.success');
+                            begin = DATES.addHumanDuration(begin, defaultStartTime);
+                        }
+
+                        let end = DATES.addHumanDuration(begin, this.options['slotDuration']);
+
+                        if (!this.hasPermission('punch')) {
+                            if (this.hasPermission('edit_begin')) {
+                                data.begin = DATES.formatForAPI(begin);
                             }
-                        );
-                    }
-                },
-            }};
+                            if (this.hasPermission('edit_end')) {
+                                data.end = DATES.formatForAPI(end);
+                            }
+                        }
+
+                        data = this.options.preparePayloadForUpdate(data);
+
+                        if (source.dataset.method === 'PATCH') {
+                            API.patch(
+                                apiUrl,
+                                JSON.stringify(data),
+                                (result) => {
+                                    const newItem = this.convertSourceForCalendar(result);
+                                    this.getCalendar().addEvent(newItem, true);
+                                    ALERT.success('action.update.success');
+                                }
+                            );
+                        } else {
+                            API.post(
+                                apiUrl,
+                                JSON.stringify(data),
+                                (result) => {
+                                    const newItem = this.convertSourceForCalendar(result);
+                                    this.getCalendar().addEvent(newItem, true);
+                                    ALERT.success('action.update.success');
+                                }
+                            );
+                        }
+                    },
+                }
+            };
         }
 
         // ============= CREATE NEW RECORDS =============
 
         // After click or selection, not allowed for everyone
         if (!this.hasPermission('punch') && this.hasPermission('create')) {
-            calendarOptions = {...calendarOptions, ...{
-                dateClick: (dateClickInfo) => {
-                    // Day-clicks are always triggered, unless a selection was created.
-                    // So clicking in a day (month view) or any slot (week and day view) will trigger a dayClick
-                    // BEFORE triggering a select - make sure not two create dialogs are requested
-                    if (dateClickInfo.view.type !== 'dayGridMonth') {
-                        return;
-                    }
+            calendarOptions = {
+                ...calendarOptions, ...{
+                    dateClick: (dateClickInfo) => {
+                        // Day-clicks are always triggered, unless a selection was created.
+                        // So clicking in a day (month view) or any slot (week and day view) will trigger a dayClick
+                        // BEFORE triggering a select - make sure not two create dialogs are requested
+                        if (dateClickInfo.view.type !== 'dayGridMonth') {
+                            return;
+                        }
 
-                    const createUrl = this.options.url.create(dateClickInfo.dateStr);
-                    MODAL.openUrlInModal(createUrl);
-                },
-                selectable: true,
-                select: (selectionInfo) => {
-                    if(selectionInfo.view.type === 'dayGridMonth') {
-                        // Multi-day clicks are NOT allowed in the month view, as simple day clicks would also trigger
-                        // a select - there is no way to distinguish a simple click and a two-day selection
-                        return;
-                    }
+                        const createUrl = this.options.url.create(dateClickInfo.dateStr);
+                        MODAL.openUrlInModal(createUrl);
+                    },
+                    selectable: true,
+                    select: (selectionInfo) => {
+                        if (selectionInfo.view.type === 'dayGridMonth') {
+                            // Multi-day clicks are NOT allowed in the month view, as simple day clicks would also trigger
+                            // a select - there is no way to distinguish a simple click and a two-day selection
+                            return;
+                        }
 
-                    const createUrl = this.options.url.create(selectionInfo.startStr, selectionInfo.endStr);
-                    MODAL.openUrlInModal(createUrl);
-                },
-            }};
+                        const createUrl = this.options.url.create(selectionInfo.startStr, selectionInfo.endStr);
+                        MODAL.openUrlInModal(createUrl);
+                    },
+                }
+            };
         }
 
         // ============= EDIT TIMESHEET =============
 
         if (this.hasPermission('edit')) {
-            calendarOptions = {...calendarOptions, ...{
-                eventClick: (eventClickInfo) => {
-                    const event = eventClickInfo.event;
-                    if (!this.isKimaiSource(event)) {
-                        eventClickInfo.jsEvent.preventDefault();
-                        return;
-                    }
-                    this.hidePopover(eventClickInfo.el);
+            calendarOptions = {
+                ...calendarOptions, ...{
+                    eventClick: (eventClickInfo) => {
+                        const event = eventClickInfo.event;
+                        if (!this.isKimaiSource(event)) {
+                            eventClickInfo.jsEvent.preventDefault();
+                            return;
+                        }
+                        this.hidePopover(eventClickInfo.el);
 
-                    if (!event.extendedProps.exported || this.hasPermission('edit_exported')) {
-                        MODAL.openUrlInModal(
-                            this.options.url.edit(event.id), (reason) => {
-                                // 403 = user is not allowed to edit the entry (e.g. lockdown mode)
-                                if (reason.status !== 403) {
-                                    // keep the log, it might help with debugging
-                                    console.log(reason);
+                        if (!event.extendedProps.exported || this.hasPermission('edit_exported')) {
+                            MODAL.openUrlInModal(
+                                this.options.url.edit(event.id), (reason) => {
+                                    // 403 = user is not allowed to edit the entry (e.g. lockdown mode)
+                                    if (reason.status !== 403) {
+                                        // keep the log, it might help with debugging
+                                        console.log(reason);
+                                    }
                                 }
-                            }
-                        );
-                    }
-                },
-            }};
+                            );
+                        }
+                    },
+                }
+            };
 
             // UPDATE TIMESHEET - MOVE THEM OR EXTEND THEM
             if (!this.hasPermission('punch')) {
-                calendarOptions = {...calendarOptions, ...{
-                    // https://fullcalendar.io/docs/event-dragging-resizing
-                    dragRevertDuration: 0,
-                    eventStartEditable: this.hasPermission('edit_begin'),
-                    eventDurationEditable: this.hasPermission('edit_end') || this.hasPermission('edit_duration'),
-                    eventDragStart: (info) => {
-                        this.hidePopover(info.el);
-                    },
-                    eventDrop: (eventDropInfo) => {
-                        this.changeHandler(eventDropInfo)
-                    },
-                    eventResizeStart: (info) => {
-                        this.hidePopover(info.el);
-                    },
-                    eventResize: (eventResizeInfo) => {
-                        this.changeHandler(eventResizeInfo)
-                    },
-                }};
+                calendarOptions = {
+                    ...calendarOptions, ...{
+                        // https://fullcalendar.io/docs/event-dragging-resizing
+                        dragRevertDuration: 0,
+                        eventStartEditable: this.hasPermission('edit_begin'),
+                        eventDurationEditable: this.hasPermission('edit_end') || this.hasPermission('edit_duration'),
+                        eventDragStart: (info) => {
+                            this.hidePopover(info.el);
+                        },
+                        eventDrop: (eventDropInfo) => {
+                            this.changeHandler(eventDropInfo)
+                        },
+                        eventResizeStart: (info) => {
+                            this.hidePopover(info.el);
+                        },
+                        eventResize: (eventResizeInfo) => {
+                            this.changeHandler(eventResizeInfo)
+                        },
+                    }
+                };
             }
         }
 
         // ============= GOOGLE CALENDAR =============
 
         if (this.options['googleCalendarApiKey'] !== undefined) {
-            calendarOptions = {...calendarOptions, ...{
-                // https://fullcalendar.io/docs/google-calendar
-                googleCalendarApiKey: this.options['googleCalendarApiKey'],
-            }};
+            calendarOptions = {
+                ...calendarOptions, ...{
+                    // https://fullcalendar.io/docs/google-calendar
+                    googleCalendarApiKey: this.options['googleCalendarApiKey'],
+                }
+            };
         }
 
         // ============= EVENT SOURCES =============
@@ -459,63 +466,71 @@ export default class KimaiCalendar {
         for (const source of this.options['eventSources']) {
             let calendarSource = {};
             if (source.type === 'timesheet') {
-                calendarSource = {...calendarSource, ...{
-                    id: 'kimai-' + source.id,
-                    events: (fetchInfo, successCallback, failureCallback) => {
-                        const targetFrom = DATES.formatForAPI(fetchInfo.start);
-                        const targetTo = DATES.formatForAPI(fetchInfo.end);
+                calendarSource = {
+                    ...calendarSource, ...{
+                        id: 'kimai-' + source.id,
+                        events: (fetchInfo, successCallback, failureCallback) => {
+                            const targetFrom = DATES.formatForAPI(fetchInfo.start);
+                            const targetTo = DATES.formatForAPI(fetchInfo.end);
 
-                        let url = source.url;
-                        url = url.replace('{from}', targetFrom);
-                        url = url.replace('__FROM__', targetFrom);
-                        url = url.replace('{to}', targetTo);
-                        url = url.replace('__TO__', targetTo);
+                            let url = source.url;
+                            url = url.replace('{from}', targetFrom);
+                            url = url.replace('__FROM__', targetFrom);
+                            url = url.replace('{to}', targetTo);
+                            url = url.replace('__TO__', targetTo);
 
-                        API.get(url, {}, result => {
-                            let apiEvents = [];
-                            for (const record of result) {
-                                apiEvents.push(this.convertSourceForCalendar(record));
-                            }
-                            successCallback(apiEvents);
-                        }, failureCallback);
-                    },
-                }};
+                            API.get(url, {}, result => {
+                                let apiEvents = [];
+                                for (const record of result) {
+                                    apiEvents.push(this.convertSourceForCalendar(record));
+                                }
+                                successCallback(apiEvents);
+                            }, failureCallback);
+                        },
+                    }
+                };
             } else if (source.type === 'google') {
-                calendarSource = {...calendarSource, ...{
-                    id: 'google-' + source.id,
-                    name: 'google',
-                    editable: false,
-                }};
+                calendarSource = {
+                    ...calendarSource, ...{
+                        id: 'google-' + source.id,
+                        name: 'google',
+                        editable: false,
+                    }
+                };
             } else if (source.type === 'json') {
-                calendarSource = {...calendarSource, ...{
-                    id: 'json-' + source.id,
-                    editable: false,
-                    events: (fetchInfo, successCallback, failureCallback) => {
-                        const targetFrom = DATES.formatForAPI(fetchInfo.start);
-                        const targetTo = DATES.formatForAPI(fetchInfo.end);
+                calendarSource = {
+                    ...calendarSource, ...{
+                        id: 'json-' + source.id,
+                        editable: false,
+                        events: (fetchInfo, successCallback, failureCallback) => {
+                            const targetFrom = DATES.formatForAPI(fetchInfo.start);
+                            const targetTo = DATES.formatForAPI(fetchInfo.end);
 
-                        let url = source.url;
-                        url = url.replace('{from}', targetFrom);
-                        url = url.replace('__FROM__', targetFrom);
-                        url = url.replace('{to}', targetTo);
-                        url = url.replace('__TO__', targetTo);
+                            let url = source.url;
+                            url = url.replace('{from}', targetFrom);
+                            url = url.replace('__FROM__', targetFrom);
+                            url = url.replace('{to}', targetTo);
+                            url = url.replace('__TO__', targetTo);
 
-                        API.get(url, {}, result => {
-                            let apiEvents = [];
-                            for (const record of result) {
-                                apiEvents.push(record);
-                            }
-                            successCallback(apiEvents);
-                        }, failureCallback);
-                    },
-                }};
+                            API.get(url, {}, result => {
+                                let apiEvents = [];
+                                for (const record of result) {
+                                    apiEvents.push(record);
+                                }
+                                successCallback(apiEvents);
+                            }, failureCallback);
+                        },
+                    }
+                };
             } else if (source.type === 'ical') {
-                calendarSource = {...calendarSource, ...{
-                    id: 'ical-' + source.id,
-                    url: source.url,
-                    format: 'ics',
-                    editable: false,
-                }};
+                calendarSource = {
+                    ...calendarSource, ...{
+                        id: 'ical-' + source.id,
+                        url: source.url,
+                        format: 'ics',
+                        editable: false,
+                    }
+                };
             } else {
                 console.log('Unknown source type given, skipping to load events from: ' + source.id);
                 continue;
@@ -527,9 +542,11 @@ export default class KimaiCalendar {
         }
 
         if (eventSources.length > 0) {
-            calendarOptions = {...calendarOptions, ...{
-                eventSources: eventSources,
-            }};
+            calendarOptions = {
+                ...calendarOptions, ...{
+                    eventSources: eventSources,
+                }
+            };
         }
 
         // INITIALIZE CALENDAR
@@ -598,7 +615,11 @@ export default class KimaiCalendar {
         /** @type {KimaiDateUtils} DATES */
         const DATES = this.kimai.getPlugin('date');
 
-        let title = this.options['patterns']['title'];
+        /* Add Hexagon */
+        //let title = this.options['patterns']['title'];
+        let title = '{duration} {activity}'
+        /* End Add Hexagon */
+
         title = title.replace('{project}', apiItem.project.name);
         title = title.replace('{customer}', apiItem.project.customer.name);
         title = title.replace('{description}', apiItem.description ?? '');
@@ -656,8 +677,8 @@ export default class KimaiCalendar {
                     <li>` + this.options['translations']['project'] + `: ` + escaper.escapeForHtml(eventObj.project) + `</li>
                     <li>` + this.options['translations']['activity'] + `: ` + escaper.escapeForHtml(eventObj.activity) + `</li>
                 </ul>` +
-                (eventObj.description !== null || eventObj.tags.length > 0 ? '<hr>' : '') +
-                (eventObj.description ? '<div>' + escaper.escapeForHtml(eventObj.description) + '</div>' : '') + tags + `
+            (eventObj.description !== null || eventObj.tags.length > 0 ? '<hr>' : '') +
+            (eventObj.description ? '<div>' + escaper.escapeForHtml(eventObj.description) + '</div>' : '') + tags + `
             </div>`;
     }
 

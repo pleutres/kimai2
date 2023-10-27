@@ -14,6 +14,9 @@ use App\Export\UserInvoice\XlsxRenderer;
 use App\Repository\UserRepository;
 use DateTime;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,21 +51,62 @@ class VacationController extends AbstractController
      */
     #[Route(path: '/', name: 'vacation_user_admin', methods: ['GET'])]
     #[IsGranted('view_other_timesheet')]
-    public function indexAction(): Response
+    public function indexAction(Request $request): Response
     {
+        $formUsername = $request->get('form')['username'];
+        $year = $request->get('form')['year'];
+
+        //$this->logger->info("" + $formUsername);
+
         $years = [];
-        $startDate = DateTime::createFromFormat('Y-m-d H:i:s', '2021-06-29 00:00:00');
-        $user = $this->userRepository->loadUserbyIdentifier('simon');
-        $this->getMonthlyActivity($years, 'vacation', 'Vacation', 'Vacation', $user, $startDate);
-        $this->getMonthlyActivity($years, 'rtt', 'Vacation','RTT', $user, $startDate);
-
         $yearsGlobal = [];
-        $this->getMonthlyActivity($yearsGlobal, 'total', null, null, $user, $startDate);
+        if ($year != null) {
+            $startDate = DateTime::createFromFormat('Y-m-d H:i:s', intval($year).'-01-01 00:00:00');
+            $endDate = DateTime::createFromFormat('Y-m-d H:i:s', intval($year).'-12-31 23:59:59');
+        }
+        else {
+            $startDate = DateTime::createFromFormat('Y-m-d H:i:s', '2021-01-01 00:00:00');
+            $endDate = null;
+        }
+        $allUsers = [];
+        $allUsernames = array('simon', 'pierre');
+        if ($formUsername == null) {
+            $selectedUsers = $allUsernames;
+        }
+        else {
+            $selectedUsers = [$formUsername];
+        }
+        foreach ($allUsernames as $username) {
+            $user = $this->userRepository->loadUserbyIdentifier($username);
+            $allUsers[$username] = $user;
+        }
 
+        foreach ($allUsers as $user) {
+            if (in_array($user->getUsername(), $selectedUsers)) {
+                $this->getMonthlyActivity($years, 'vacation', 'Vacation', 'Vacation', $user, $startDate, $endDate);
+                $this->getMonthlyActivity($years, 'rtt', 'Vacation','RTT', $user, $startDate, $endDate);
+                $this->getMonthlyActivity($yearsGlobal, 'total', null, null, $user, $startDate, $endDate);
+            }
+        }
         krsort($years);
+
+        for ($i=date("Y"); $i >= 2021 ; $i--) {
+            $allYears[$i] = $i;
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('username', ChoiceType::class, ['choices' => $this->mkChoice($allUsers), 'data' => $formUsername])
+            ->add('year', ChoiceType::class, ['choices' => $allYears, 'data' => $year])
+            ->add('save', SubmitType::class, ['label' => 'Filter'])
+            ->setMethod('GET')
+            ->getForm();
+
         $viewVars = [
             'years' => $years,
+            'allYears' => $allYears,
             'yearsGlobal' => $years,
+            'allUsers' => $allUsers,
+            'form' => $form
         ];
 
         return $this->render('uservacations/index.html.twig', $viewVars);
@@ -103,7 +147,7 @@ class VacationController extends AbstractController
         }
 
         if (!empty($end)) {
-            $qb->andWhere($qb->expr()->lte($this->getDatetimeFieldSql('t.end'), ':to'))
+            $qb->andWhere($qb->expr()->lte('t.end', ':to'))
                 ->setParameter('to', $end);
         } else {
             $qb->andWhere($qb->expr()->isNotNull('t.end'));
@@ -180,5 +224,13 @@ class VacationController extends AbstractController
             return $year;
         }
         return null;
+    }
+
+    private function mkChoice(array $allUsers) {
+        $result = [];
+        foreach ($allUsers as $user) {
+            $result[$user->getDisplayName()] = $user->getUsername();
+        }
+        return $result;
     }
 }
