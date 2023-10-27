@@ -130,11 +130,13 @@ final class SamlProvider
             }
             if ($part[0] === '$') {
                 $key = substr($part, 1);
-                if (!isset($attributes[$key])) {
+                if (!\array_key_exists($key, $attributes)) {
                     throw new \RuntimeException('Missing user attribute: ' . $key);
                 }
 
-                $results[] = $attributes[$key][0];
+                if (\is_array($attributes[$key]) && isset($attributes[$key][0])) {
+                    $results[] = $attributes[$key][0];
+                }
             } else {
                 $results[] = $part;
             }

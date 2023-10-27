@@ -36,7 +36,7 @@ use App\Utils\PageSetup;
 use App\Validator\Constraints\ColorChoices;
 use App\Validator\Constraints\DateTimeFormat;
 use App\Validator\Constraints\TimeFormat;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -422,6 +422,7 @@ final class SystemConfigurationController extends AbstractController
                         ]),
                     (new Configuration('timesheet.rounding.default.days'))
                         ->setType(WeekDaysType::class)
+                        ->setRequired(false)
                         ->setTranslationDomain('system-configuration'),
                 ]),
             (new SystemConfigurationModel('invoice'))

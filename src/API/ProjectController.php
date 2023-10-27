@@ -27,8 +27,8 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Nelmio\ApiDocBundle\Annotation\Security as ApiSecurity;
 use OpenApi\Attributes as OA;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -115,8 +115,8 @@ final class ProjectController extends BaseApiController
         }
 
         $ignoreDates = false;
-        if (null !== $paramFetcher->get('ignoreDates')) {
-            $ignoreDates = \intval($paramFetcher->get('ignoreDates')) === 1;
+        if (null !== ($ign = $paramFetcher->get('ignoreDates'))) {
+            $ignoreDates = $ign === 1 || $ign === '1';
         }
 
         if (!$ignoreDates) {
@@ -144,6 +144,7 @@ final class ProjectController extends BaseApiController
             $query->setSearchTerm(new SearchTerm($term));
         }
 
+        $query->setIsApiCall(true);
         $data = $this->repository->getProjectsForQuery($query);
         $view = new View($data, 200);
         $view->getContext()->setGroups(self::GROUPS_COLLECTION);

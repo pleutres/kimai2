@@ -267,6 +267,18 @@
         <target>Directory "%dir%" is write protected.</target>
       </trans-unit>
       <!-- General labels -->
+      <trans-unit id="EYXzfTO" resname="deleted">
+        <source>deleted</source>
+        <target>Deleted</target>
+      </trans-unit>
+      <trans-unit id="EX27Gdt" resname="created_by">
+        <source>created_by</source>
+        <target>Created by</target>
+      </trans-unit>
+      <trans-unit id="6Hip2aF" resname="created_at">
+        <source>created_at</source>
+        <target>Created at</target>
+      </trans-unit>
       <trans-unit id="DodjLNR" resname="date">
         <source>date</source>
         <target>Date</target>
@@ -285,7 +297,7 @@
       </trans-unit>
       <trans-unit id="BPiZbad" resname="user">
         <source>User</source>
-        <target state="needs-translation">User</target>
+        <target state="translated">User</target>
       </trans-unit>
       <trans-unit id="FveKfWM" resname="username">
         <source>username</source>
@@ -330,6 +342,10 @@
       <trans-unit id="AeMGtJO" resname="help.visible">
         <source>help.visible</source>
         <target>If the setting is off, the object is not displayed in dropdown-boxes and list-views.</target>
+      </trans-unit>
+      <trans-unit id="t1r372x" resname="invisible">
+        <source>invisible</source>
+        <target>Invisible</target>
       </trans-unit>
       <trans-unit id="CvlqjtY" resname="budget">
         <source>budget</source>
@@ -507,13 +523,13 @@
         <source>color</source>
         <target>Color</target>
       </trans-unit>
-      <trans-unit id="tl01EdS" resname="replaceTags">
-        <source>replaceTags</source>
-        <target>Replace tags</target>
+      <trans-unit id="tl01EdS" resname="replace">
+        <source>replace</source>
+        <target>Replace</target>
       </trans-unit>
-      <trans-unit id="ICpl9sx" resname="appendTags">
-        <source>appendTags</source>
-        <target>Append tags</target>
+      <trans-unit id="ICpl9sx" resname="append">
+        <source>append</source>
+        <target>Append</target>
       </trans-unit>
       <!-- Column modal -->
       <trans-unit id="UbnqJLn" resname="modal.columns.title">
@@ -564,7 +580,7 @@
       <!-- 2FA  -->
       <trans-unit id="FeFBn_3" resname="profile.2fa">
         <source>profile.2fa</source>
-        <target>Two-Factor (TOTP)</target>
+        <target>Two-Factor (2FA)</target>
       </trans-unit>
       <trans-unit id="hPY2VcD" resname="profile.2fa_intro">
         <source>profile.2fa_intro</source>
@@ -585,11 +601,91 @@
       <!-- END 2FA  -->
       <trans-unit id="Z34ZpjK" resname="profile.api-token">
         <source>profile.api-token</source>
-        <target>API</target>
+        <target>API Access</target>
       </trans-unit>
       <trans-unit id="ygtTz8." resname="profile.roles">
         <source>profile.roles</source>
         <target>Roles</target>
+      </trans-unit>
+      <trans-unit id="eCEGRzN" resname="work_contract">
+        <source>work_contract</source>
+        <target>Employment contract</target>
+      </trans-unit>
+      <trans-unit id="7_d7IB3" resname="evaluation">
+        <source>evaluation</source>
+        <target>Evaluation</target>
+      </trans-unit>
+      <trans-unit id="4lrfIsZ" resname="complete_month">
+        <source>Complete month</source>
+        <target state="translated">Complete month</target>
+      </trans-unit>
+      <trans-unit id="W8XQTkJ" resname="complete_month.help">
+        <source>complete_month.help</source>
+        <target>After completing the month, the user will no longer be able to create or edit times for that period.</target>
+      </trans-unit>
+      <trans-unit id="eWmotjb" resname="completed_month_pdf">
+        <source>completed_month_pdf</source>
+        <target>Completed month PDF</target>
+      </trans-unit>
+      <trans-unit id="AXr_aHI" resname="completed_month_pdf_note">
+        <source>completed_month_pdf_note</source>
+        <target>This document serves as proof of the hours worked.</target>
+      </trans-unit>
+      <trans-unit id="yXrOTI." resname="review">
+        <source>Review</source>
+        <target state="translated">Review</target>
+      </trans-unit>
+      <trans-unit id="mS4SSmt" resname="work_times">
+        <source>work_times</source>
+        <target>Working times</target>
+      </trans-unit>
+      <trans-unit id="iaJj4va" resname="work_times_account">
+        <source>Account working times</source>
+        <target state="translated">Account working times</target>
+      </trans-unit>
+      <trans-unit id="1btzNDa" resname="work_times_should">
+        <source>work_times_should</source>
+        <target>Target-hours</target>
+      </trans-unit>
+      <trans-unit id="PE2iiaW" resname="work_times_should.help">
+        <source>work_times_should.help</source>
+        <target>The values configured here are used to calculate the hourly account.</target>
+      </trans-unit>
+      <trans-unit id="s9NPI3v" resname="work_times_should.none_configured">
+        <source>work_times_should.none_configured</source>
+        <target>No target hours have been configured for this user in the employment contract settings.</target>
+      </trans-unit>
+      <trans-unit id="31dFXhR" resname="work_times_is">
+        <source>work_times_is</source>
+        <target>Is-hours</target>
+      </trans-unit>
+      <trans-unit id="uHrZlbq" resname="work_times_result">
+        <source>work_times_result</source>
+        <target>Hours worked</target>
+      </trans-unit>
+      <trans-unit id="8yqaKzX" resname="confirmed_by_at">
+        <source>confirmed_by_at</source>
+        <target>Confirmed by %user% at %date%</target>
+      </trans-unit>
+      <trans-unit id="wZRRqg0" resname="manual_bookings">
+        <source>manual_bookings</source>
+        <target>Manual bookings</target>
+      </trans-unit>
+      <trans-unit id="IalLD5Q" resname="manual_bookings.work_contract_intro">
+        <source>manual_bookings.work_contract_intro</source>
+        <target>Manual bookings can neither be subsequently changed nor deleted!</target>
+      </trans-unit>
+      <trans-unit id="znIJiOw" resname="manual_bookings.duration_help">
+        <source>manual_bookings.duration_help</source>
+        <target>The duration can be both positive (increase of the is-time) and negative (reduction of the is-time).</target>
+      </trans-unit>
+      <trans-unit id="M.zFjwe" resname="pto_year_holiday" approved="yes">
+        <source>Holidays per year</source>
+        <target state="final">Holidays per year</target>
+      </trans-unit>
+      <trans-unit id="gcFtM3o" resname="holiday">
+        <source>holiday</source>
+        <target>Holiday</target>
       </trans-unit>
       <trans-unit id="MQKiG33" resname="profile.preferences">
         <source>profile.preferences</source>
@@ -1165,6 +1261,14 @@
         <source>status.closed</source>
         <target>Completed</target>
       </trans-unit>
+      <trans-unit id="opDmYAa" resname="status.approved">
+        <source>status.approved</source>
+        <target>Approved</target>
+      </trans-unit>
+      <trans-unit id="Na24cyT" resname="status.requested">
+        <source>status.requested</source>
+        <target>Requested</target>
+      </trans-unit>
       <trans-unit id="crrlEUA" resname="preview.skipped_rows">
         <source>Skipped preview of %rows% more rows …</source>
         <target state="translated">Skipped preview of %rows% more rows …</target>
@@ -1444,6 +1548,90 @@
       <trans-unit id="M2B0gF." resname="time">
         <source>time</source>
         <target>Time</target>
+      </trans-unit>
+      <trans-unit id="95DUED0" resname="send_to">
+        <source>send_to</source>
+        <target>Send to %name%</target>
+      </trans-unit>
+      <trans-unit id="5buBUCm" resname="receive_from">
+        <source>receive_from</source>
+        <target>Receive from %name%</target>
+      </trans-unit>
+      <trans-unit id="fWuGTog" resname="public_holiday">
+        <source>public_holiday</source>
+        <target>Public holiday</target>
+      </trans-unit>
+      <trans-unit id="zlmddHB" resname="public_holidays">
+        <source>public_holidays</source>
+        <target>Public holidays</target>
+      </trans-unit>
+      <trans-unit id="u4lbYD5" resname="public_holiday.group">
+        <source>public_holiday.group</source>
+        <target>Holiday group</target>
+      </trans-unit>
+      <trans-unit id="GIgQHa4" resname="absence">
+        <source>absence</source>
+        <target>Absence</target>
+      </trans-unit>
+      <trans-unit id="4PMHpIp" resname="time_off">
+        <source>time_off</source>
+        <target>Time off</target>
+      </trans-unit>
+      <trans-unit id="N6juwc4" resname="default">
+        <source>default</source>
+        <target>Default</target>
+      </trans-unit>
+      <trans-unit id="_WlU8Fp" resname="sickness">
+        <source>sickness</source>
+        <target>Sickness</target>
+      </trans-unit>
+      <trans-unit id="2SmKENG" resname="other">
+        <source>other</source>
+        <target>Other</target>
+      </trans-unit>
+      <trans-unit id="csAXaBa" resname="button.request">
+        <source>button.request</source>
+        <target>Submit</target>
+      </trans-unit>
+      <trans-unit id="Od3xvQK" resname="button.report">
+        <source>button.report</source>
+        <target>Report</target>
+      </trans-unit>
+      <trans-unit id="YDrWFFP" resname="sickness.intro">
+        <source>sickness.intro</source>
+        <target>Illness, doctor's visit, care of close relatives, etc.</target>
+      </trans-unit>
+      <trans-unit id="yJg6P3m" resname="holiday.intro">
+        <source>holiday.intro</source>
+        <target>You have taken %used% of your available %days% vacation days so far.</target>
+      </trans-unit>
+      <trans-unit id="DA1.Ln_" resname="time_off.intro">
+        <source>time_off.intro</source>
+        <target>Your working time account has a balance of %hours% hours.</target>
+      </trans-unit>
+      <trans-unit id="YPO294a" resname="absence_other.intro">
+        <source>absence_other.intro</source>
+        <target>Family events, moving house, weather chaos etc.</target>
+      </trans-unit>
+      <trans-unit id="TTnaBm4" resname="day_full">
+        <source>day_full</source>
+        <target>Full day</target>
+      </trans-unit>
+      <trans-unit id="Eml59KV" resname="day_half">
+        <source>day_half</source>
+        <target>Half day</target>
+      </trans-unit>
+      <trans-unit id="CDTC1gc" resname="supervisor">
+        <source>supervisor</source>
+        <target>Supervisor</target>
+      </trans-unit>
+      <trans-unit id=".wmq_rT" resname="force_password_change">
+        <source>force_password_change</source>
+        <target>Request new password</target>
+      </trans-unit>
+      <trans-unit id="0bKwA0k" resname="force_password_change_help">
+        <source>force_password_change_help</source>
+        <target>The next time the user logs in, they must enter a new password.</target>
       </trans-unit>
     </body>
   </file>

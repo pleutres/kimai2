@@ -423,21 +423,6 @@ parameters:
             path: API/ApiDocControllerTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\API\\\\ApiDocControllerTest\\:\\:testGetDocs\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/ApiDocControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\ApiDocControllerTest\\:\\:testGetJsonDocs\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/ApiDocControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\ApiDocControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/ApiDocControllerTest.php
-
-        -
             message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
             count: 2
             path: API/ApiDocControllerTest.php
@@ -1118,56 +1103,6 @@ parameters:
             path: API/StatusControllerTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testDeleteAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testDeleteActionWithUnknownTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testEmptyCollection\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testGetCollection\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testPartOfEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testPostAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testPostActionAsRegularUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\TagControllerTest\\:\\:testPostActionWithValidationErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/TagControllerTest.php
-
-        -
-            message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-            count: 6
-            path: API/TagControllerTest.php
-
-        -
             message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
             count: 1
             path: API/TagControllerTest.php
@@ -1303,106 +1238,6 @@ parameters:
             path: API/UserControllerTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:getRoleTestData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testGetCollection\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testGetCollectionWithQuery\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testGetCollectionWithQuery2\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testGetEntity\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testGetEntityAccessAllowedForOwnProfile\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testGetEntityAccessDenied\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testGetMyProfile\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testIsSecureForRole\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPatchAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPatchActionWithInvalidUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPatchActionWithUnknownUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPatchActionWithValidationErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPostAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPostActionWithInvalidUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPostActionWithShortPassword\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\API\\\\UserControllerTest\\:\\:testPostActionWithValidationErrors\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: API/UserControllerTest.php
-
-        -
-            message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-            count: 9
-            path: API/UserControllerTest.php
-
-        -
             message: "#^Parameter \\#5 \\$content of method App\\\\Tests\\\\API\\\\APIControllerBaseTest\\:\\:request\\(\\) expects string\\|null, string\\|false given\\.$#"
             count: 8
             path: API/UserControllerTest.php
@@ -1501,41 +1336,6 @@ parameters:
             message: "#^Parameter \\#1 \\$userService of class App\\\\Command\\\\ActivateUserCommand constructor expects App\\\\User\\\\UserService, object\\|null given\\.$#"
             count: 1
             path: Command/ActivateUserCommandTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Command\\\\AssetsInstallerFailureCommand\\:\\:installAssets\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Command/BundleInstallerCommandTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Command\\\\BundleInstallerCommandTest\\:\\:testAssetsInstallIsOk\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Command/BundleInstallerCommandTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Command\\\\BundleInstallerCommandTest\\:\\:testAssetsInstallReturnsNonZeroExitCode\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Command/BundleInstallerCommandTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Command\\\\BundleInstallerCommandTest\\:\\:testAssetsInstallationFailure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Command/BundleInstallerCommandTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Command\\\\BundleInstallerCommandTest\\:\\:testFullRun\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Command/BundleInstallerCommandTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Command\\\\BundleInstallerCommandTest\\:\\:testInvalidNamespaceWillRaiseException\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Command/BundleInstallerCommandTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Command\\\\BundleInstallerCommandTest\\:\\:testMissingMigrationThrowsException\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Command/BundleInstallerCommandTest.php
 
         -
             message: "#^Parameter \\#1 \\$command of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Console\\\\Application\\:\\:add\\(\\) expects Symfony\\\\Component\\\\Console\\\\Command\\\\Command, object given\\.$#"
@@ -1868,7 +1668,7 @@ parameters:
             path: Command/InvoiceCreateCommandTest.php
 
         -
-            message: "#^Parameter \\#6 \\$eventDispatcher of class App\\\\Command\\\\InvoiceCreateCommand constructor expects Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface, object\\|null given\\.$#"
+            message: "#^Parameter \\#6 \\$eventDispatcher of class App\\\\Command\\\\InvoiceCreateCommand constructor expects Psr\\\\EventDispatcher\\\\EventDispatcherInterface, object\\|null given\\.$#"
             count: 1
             path: Command/InvoiceCreateCommandTest.php
 
@@ -2453,37 +2253,7 @@ parameters:
             path: Controller/ControllerBaseTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assert404\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertAccessIsGranted\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertAccessIsGranted\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertCalloutWidgetWithMessage\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertDataTableRowCount\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertExcelExportResponse\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertFormHasValidationError\\(\\) has no return type specified\\.$#"
             count: 1
             path: Controller/ControllerBaseTest.php
 
@@ -2498,51 +2268,6 @@ parameters:
             path: Controller/ControllerBaseTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasDataTable\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasFlashDeleteSuccess\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasFlashError\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasFlashMessage\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasFlashSaveSuccess\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasFlashSuccess\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasNoEntriesWithFilter\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasProgressbar\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasValidationError\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertHasValidationError\\(\\) has parameter \\$fieldNames with no value type specified in iterable type array\\.$#"
             count: 1
             path: Controller/ControllerBaseTest.php
@@ -2553,57 +2278,7 @@ parameters:
             path: Controller/ControllerBaseTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertInvalidCsrfToken\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertIsModalRedirect\\(\\) should return string but returns string\\|null\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertIsRedirect\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertMainContentClass\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertPageActions\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertPageActions\\(\\) has parameter \\$buttons with no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertRedirectUrl\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertRequestIsSecured\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertRouteNotFound\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:assertSuccessResponse\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:clearConfigCache\\(\\) has no return type specified\\.$#"
             count: 1
             path: Controller/ControllerBaseTest.php
 
@@ -2613,17 +2288,7 @@ parameters:
             path: Controller/ControllerBaseTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:loadUserFromDatabase\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:request\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:requestPure\\(\\) has no return type specified\\.$#"
             count: 1
             path: Controller/ControllerBaseTest.php
 
@@ -2640,21 +2305,6 @@ parameters:
         -
             message: "#^Parameter \\#2 \\$haystack of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
             count: 10
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Parameter \\#2 \\$haystack of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|null given\\.$#"
-            count: 4
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Parameter \\#2 \\$string of static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringEndsWith\\(\\) expects string, string\\|null given\\.$#"
-            count: 2
-            path: Controller/ControllerBaseTest.php
-
-        -
-            message: "#^Parameter \\#3 \\$method of method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:request\\(\\) expects string, string\\|null given\\.$#"
-            count: 1
             path: Controller/ControllerBaseTest.php
 
         -
@@ -3071,26 +2721,6 @@ parameters:
             message: "#^Parameter \\#2 \\$url of method App\\\\Tests\\\\Controller\\\\ControllerBaseTest\\:\\:request\\(\\) expects string, string\\|null given\\.$#"
             count: 1
             path: Controller/PermissionControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\PluginControllerTest\\:\\:testIndexAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/PluginControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\PluginControllerTest\\:\\:testIndexActionWithInstalledPlugins\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/PluginControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\PluginControllerTest\\:\\:testIsSecure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/PluginControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\PluginControllerTest\\:\\:testIsSecureForRole\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/PluginControllerTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Controller\\\\ProfileControllerTest\\:\\:testEditActionTabs\\(\\) has parameter \\$role with no type specified\\.$#"
@@ -3586,41 +3216,6 @@ parameters:
             message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
             count: 6
             path: Controller/Security/PasswordResetControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\Security\\\\SecurityControllerTest\\:\\:testCheckAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/Security/SecurityControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\Security\\\\SecurityControllerTest\\:\\:testLoginAlreadyLoggedIn\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/Security/SecurityControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\Security\\\\SecurityControllerTest\\:\\:testLoginNegative\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/Security/SecurityControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\Security\\\\SecurityControllerTest\\:\\:testLoginPageIsRendered\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/Security/SecurityControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\Security\\\\SecurityControllerTest\\:\\:testLoginPositive\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/Security/SecurityControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\Security\\\\SecurityControllerTest\\:\\:testLogoutAction\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/Security/SecurityControllerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Controller\\\\Security\\\\SecurityControllerTest\\:\\:testRootUrlIsRedirectedToLogin\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Controller/Security/SecurityControllerTest.php
 
         -
             message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
@@ -4773,111 +4368,6 @@ parameters:
             path: Entity/UserTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testAuth\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testCanSeeAllData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testColor\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testDatetime\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testDisplayName\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testEqualsTo\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testExportAnnotations\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testGetLocale\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testGetUsername\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testMaxLength\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testPasswordRequestedAt\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testPreferences\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testPreferencesCollectionIsCreatedOnBrokenUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testRoles\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testSerialize\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testSystemAccount\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testTeamMemberships\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testTeamMembershipsException\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testTeams\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserTest\\:\\:testWizards\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserTest.php
-
-        -
             message: "#^Parameter \\#1 \\$string of function mb_strlen expects string, string\\|null given\\.$#"
             count: 5
             path: Entity/UserTest.php
@@ -4923,16 +4413,6 @@ parameters:
             path: Entity/UserValidationTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserValidationTest\\:\\:testInvalidRoles\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserValidationTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserValidationTest\\:\\:testInvalidValues\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserValidationTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Entity\\\\UserValidationTest\\:\\:testInvalidValues\\(\\) has parameter \\$email with no type specified\\.$#"
             count: 1
             path: Entity/UserValidationTest.php
@@ -4944,16 +4424,6 @@ parameters:
 
         -
             message: "#^Method App\\\\Tests\\\\Entity\\\\UserValidationTest\\:\\:testInvalidValues\\(\\) has parameter \\$username with no type specified\\.$#"
-            count: 1
-            path: Entity/UserValidationTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserValidationTest\\:\\:testValidRoles\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Entity/UserValidationTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Entity\\\\UserValidationTest\\:\\:testValidValues\\(\\) has no return type specified\\.$#"
             count: 1
             path: Entity/UserValidationTest.php
 
@@ -5036,11 +4506,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Event\\\\CalendarGoogleSourceEventTest\\:\\:testGetterAndSetter\\(\\) has no return type specified\\.$#"
             count: 1
             path: Event/CalendarGoogleSourceEventTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Event\\\\ConfigureMainMenuEventTest\\:\\:testGetterAndSetter\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Event/ConfigureMainMenuEventTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Event\\\\CustomerMetaDefinitionEventTest\\:\\:testGetterAndSetter\\(\\) has no return type specified\\.$#"
@@ -5186,21 +4651,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Event\\\\SystemConfigurationEventTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
             count: 1
             path: Event/SystemConfigurationEventTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Event\\\\ThemeEventTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Event/ThemeEventTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Event\\\\ThemeEventTest\\:\\:testEmpty\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Event/ThemeEventTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Event\\\\ThemeEventTest\\:\\:testGetterAndSetter\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Event/ThemeEventTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Event\\\\ThemeJavascriptTranslationsEventTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
@@ -5723,26 +5173,6 @@ parameters:
             path: Export/Renderer/PdfRendererFactoryTest.php
 
         -
-            message: "#^Cannot call method push\\(\\) on object\\|null\\.$#"
-            count: 1
-            path: Export/Renderer/PdfRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Export\\\\Renderer\\\\PdfRendererTest\\:\\:testConfiguration\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Export/Renderer/PdfRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Export\\\\Renderer\\\\PdfRendererTest\\:\\:testRender\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Export/Renderer/PdfRendererTest.php
-
-        -
-            message: "#^Parameter \\#2 \\$cacheDirectory of class App\\\\Pdf\\\\MPdfConverter constructor expects string, array\\|bool\\|float\\|int\\|string\\|null given\\.$#"
-            count: 1
-            path: Export/Renderer/PdfRendererTest.php
-
-        -
             message: "#^Call to an undefined method App\\\\Export\\\\ExportRendererInterface\\|App\\\\Export\\\\TimesheetExportInterface\\:\\:getIcon\\(\\)\\.$#"
             count: 1
             path: Export/Renderer/XlsxRendererTest.php
@@ -6178,44 +5608,9 @@ parameters:
             path: Export/Timesheet/CsvRendererTest.php
 
         -
-            message: "#^Cannot call method push\\(\\) on object\\|null\\.$#"
-            count: 1
-            path: Export/Timesheet/HtmlRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Export\\\\Timesheet\\\\HtmlRendererTest\\:\\:testConfiguration\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Export/Timesheet/HtmlRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Export\\\\Timesheet\\\\HtmlRendererTest\\:\\:testRender\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Export/Timesheet/HtmlRendererTest.php
-
-        -
             message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
             count: 1
             path: Export/Timesheet/HtmlRendererTest.php
-
-        -
-            message: "#^Cannot call method push\\(\\) on object\\|null\\.$#"
-            count: 1
-            path: Export/Timesheet/PdfRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Export\\\\Timesheet\\\\PdfRendererTest\\:\\:testConfiguration\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Export/Timesheet/PdfRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Export\\\\Timesheet\\\\PdfRendererTest\\:\\:testRender\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Export/Timesheet/PdfRendererTest.php
-
-        -
-            message: "#^Parameter \\#2 \\$cacheDirectory of class App\\\\Pdf\\\\MPdfConverter constructor expects string, array\\|bool\\|float\\|int\\|string\\|null given\\.$#"
-            count: 1
-            path: Export/Timesheet/PdfRendererTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Export\\\\Timesheet\\\\XlsxRendererTest\\:\\:testConfiguration\\(\\) has no return type specified\\.$#"
@@ -6603,11 +5998,6 @@ parameters:
             path: Form/Type/TypeTestModel.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Form\\\\Type\\\\TypeTestModel\\:\\:__set\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Form/Type/TypeTestModel.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Form\\\\Type\\\\TypeTestModel\\:\\:__set\\(\\) has parameter \\$name with no type specified\\.$#"
             count: 1
             path: Form/Type/TypeTestModel.php
@@ -6623,11 +6013,6 @@ parameters:
             path: Form/Type/TypeTestModel.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\AbstractCalculatorTest\\:\\:assertDescription\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/AbstractCalculatorTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\AbstractCalculatorTest\\:\\:assertDescription\\(\\) has parameter \\$addActivity with no type specified\\.$#"
             count: 1
             path: Invoice/Calculator/AbstractCalculatorTest.php
@@ -6636,141 +6021,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\AbstractCalculatorTest\\:\\:assertDescription\\(\\) has parameter \\$addProject with no type specified\\.$#"
             count: 1
             path: Invoice/Calculator/AbstractCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\AbstractCalculatorTest\\:\\:assertEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/AbstractCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\AbstractCalculatorTest\\:\\:getEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/AbstractCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ActivityInvoiceCalculatorTest\\:\\:testDescriptionByActivity\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ActivityInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ActivityInvoiceCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ActivityInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ActivityInvoiceCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ActivityInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\DateInvoiceCalculatorTest\\:\\:testDescriptionByTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/DateInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\DateInvoiceCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/DateInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\DateInvoiceCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/DateInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\DefaultCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/DefaultCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\DefaultCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/DefaultCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\PriceInvoiceCalculatorTest\\:\\:testDescriptionByTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/PriceInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\PriceInvoiceCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/PriceInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\PriceInvoiceCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/PriceInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ProjectInvoiceCalculatorTest\\:\\:testDescriptionByProject\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ProjectInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ProjectInvoiceCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ProjectInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ProjectInvoiceCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ProjectInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ShortInvoiceCalculatorTest\\:\\:testDescriptionByTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ShortInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ShortInvoiceCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ShortInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ShortInvoiceCalculatorTest\\:\\:testWithMixedRateTypes\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ShortInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ShortInvoiceCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ShortInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\ShortInvoiceCalculatorTest\\:\\:testWithMultipleEntriesDifferentRates\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/ShortInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\UserInvoiceCalculatorTest\\:\\:testDescriptionByTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/UserInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\UserInvoiceCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/UserInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\UserInvoiceCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/UserInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\WeeklyInvoiceCalculatorTest\\:\\:testDescriptionByTimesheet\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/WeeklyInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\WeeklyInvoiceCalculatorTest\\:\\:testEmptyModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/WeeklyInvoiceCalculatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Calculator\\\\WeeklyInvoiceCalculatorTest\\:\\:testWithMultipleEntries\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Calculator/WeeklyInvoiceCalculatorTest.php
 
         -
             message: "#^Cannot call method getEntries\\(\\) on App\\\\Invoice\\\\CalculatorInterface\\|null\\.$#"
@@ -6798,11 +6048,6 @@ parameters:
             path: Invoice/Hydrator/InvoiceItemDefaultHydratorTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceItemDefaultHydratorTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceItemDefaultHydratorTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceItemDefaultHydratorTest\\:\\:testHydrate\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Hydrator/InvoiceItemDefaultHydratorTest.php
@@ -6823,19 +6068,9 @@ parameters:
             path: Invoice/Hydrator/InvoiceModelActivityHydratorTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelActivityHydratorTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelActivityHydratorTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelActivityHydratorTest\\:\\:testHydrate\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Hydrator/InvoiceModelActivityHydratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelCustomerHydratorTest\\:\\:assertModelStructure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelCustomerHydratorTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelCustomerHydratorTest\\:\\:assertModelStructure\\(\\) has parameter \\$model with no value type specified in iterable type array\\.$#"
@@ -6848,42 +6083,12 @@ parameters:
             path: Invoice/Hydrator/InvoiceModelCustomerHydratorTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelCustomerHydratorTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelCustomerHydratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelCustomerHydratorTest\\:\\:testHydrate\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelCustomerHydratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelDefaultHydratorTest\\:\\:assertModelStructure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelDefaultHydratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelDefaultHydratorTest\\:\\:assertModelStructure\\(\\) has parameter \\$hasProject with no type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelDefaultHydratorTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelDefaultHydratorTest\\:\\:assertModelStructure\\(\\) has parameter \\$model with no value type specified in iterable type array\\.$#"
             count: 1
             path: Invoice/Hydrator/InvoiceModelDefaultHydratorTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelDefaultHydratorTest\\:\\:getAbstractRenderer\\(\\) should return App\\\\Invoice\\\\Renderer\\\\AbstractRenderer but returns object\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelDefaultHydratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelDefaultHydratorTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelDefaultHydratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelDefaultHydratorTest\\:\\:testHydrate\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Hydrator/InvoiceModelDefaultHydratorTest.php
 
@@ -6899,11 +6104,6 @@ parameters:
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelProjectHydratorTest\\:\\:getAbstractRenderer\\(\\) should return App\\\\Invoice\\\\Renderer\\\\AbstractRenderer but returns object\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelProjectHydratorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelProjectHydratorTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Hydrator/InvoiceModelProjectHydratorTest.php
 
@@ -6928,11 +6128,6 @@ parameters:
             path: Invoice/Hydrator/InvoiceModelUserHydratorTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelUserHydratorTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Hydrator/InvoiceModelUserHydratorTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Hydrator\\\\InvoiceModelUserHydratorTest\\:\\:testHydrate\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Hydrator/InvoiceModelUserHydratorTest.php
@@ -6941,21 +6136,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Invoice\\\\InvoiceItemTest\\:\\:testEmptyObject\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/InvoiceItemTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\InvoiceModelTest\\:\\:testEmptyObject\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/InvoiceModelTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\InvoiceModelTest\\:\\:testEmptyObjectThrowsExceptionOnNumberGenerator\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/InvoiceModelTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\InvoiceModelTest\\:\\:testSetter\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/InvoiceModelTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\NumberGenerator\\\\DateNumberGeneratorTest\\:\\:getSut\\(\\) has no return type specified\\.$#"
@@ -7048,22 +6228,12 @@ parameters:
             path: Invoice/Renderer/DebugRendererTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DebugRendererTest\\:\\:assertEntryStructure\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/DebugRendererTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DebugRendererTest\\:\\:assertEntryStructure\\(\\) has parameter \\$metaFields with no value type specified in iterable type array\\.$#"
             count: 1
             path: Invoice/Renderer/DebugRendererTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DebugRendererTest\\:\\:assertEntryStructure\\(\\) has parameter \\$model with no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Invoice/Renderer/DebugRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DebugRendererTest\\:\\:assertModelStructure\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Renderer/DebugRendererTest.php
 
@@ -7078,17 +6248,7 @@ parameters:
             path: Invoice/Renderer/DebugRendererTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DebugRendererTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/DebugRendererTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DebugRendererTest\\:\\:getTestModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/DebugRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DebugRendererTest\\:\\:testRender\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Renderer/DebugRendererTest.php
 
@@ -7138,11 +6298,6 @@ parameters:
             path: Invoice/Renderer/DebugRendererTest.php
 
         -
-            message: "#^Method class@anonymous/Invoice/Renderer/DebugRendererTest\\.php\\:35\\:\\:setInvoiceModel\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/DebugRendererTest.php
-
-        -
             message: "#^Method class@anonymous/Invoice/Renderer/DebugRendererTest\\.php\\:47\\:\\:hydrate\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Invoice/Renderer/DebugRendererTest.php
@@ -7173,11 +6328,6 @@ parameters:
             path: Invoice/Renderer/DocxRendererTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DocxRendererTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/DocxRendererTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\DocxRendererTest\\:\\:testRender\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Renderer/DocxRendererTest.php
@@ -7189,11 +6339,6 @@ parameters:
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\OdsRendererTest\\:\\:getAbstractRenderer\\(\\) should return App\\\\Invoice\\\\Renderer\\\\AbstractRenderer but returns object\\.$#"
-            count: 1
-            path: Invoice/Renderer/OdsRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\OdsRendererTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Renderer/OdsRendererTest.php
 
@@ -7253,57 +6398,17 @@ parameters:
             path: Invoice/Renderer/PdfRendererTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\PdfRendererTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/PdfRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\PdfRendererTest\\:\\:testRender\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/PdfRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\PdfRendererTest\\:\\:testSupports\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/PdfRendererTest.php
-
-        -
             message: "#^Parameter \\#2 \\$cacheDirectory of class App\\\\Pdf\\\\MPdfConverter constructor expects string, array\\|bool\\|float\\|int\\|string\\|null given\\.$#"
             count: 1
             path: Invoice/Renderer/PdfRendererTest.php
 
         -
             message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|null given\\.$#"
-            count: 2
+            count: 3
             path: Invoice/Renderer/PdfRendererTest.php
 
         -
-            message: "#^Cannot call method push\\(\\) on object\\|null\\.$#"
-            count: 1
-            path: Invoice/Renderer/TwigRendererTest.php
-
-        -
-            message: "#^Cannot call method setLanguage\\(\\) on App\\\\Entity\\\\InvoiceTemplate\\|null\\.$#"
-            count: 1
-            path: Invoice/Renderer/TwigRendererTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\TwigRendererTest\\:\\:getAbstractRenderer\\(\\) should return App\\\\Invoice\\\\Renderer\\\\AbstractRenderer but returns object\\.$#"
-            count: 1
-            path: Invoice/Renderer/TwigRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\TwigRendererTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/TwigRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\TwigRendererTest\\:\\:testRender\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Invoice/Renderer/TwigRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\TwigRendererTest\\:\\:testSupports\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Renderer/TwigRendererTest.php
 
@@ -7319,11 +6424,6 @@ parameters:
 
         -
             message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\XlsxRendererTest\\:\\:getAbstractRenderer\\(\\) should return App\\\\Invoice\\\\Renderer\\\\AbstractRenderer but returns object\\.$#"
-            count: 1
-            path: Invoice/Renderer/XlsxRendererTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Invoice\\\\Renderer\\\\XlsxRendererTest\\:\\:getNumberGeneratorSut\\(\\) has no return type specified\\.$#"
             count: 1
             path: Invoice/Renderer/XlsxRendererTest.php
 
@@ -7936,16 +7036,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Model\\\\Statistic\\\\TimesheetTest\\:\\:testSetter\\(\\) has no return type specified\\.$#"
             count: 1
             path: Model/Statistic/TimesheetTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Model\\\\Statistic\\\\YearTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Model/Statistic/YearTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Model\\\\Statistic\\\\YearTest\\:\\:testSetter\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Model/Statistic/YearTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Model\\\\TimesheetCountedStatisticTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
@@ -8616,16 +7706,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Security\\\\SessionHandlerTest\\:\\:testConstruct\\(\\) has no return type specified\\.$#"
             count: 1
             path: Security/SessionHandlerTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Security\\\\TestUserEntity\\:\\:eraseCredentials\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Security/TestUserEntity.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Security\\\\TestUserEntity\\:\\:getTimeFormat\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Security/TestUserEntity.php
 
         -
             message: "#^Method App\\\\Tests\\\\Security\\\\UserCheckerTest\\:\\:testCheckPostAuthReturnsOnUnknownUserClass\\(\\) has no return type specified\\.$#"
@@ -9668,7 +8748,7 @@ parameters:
             path: Twig/ExtensionsTest.php
 
         -
-            message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, \\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
+            message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array<class-string, string>|\\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
             count: 6
             path: Twig/ExtensionsTest.php
 
@@ -9758,7 +8838,7 @@ parameters:
             path: Twig/LocaleFormatExtensionsTest.php
 
         -
-            message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, \\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
+            message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array<class-string, string>|\\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
             count: 5
             path: Twig/LocaleFormatExtensionsTest.php
 
@@ -10303,36 +9383,6 @@ parameters:
             path: Validator/Constraints/DateTimeFormatValidatorTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\DurationValidatorTest\\:\\:getInvalidData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Validator/Constraints/DurationValidatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\DurationValidatorTest\\:\\:getValidData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Validator/Constraints/DurationValidatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\DurationValidatorTest\\:\\:testConstraintIsInvalid\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Validator/Constraints/DurationValidatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\DurationValidatorTest\\:\\:testConstraintWithValidData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Validator/Constraints/DurationValidatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\DurationValidatorTest\\:\\:testValidationError\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Validator/Constraints/DurationValidatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\DurationValidatorTest\\:\\:testValidationErrorUpperCase\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Validator/Constraints/DurationValidatorTest.php
-
-        -
             message: "#^Parameter \\#1 \\$string of function strtoupper expects string, int\\|string given\\.$#"
             count: 1
             path: Validator/Constraints/DurationValidatorTest.php
@@ -10519,11 +9569,6 @@ parameters:
 
         -
             message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\TimesheetBasicValidatorTest\\:\\:testConstraintIsInvalid\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Validator/Constraints/TimesheetBasicValidatorTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Validator\\\\Constraints\\\\TimesheetBasicValidatorTest\\:\\:testDisabledValuesDuringStart\\(\\) has no return type specified\\.$#"
             count: 1
             path: Validator/Constraints/TimesheetBasicValidatorTest.php
 
@@ -11283,27 +10328,7 @@ parameters:
             path: Widget/Type/AbstractWidgetTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AbstractWidgetTypeTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AbstractWidgetTypeTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AbstractWidgetTypeTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Widget/Type/AbstractWidgetTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AbstractWidgetTypeTest\\:\\:testDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AbstractWidgetTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AbstractWidgetTypeTest\\:\\:testFluentInterface\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AbstractWidgetTypeTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AbstractWidgetTypeTest\\:\\:testSetter\\(\\) has no return type specified\\.$#"
             count: 1
             path: Widget/Type/AbstractWidgetTypeTest.php
 
@@ -11311,16 +10336,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\ActiveUsersYearTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/ActiveUsersYearTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\ActiveUsersYearTest\\:\\:testSettings\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/ActiveUsersYearTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountMonthTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AmountMonthTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountMonthTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -11333,11 +10348,6 @@ parameters:
             path: Widget/Type/AmountMonthTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountTodayTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AmountTodayTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountTodayTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/AmountTodayTest.php
@@ -11346,11 +10356,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountTodayTest\\:\\:testSettings\\(\\) has no return type specified\\.$#"
             count: 1
             path: Widget/Type/AmountTodayTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountTotalTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AmountTotalTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountTotalTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -11363,11 +10368,6 @@ parameters:
             path: Widget/Type/AmountTotalTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountWeekTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AmountWeekTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountWeekTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/AmountWeekTest.php
@@ -11378,11 +10378,6 @@ parameters:
             path: Widget/Type/AmountWeekTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountYearTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/AmountYearTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountYearTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/AmountYearTest.php
@@ -11391,41 +10386,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\AmountYearTest\\:\\:testSettings\\(\\) has no return type specified\\.$#"
             count: 1
             path: Widget/Type/AmountYearTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\CounterTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Widget/Type/CounterTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\CounterTest\\:\\:testQueryWithUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/CounterTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\CounterTest\\:\\:testTemplateName\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/CounterTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\CounterYearTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
-            count: 1
-            path: Widget/Type/CounterYearTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\CounterYearTest\\:\\:testQueryWithUser\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/CounterYearTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\CounterYearTest\\:\\:testTemplateName\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/CounterYearTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\CounterYearTest\\:\\:testTemplateNameWithFinancialYear\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/CounterYearTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\DailyWorkingTimeChartTest\\:\\:testDefaultValues\\(\\) has no return type specified\\.$#"
@@ -11473,16 +10433,6 @@ parameters:
             path: Widget/Type/MoreTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\MoreTest\\:\\:testData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/MoreTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\MoreTest\\:\\:testTemplateName\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/MoreTest.php
-
-        -
             message: "#^Cannot access offset 'financialBegin' on mixed\\.$#"
             count: 2
             path: Widget/Type/PaginatedWorkingTimeChartTest.php
@@ -11523,11 +10473,6 @@ parameters:
             path: Widget/Type/PaginatedWorkingTimeChartTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsActivityTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/TotalsActivityTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsActivityTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/TotalsActivityTest.php
@@ -11536,11 +10481,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsActivityTest\\:\\:testData\\(\\) has no return type specified\\.$#"
             count: 1
             path: Widget/Type/TotalsActivityTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsCustomerTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/TotalsCustomerTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsCustomerTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -11553,11 +10493,6 @@ parameters:
             path: Widget/Type/TotalsCustomerTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsProjectTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/TotalsProjectTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsProjectTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/TotalsProjectTest.php
@@ -11566,11 +10501,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsProjectTest\\:\\:testData\\(\\) has no return type specified\\.$#"
             count: 1
             path: Widget/Type/TotalsProjectTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsUserTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/TotalsUserTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\TotalsUserTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -11583,11 +10513,6 @@ parameters:
             path: Widget/Type/TotalsUserTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountMonthTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/UserAmountMonthTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountMonthTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/UserAmountMonthTest.php
@@ -11596,11 +10521,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountMonthTest\\:\\:testSettings\\(\\) has no return type specified\\.$#"
             count: 1
             path: Widget/Type/UserAmountMonthTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountTodayTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/UserAmountTodayTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountTodayTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -11613,11 +10533,6 @@ parameters:
             path: Widget/Type/UserAmountTodayTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountTotalTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/UserAmountTotalTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountTotalTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/UserAmountTotalTest.php
@@ -11628,11 +10543,6 @@ parameters:
             path: Widget/Type/UserAmountTotalTest.php
 
         -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountWeekTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/UserAmountWeekTest.php
-
-        -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountWeekTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
             count: 1
             path: Widget/Type/UserAmountWeekTest.php
@@ -11641,11 +10551,6 @@ parameters:
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountWeekTest\\:\\:testSettings\\(\\) has no return type specified\\.$#"
             count: 1
             path: Widget/Type/UserAmountWeekTest.php
-
-        -
-            message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountYearTest\\:\\:assertDefaultData\\(\\) has no return type specified\\.$#"
-            count: 1
-            path: Widget/Type/UserAmountYearTest.php
 
         -
             message: "#^Method App\\\\Tests\\\\Widget\\\\Type\\\\UserAmountYearTest\\:\\:getDefaultOptions\\(\\) return type has no value type specified in iterable type array\\.$#"

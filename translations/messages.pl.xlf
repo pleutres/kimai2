@@ -361,13 +361,13 @@
         <source>color</source>
         <target>Kolor</target>
       </trans-unit>
-      <trans-unit id="tl01EdS" resname="replaceTags">
-        <source>replaceTags</source>
-        <target>Zamień tagi</target>
+      <trans-unit id="tl01EdS" resname="replace">
+        <source>replace</source>
+        <target>Zamień</target>
       </trans-unit>
-      <trans-unit id="ICpl9sx" resname="appendTags">
-        <source>appendTags</source>
-        <target>Dodaj tagi</target>
+      <trans-unit id="ICpl9sx" resname="append">
+        <source>append</source>
+        <target>Dodaj</target>
       </trans-unit>
       <!--
               User profile
@@ -394,7 +394,7 @@
       </trans-unit>
       <trans-unit id="Z34ZpjK" resname="profile.api-token">
         <source>profile.api-token</source>
-        <target>API</target>
+        <target state="translated">Dostęp do API</target>
       </trans-unit>
       <trans-unit id="ygtTz8." resname="profile.roles">
         <source>profile.roles</source>
@@ -1264,7 +1264,7 @@
       </trans-unit>
       <trans-unit id="FeFBn_3" resname="profile.2fa">
         <source>profile.2fa</source>
-        <target state="translated">Dwuskładnikowe (TOTP)</target>
+        <target state="translated">Dwuskładnikowe (2FA)</target>
       </trans-unit>
       <trans-unit id="o0hsx2H" resname="mark_as_open">
         <source>mark_as_open</source>
@@ -1440,7 +1440,7 @@
       </trans-unit>
       <trans-unit id="52lzpZE" resname="active.help">
         <source>active.help</source>
-        <target state="translated">Zdezaktywowani użytkownicy nie mają możliwości logowania się i zostają ukryci w raportach i oknach wyboru.</target>
+        <target state="translated">Zdezaktywowani użytkownicy nie mają możliwości logowania się i zostają ukryci w raportach i oknach wyboru</target>
       </trans-unit>
       <trans-unit id="GxuKjNb" resname="help.invoiceTemplate_customer">
         <source>help.invoiceTemplate_customer</source>
@@ -1481,6 +1481,66 @@
       <trans-unit id="F7xeAn4" resname="invoice_date">
         <source>invoice_date</source>
         <target state="translated">Data faktury</target>
+      </trans-unit>
+      <trans-unit id="EYXzfTO" resname="deleted">
+        <source>deleted</source>
+        <target state="translated">Usunięto</target>
+      </trans-unit>
+      <trans-unit id="AXr_aHI" resname="completed_month_pdf_note">
+        <source>completed_month_pdf_note</source>
+        <target state="translated">Dokument ten służy jako dowód przepracowanych godzin.</target>
+      </trans-unit>
+      <trans-unit id="4lrfIsZ" resname="complete_month">
+        <source>complete_month</source>
+        <target state="translated">Cały miesiąc</target>
+      </trans-unit>
+      <trans-unit id="EX27Gdt" resname="created_by">
+        <source>created_by</source>
+        <target state="translated">Stworzone przez</target>
+      </trans-unit>
+      <trans-unit id="6Hip2aF" resname="created_at">
+        <source>created_at</source>
+        <target state="translated">Utworzono o</target>
+      </trans-unit>
+      <trans-unit id="eCEGRzN" resname="work_contract">
+        <source>work_contract</source>
+        <target state="translated">Umowa o pracę</target>
+      </trans-unit>
+      <trans-unit id="7_d7IB3" resname="evaluation">
+        <source>evaluation</source>
+        <target state="translated">Ocena</target>
+      </trans-unit>
+      <trans-unit id="mS4SSmt" resname="work_times">
+        <source>work_times</source>
+        <target state="translated">Czas pracy</target>
+      </trans-unit>
+      <trans-unit id="1btzNDa" resname="work_times_should">
+        <source>work_times_should</source>
+        <target state="translated">Godziny docelowe</target>
+      </trans-unit>
+      <trans-unit id="t1r372x" resname="invisible">
+        <source>invisible</source>
+        <target state="translated">Niewidoczne</target>
+      </trans-unit>
+      <trans-unit id="TTnaBm4" resname="day_full">
+        <source>day_full</source>
+        <target state="translated">Pełen dzień</target>
+      </trans-unit>
+      <trans-unit id="Eml59KV" resname="day_half">
+        <source>day_half</source>
+        <target state="translated">Połowa dnia</target>
+      </trans-unit>
+      <trans-unit id="eWmotjb" resname="completed_month_pdf">
+        <source>completed_month_pdf</source>
+        <target state="translated">Miesiąc skończony PDF</target>
+      </trans-unit>
+      <trans-unit id="W8XQTkJ" resname="complete_month.help">
+        <source>complete_month.help</source>
+        <target state="translated">Po skończeniu miesiąca, użytkownik nie będzie już w stanie tworzyć lub zmieniać czasów na ten okres.</target>
+      </trans-unit>
+      <trans-unit id="CDTC1gc" resname="supervisor">
+        <source>supervisor</source>
+        <target state="translated">Kierowca</target>
       </trans-unit>
     </body>
   </file>

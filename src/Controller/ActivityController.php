@@ -35,7 +35,7 @@ use App\Repository\TeamRepository;
 use App\Utils\DataTable;
 use App\Utils\PageSetup;
 use Exception;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +47,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * Controller used to manage activities.
  */
 #[Route(path: '/admin/activity')]
-#[IsGranted(new Expression("is_granted('view_activity') or is_granted('view_teamlead_activity') or is_granted('view_team_activity')"))]
 final class ActivityController extends AbstractController
 {
     public function __construct(private ActivityRepository $repository, private SystemConfiguration $configuration, private EventDispatcherInterface $dispatcher, private ActivityService $activityService)
@@ -56,6 +55,7 @@ final class ActivityController extends AbstractController
 
     #[Route(path: '/', defaults: ['page' => 1], name: 'admin_activity', methods: ['GET'])]
     #[Route(path: '/page/{page}', requirements: ['page' => '[1-9]\d*'], name: 'admin_activity_paginated', methods: ['GET'])]
+    #[IsGranted(new Expression("is_granted('listing', 'activity')"))]
     public function indexAction(int $page, Request $request): Response
     {
         $query = new ActivityQuery();
@@ -329,7 +329,11 @@ final class ActivityController extends AbstractController
                 $this->activityService->updateActivity($activity);
                 $this->flashSuccess('action.update.success');
 
-                return $this->redirectToRoute('activity_details', ['id' => $activity->getId()]);
+                if ($this->isGranted('view', $activity)) {
+                    return $this->redirectToRoute('activity_details', ['id' => $activity->getId()]);
+                } else {
+                    return new Response();
+                }
             } catch (Exception $ex) {
                 $this->flashUpdateException($ex);
             }
@@ -389,6 +393,7 @@ final class ActivityController extends AbstractController
     }
 
     #[Route(path: '/export', name: 'activity_export', methods: ['GET'])]
+    #[IsGranted(new Expression("is_granted('listing', 'activity')"))]
     public function exportAction(Request $request, EntityWithMetaFieldsExporter $exporter): Response
     {
         $query = new ActivityQuery();
@@ -414,6 +419,10 @@ final class ActivityController extends AbstractController
         return $writer->getFileResponse($spreadsheet);
     }
 
+    /**
+     * @param ActivityQuery $query
+     * @return FormInterface<ActivityQuery>
+     */
     private function getToolbarForm(ActivityQuery $query): FormInterface
     {
         return $this->createSearchForm(ActivityToolbarForm::class, $query, [
@@ -423,6 +432,10 @@ final class ActivityController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Activity $activity
+     * @return FormInterface<ActivityEditForm>
+     */
     private function createEditForm(Activity $activity): FormInterface
     {
         $currency = $this->configuration->getCustomerDefaultCurrency();

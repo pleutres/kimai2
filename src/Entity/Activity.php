@@ -43,8 +43,8 @@ class Activity implements EntityWithMetaFields, EntityWithBudget
     #[Serializer\Groups(['Default'])]
     #[Exporter\Expose(label: 'id', type: 'integer')]
     private ?int $id = null;
-    #[ORM\ManyToOne(targetEntity: 'App\Entity\Project')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     #[Serializer\Expose]
     #[Serializer\Groups(['Subresource', 'Expanded'])]
     #[OA\Property(ref: '#/components/schemas/ProjectExpanded')]
@@ -87,7 +87,7 @@ class Activity implements EntityWithMetaFields, EntityWithBudget
      *
      * @var Collection<ActivityMeta>
      */
-    #[ORM\OneToMany(targetEntity: 'App\Entity\ActivityMeta', mappedBy: 'activity', cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'activity', targetEntity: ActivityMeta::class, cascade: ['persist'])]
     #[Serializer\Expose]
     #[Serializer\Groups(['Activity'])]
     #[Serializer\Type(name: 'array<App\Entity\ActivityMeta>')]
@@ -102,7 +102,7 @@ class Activity implements EntityWithMetaFields, EntityWithBudget
     #[ORM\JoinTable(name: 'kimai2_activities_teams')]
     #[ORM\JoinColumn(name: 'activity_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'team_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[ORM\ManyToMany(targetEntity: 'App\Entity\Team', cascade: ['persist'], inversedBy: 'activities')]
+    #[ORM\ManyToMany(targetEntity: Team::class, inversedBy: 'activities', cascade: ['persist'])]
     #[Serializer\Expose]
     #[Serializer\Groups(['Activity'])]
     #[OA\Property(type: 'array', items: new OA\Items(ref: '#/components/schemas/Team'))]
@@ -232,7 +232,7 @@ class Activity implements EntityWithMetaFields, EntityWithBudget
         return $this;
     }
 
-    public function addTeam(Team $team)
+    public function addTeam(Team $team): void
     {
         if ($this->teams->contains($team)) {
             return;
@@ -242,7 +242,7 @@ class Activity implements EntityWithMetaFields, EntityWithBudget
         $team->addActivity($this);
     }
 
-    public function removeTeam(Team $team)
+    public function removeTeam(Team $team): void
     {
         if (!$this->teams->contains($team)) {
             return;

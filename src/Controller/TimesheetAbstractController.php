@@ -33,7 +33,7 @@ use App\Timesheet\TimesheetService;
 use App\Timesheet\TrackingMode\TrackingModeInterface;
 use App\Utils\DataTable;
 use App\Utils\PageSetup;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -202,6 +202,7 @@ abstract class TimesheetAbstractController extends AbstractController
     protected function duplicate(Timesheet $timesheet, Request $request): Response
     {
         $copyTimesheet = clone $timesheet;
+        $copyTimesheet->resetRates();
 
         $event = new TimesheetMetaDefinitionEvent($copyTimesheet);
         $this->dispatcher->dispatch($event);
@@ -333,6 +334,13 @@ abstract class TimesheetAbstractController extends AbstractController
             $execute = false;
             /** @var Timesheet $timesheet */
             foreach ($timesheets as $timesheet) {
+                if ($dto->isReplaceDescription()) {
+                    $timesheet->setDescription($dto->getDescription());
+                    $execute = true;
+                } elseif($dto->getDescription() !== null && $dto->getDescription() !== '') {
+                    $timesheet->setDescription($timesheet->getDescription() . PHP_EOL . $dto->getDescription());
+                    $execute = true;
+                }
                 if ($dto->isReplaceTags()) {
                     foreach ($timesheet->getTags() as $tag) {
                         $timesheet->removeTag($tag);
@@ -417,7 +425,7 @@ abstract class TimesheetAbstractController extends AbstractController
         ]);
     }
 
-    protected function multiDelete(Request $request)
+    protected function multiDelete(Request $request): Response
     {
         $form = $this->getMultiUpdateActionForm();
         $form->handleRequest($request);
@@ -445,7 +453,7 @@ abstract class TimesheetAbstractController extends AbstractController
         return $this->redirectToRoute($this->getTimesheetRoute());
     }
 
-    protected function prepareQuery(TimesheetQuery $query)
+    protected function prepareQuery(TimesheetQuery $query): void
     {
         $query->setUser($this->getUser());
     }

@@ -78,7 +78,7 @@ abstract class APIControllerBaseTest extends ControllerBaseTest
         $this->assertEquals($pageSize, $response->headers->get('X-Per-Page'));
     }
 
-    protected function assertRequestIsSecured(HttpKernelBrowser $client, string $url, $method = 'GET'): void
+    protected function assertRequestIsSecured(HttpKernelBrowser $client, string $url, string $method = 'GET'): void
     {
         $this->request($client, $url, $method);
         $this->assertResponseIsSecured($client->getResponse(), $url);
@@ -126,7 +126,7 @@ abstract class APIControllerBaseTest extends ControllerBaseTest
         ]);
     }
 
-    public function request(HttpKernelBrowser $client, string $url, $method = 'GET', array $parameters = [], string $content = null): Crawler
+    public function request(HttpKernelBrowser $client, string $url, string $method = 'GET', array $parameters = [], string $content = null): Crawler
     {
         $server = ['HTTP_CONTENT_TYPE' => 'application/json', 'CONTENT_TYPE' => 'application/json'];
 
@@ -287,7 +287,7 @@ abstract class APIControllerBaseTest extends ControllerBaseTest
             foreach ($messages as $i => $message) {
                 self::assertEquals($message, $data[$fieldName]['errors'][$i]);
             }
-            if (\array_key_exists('errors', $data[$fieldName]) && \count($data[$fieldName]['errors']) > 0) {
+            if (\array_key_exists('errors', (array) $data[$fieldName]) && \count($data[$fieldName]['errors']) > 0) {
                 $foundErrors[$fieldName] = \count($data[$fieldName]['errors']);
             }
         }
@@ -313,6 +313,7 @@ abstract class APIControllerBaseTest extends ControllerBaseTest
                     'id' => 'int',
                     'name' => 'string',
                     'color' => '@string',
+                    'visible' => 'bool',
                 ];
 
                 // embedded meta data
@@ -339,6 +340,7 @@ abstract class APIControllerBaseTest extends ControllerBaseTest
                     'id' => 'int',
                     'username' => 'string',
                     'enabled' => 'bool',
+                    'apiToken' => 'bool',
                     'color' => '@string',
                     'alias' => '@string',
                     'accountNumber' => '@string',
@@ -352,8 +354,10 @@ abstract class APIControllerBaseTest extends ControllerBaseTest
                     'id' => 'int',
                     'username' => 'string',
                     'enabled' => 'bool',
+                    'apiToken' => 'bool',
                     'alias' => '@string',
                     'title' => '@string',
+                    'supervisor' => ['result' => 'object', 'type' => '@UserEntity'],
                     'avatar' => '@string',
                     'color' => '@string',
                     'teams' => ['result' => 'array', 'type' => 'Team'],

@@ -246,7 +246,7 @@
 
 {% macro alert(type, description, title, icon, dismissible) %}
     {% from '@theme/components/alert.html.twig' import alert %}
-    {{ alert({type: type, description: description|trans, title: title|trans, icon: icon, dismissible: dismissible}) }}
+    {{ alert({type: type, description: description|trans, title: title|trans, icon: icon, dismissible: dismissible, important: true}) }}
 {% endmacro %}
 
 {% macro callout(type, description, title, icon) %}
@@ -407,6 +407,14 @@
 
 {#
     To be used like this:
+    <tr class="{{ class_tag_row(tag) }}">
+#}
+{% macro class_tag_row(tag) %}
+    {%- if not tag.visible %}bg-orange-lt{% endif -%}
+{% endmacro %}
+
+{#
+    To be used like this:
     <tr {{ customer_row_attr(customer, now) }}>
 #}
 {% macro customer_row_attr(customer, now) %}
@@ -514,4 +522,17 @@
             KimaiReloadPageWidget.create('{{ events }}', {% if full_reload is same as true %}true{% else %}false{% endif %});
         });
     </script>
+{% endmacro %}
+
+{% macro work_times_result(should, actual, decimal) %}
+    {% set result = actual - should %}
+    {% if result == 0 %}
+        <span class="work_time_exact">{{ result|duration(decimal) }}</span>
+    {% elseif should == 0 and actual > 0 %}
+        <span class="work_time_positive text-green">+{{ actual|duration(decimal) }}</span>
+    {% elseif result < 0 %}
+        <span class="work_time_negative text-red">{{ result|duration(decimal) }}</span>
+    {% else %}
+        <span class="work_time_positive text-green">+{{ result|duration(decimal) }}</span>
+    {% endif %}
 {% endmacro %}

@@ -17,9 +17,9 @@ use App\Timesheet\DateTimeFactory;
 use App\Validator\ValidationFailedException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseAbstractController;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -47,19 +47,41 @@ abstract class AbstractController extends BaseAbstractController implements Serv
         return $this->container->get('translator');
     }
 
-    protected function createSearchForm(string $type = FormType::class, $data = null, array $options = []): FormInterface
+    /**
+     * @template TFormType of FormTypeInterface<TData>
+     * @template TData of mixed
+     * @param class-string<TFormType> $type
+     * @param TData $data
+     * @param array<mixed> $options
+     * @return FormInterface<TData>
+     */
+    protected function createSearchForm(string $type, mixed $data, array $options = []): FormInterface
     {
         return $this->createFormForGetRequest($type, $data, $options);
     }
 
-    protected function createFormForGetRequest(string $type = FormType::class, $data = null, array $options = []): FormInterface
+    /**
+     * @template TFormType of FormTypeInterface<TData>
+     * @template TData of mixed
+     * @param class-string<TFormType> $type
+     * @param TData $data
+     * @param array<mixed> $options
+     * @return FormInterface<TData>
+     */
+    protected function createFormForGetRequest(string $type, mixed $data, array $options = []): FormInterface
     {
-        return $this->container
-            ->get('form.factory')
-            ->createNamed('', $type, $data, array_merge(['method' => 'GET'], $options));
+        return $this->container->get('form.factory')->createNamed('', $type, $data, array_merge(['method' => 'GET'], $options)); // @phpstan-ignore-line
     }
 
-    protected function createFormWithName(string $name, string $type, mixed $data = null, array $options = []): FormInterface
+    /**
+     * @template TFormType of FormTypeInterface<TData>
+     * @template TData of array|object
+     * @param class-string<TFormType> $type
+     * @param TData $data
+     * @param array<mixed> $options
+     * @return FormInterface<TData>
+     */
+    protected function createFormWithName(string $name, string $type, mixed $data, array $options = []): FormInterface
     {
         return $this->container->get('form.factory')->createNamed($name, $type, $data, $options);
     }
@@ -99,17 +121,12 @@ abstract class AbstractController extends BaseAbstractController implements Serv
      * Adds an "error" flash message to the stack.
      *
      * @param string $translationKey
-     * @param array<string, string>|string $reason passing an array is deprecated
+     * @param string $reason
      * @return void
      * @throws \Exception
      */
-    protected function flashError(string $translationKey, array|string $reason = ''): void
+    protected function flashError(string $translationKey, string $reason = ''): void
     {
-        if (\is_array($reason)) {
-            @trigger_error('Calling "flashError" with an array $reason is deprecated and will be removed soon. Refactor and pass a string instead.', E_USER_DEPRECATED);
-            $reason = \array_key_exists('%reason%', $reason) ? $reason['%reason%'] : '';
-        }
-
         $this->addFlashTranslated('error', $translationKey, ['%reason%' => $reason]);
     }
 
@@ -166,6 +183,9 @@ abstract class AbstractController extends BaseAbstractController implements Serv
 
     /**
      * Handles exception flash messages for failed update/create actions.
+     * @param \Exception $exception
+     * @param FormInterface $form
+     * @return void
      */
     protected function handleFormUpdateException(\Exception $exception, FormInterface $form): void
     {

@@ -288,7 +288,7 @@ class ConfigurationTest extends TestCase
                     'allow_overbooking_budget' => true,
                     'lockdown_period_timezone' => null,
                     'break_warning_duration' => 0,
-                    'long_running_duration' => 480,
+                    'long_running_duration' => 0,
                     'require_activity' => true,
                 ],
                 'duration_increment' => 15,
@@ -309,7 +309,7 @@ class ConfigurationTest extends TestCase
                     1 => 'templates/invoice/renderer/',
                 ],
                 'number_format' => '{Y}/{cy,3}',
-                'upload_twig' => true,
+                'upload_twig' => false,
             ],
             'export' => [
                 'documents' => [
@@ -413,7 +413,7 @@ class ConfigurationTest extends TestCase
                 'connection' => [
                     'organization' => []
                 ],
-                'provider' => null,
+                'provider' => 'default',
             ],
             'company' => [
                 'financial_year' => null,

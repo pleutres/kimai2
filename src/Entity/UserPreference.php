@@ -31,12 +31,22 @@ class UserPreference
     public const LOCALE = 'language';
     public const TIMEZONE = 'timezone';
     public const FIRST_WEEKDAY = 'first_weekday';
+    public const WORK_HOURS_MONDAY = 'work_monday';
+    public const WORK_HOURS_TUESDAY = 'work_tuesday';
+    public const WORK_HOURS_WEDNESDAY = 'work_wednesday';
+    public const WORK_HOURS_THURSDAY = 'work_thursday';
+    public const WORK_HOURS_FRIDAY = 'work_friday';
+    public const WORK_HOURS_SATURDAY = 'work_saturday';
+    public const WORK_HOURS_SUNDAY = 'work_sunday';
+    public const WORK_STARTING_DAY = 'work_start_day';
+    public const PUBLIC_HOLIDAY_GROUP = 'public_holiday_group';
+    public const HOLIDAYS_PER_YEAR = 'holidays';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id', type: 'integer')]
     private ?int $id = null;
-    #[ORM\ManyToOne(targetEntity: 'App\Entity\User', inversedBy: 'preferences')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'preferences')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Assert\NotNull]
     private ?User $user = null;
@@ -47,6 +57,7 @@ class UserPreference
     #[Serializer\Groups(['Default'])]
     private string $name;
     #[ORM\Column(name: 'value', type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 250)]
     #[Serializer\Expose]
     #[Serializer\Groups(['Default'])]
     private ?string $value;

@@ -14,6 +14,7 @@ use App\Entity\UserPreference;
 use App\Event\PrepareUserEvent;
 use App\Form\Model\TotpActivation;
 use App\Form\UserApiTokenType;
+use App\Form\UserContractType;
 use App\Form\UserEditType;
 use App\Form\UserPasswordType;
 use App\Form\UserPreferencesForm;
@@ -31,8 +32,8 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,9 +60,12 @@ final class ProfileController extends AbstractController
     {
         $dateFactory = $this->getDateTimeFactory();
         $userStats = $repository->getUserStatistics($profile);
-        $firstEntry = $statisticService->findFirstRecordDate($profile);
+        $workStartingDay = $profile->getWorkStartingDay();
+        if ($workStartingDay === null) {
+            $workStartingDay = $statisticService->findFirstRecordDate($profile);
+        }
 
-        $begin = $firstEntry ?? $dateFactory->getStartOfMonth();
+        $begin = $workStartingDay ?? $dateFactory->getStartOfMonth();
         $end = $dateFactory->getEndOfMonth();
 
         // statistic service does not fill up the complete year by default!
@@ -72,7 +76,7 @@ final class ProfileController extends AbstractController
             'tab' => 'charts',
             'user' => $profile,
             'stats' => $userStats,
-            'firstTimesheet' => $firstEntry,
+            'workingSince' => $workStartingDay,
             'workMonths' => $statisticService->getMonthlyStats($begin, $end, [$profile])[0]
         ];
 
@@ -178,6 +182,32 @@ final class ProfileController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/{username}/contract', name: 'user_profile_contract', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('contract', 'profile')]
+    public function contractAction(User $profile, Request $request, UserRepository $userRepository): Response
+    {
+        $form = $this->createForm(UserContractType::class, $profile, [
+            'action' => $this->generateUrl('user_profile_contract', ['username' => $profile->getUserIdentifier()]),
+            'method' => 'POST',
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userRepository->saveUser($profile);
+            $this->flashSuccess('action.update.success');
+
+            return $this->redirectToRoute('user_profile_contract', ['username' => $profile->getUserIdentifier()]);
+        }
+
+        return $this->render('user/contract.html.twig', [
+            'tab' => 'contract',
+            'user' => $profile,
+            'form' => $form->createView(),
+        ]);
+    }
+
     #[Route(path: '/{username}/teams', name: 'user_profile_teams', methods: ['GET', 'POST'])]
     #[IsGranted('teams', 'profile')]
     public function teamsAction(User $profile, Request $request, UserRepository $userRepository, TeamRepository $teamRepository): Response
@@ -244,9 +274,9 @@ final class ProfileController extends AbstractController
         // prepare ordered preferences
         $sections = [];
 
-        /** @var \ArrayIterator $iterator */
+        /** @var \ArrayIterator<int, UserPreference> $iterator */
         $iterator = $profile->getPreferences()->getIterator();
-        $iterator->uasort(function (UserPreference $a, UserPreference $b) {
+        $iterator->uasort(function ($a, $b) {
             return ($a->getOrder() < $b->getOrder()) ? -1 : 1;
         });
 
@@ -286,7 +316,8 @@ final class ProfileController extends AbstractController
                 'action' => $this->generateUrl('user_profile_edit', ['username' => $user->getUserIdentifier()]),
                 'method' => 'POST',
                 'include_active_flag' => ($user->getId() !== $this->getUser()->getId()),
-                'include_preferences' => false,
+                'include_preferences' => true,
+                'include_supervisor' => $this->isGranted('supervisor', $user),
             ]
         );
     }
@@ -367,23 +398,35 @@ final class ProfileController extends AbstractController
             return $this->redirectToRoute('user_profile_2fa', ['username' => $profile->getUserIdentifier()]);
         }
 
+        $qrCodeContent = $totpAuthenticator->getQRContent($profile);
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data($qrCodeContent)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(200)
+            ->margin(0)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+            ->build();
+
         return $this->render('user/2fa.html.twig', [
             'tab' => '2fa',
             'user' => $profile,
             'form' => $form->createView(),
             'deactivate' => $this->getTwoFactorDeactivationForm($profile)->createView(),
+            'qr_code' => $result,
+            'secret' => $profile->getTotpSecret(),
         ]);
     }
 
     private function getTwoFactorDeactivationForm(User $user): FormInterface
     {
-        return $this->createFormBuilder(
-            [],
-            [
-                'action' => $this->generateUrl('user_profile_2fa_deactivate', ['username' => $user->getUserIdentifier()]),
-                'method' => 'POST'
-            ]
-        )->getForm();
+        return $this->createFormBuilder([], [
+            'action' => $this->generateUrl('user_profile_2fa_deactivate', ['username' => $user->getUserIdentifier()]),
+            'method' => 'POST'
+        ])->getForm();
     }
 
     #[Route(path: '/{username}/2fa_deactivate', name: 'user_profile_2fa_deactivate', methods: ['POST'])]
@@ -404,29 +447,5 @@ final class ProfileController extends AbstractController
         }
 
         return $this->redirectToRoute('user_profile_2fa', ['username' => $profile->getUserIdentifier()]);
-    }
-
-    #[Route(path: '/{username}/totp.png', name: 'user_profile_2fa_image', methods: ['GET'])]
-    #[IsGranted('2fa', 'profile')]
-    public function displayTotpQrCode(User $profile, TotpAuthenticatorInterface $totpAuthenticator): Response
-    {
-        if (!$profile->hasTotpSecret()) {
-            throw $this->createNotFoundException('User has no TOTP secret.');
-        }
-
-        $qrCodeContent = $totpAuthenticator->getQRContent($profile);
-
-        $result = Builder::create()
-            ->writer(new PngWriter())
-            ->writerOptions([])
-            ->data($qrCodeContent)
-            ->encoding(new Encoding('UTF-8'))
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
-            ->size(200)
-            ->margin(0)
-            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
-            ->build();
-
-        return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
     }
 }

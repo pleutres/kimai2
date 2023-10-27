@@ -9,6 +9,7 @@
 
 namespace App\Controller;
 
+use App\Constants;
 use App\Utils\FileHelper;
 use App\Utils\PageSetup;
 use App\Utils\ReleaseVersion;
@@ -87,6 +88,13 @@ final class DoctorController extends AbstractController
         $page = new PageSetup('Doctor');
         $page->setHelp('doctor.html');
 
+        $latestRelease = $this->getNextUpdateVersion();
+        if (\is_array($latestRelease) && \array_key_exists('version', $latestRelease)) {
+            if (version_compare(Constants::VERSION, (string) $latestRelease['version']) >= 0) {
+                $latestRelease = null;
+            }
+        }
+
         return $this->render('doctor/index.html.twig', [
             'page_setup' => $page,
             'modules' => get_loaded_extensions(),
@@ -100,7 +108,7 @@ final class DoctorController extends AbstractController
             'logLines' => $logLines,
             'logSize' => $this->getLogSize(),
             'composer' => $this->getComposerPackages(),
-            'release' => $this->getNextUpdateVersion()
+            'release' => $latestRelease
         ]);
     }
 
@@ -109,29 +117,28 @@ final class DoctorController extends AbstractController
      */
     private function getComposerPackages(): array
     {
+        /** @var array<string, string> $versions */
         $versions = [];
 
-        if (class_exists(InstalledVersions::class)) {
-            $rootPackage = InstalledVersions::getRootPackage()['name'];
-            foreach (InstalledVersions::getInstalledPackages() as $package) {
-                $versions[$package] = InstalledVersions::getPrettyVersion($package);
+        $rootPackage = InstalledVersions::getRootPackage()['name'];
+        foreach (InstalledVersions::getInstalledPackages() as $package) {
+            $versions[$package] = InstalledVersions::getPrettyVersion($package);
+        }
+
+        // remove kimai from the package list
+        $versions = array_filter($versions, function ($version, $name) use ($rootPackage): bool {
+            if ($name === $rootPackage) {
+                return false;
             }
 
-            // remove kimai from the package list
-            $versions = array_filter($versions, function ($version, $name) use ($rootPackage): bool {
-                if ($name === $rootPackage) {
-                    return false;
-                }
+            if ($version === null || $version === '*') {
+                return false;
+            }
 
-                if ($version === null || $version === '*') {
-                    return false;
-                }
+            return true;
+        }, ARRAY_FILTER_USE_BOTH);
 
-                return true;
-            }, ARRAY_FILTER_USE_BOTH);
-
-            ksort($versions);
-        }
+        ksort($versions);
 
         return $versions;
     }
@@ -313,6 +320,9 @@ final class DoctorController extends AbstractController
         return $phpInfo;
     }
 
+    /**
+     * @return array{'version': string, 'date': \DateTimeInterface, 'url': string, 'download': string, 'content': string}|null
+     */
     private function getNextUpdateVersion(): ?array
     {
         return $this->cache->get('kimai.update_release', function (ItemInterface $item) {

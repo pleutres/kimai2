@@ -23,11 +23,12 @@ class ThemeEvent extends Event
     public const CONTENT_AFTER = 'app.theme.content_after';
 
     private string $content = '';
-    protected mixed $payload;
 
-    public function __construct(private ?User $user = null, mixed $payload = null)
+    /**
+     * @param array<string, mixed|array<mixed>> $payload
+     */
+    public function __construct(private ?User $user = null, protected array $payload = [])
     {
-        $this->payload = $payload;
     }
 
     public function getUser(): ?User
@@ -47,13 +48,11 @@ class ThemeEvent extends Event
         return $this;
     }
 
-    public function getPayload(): mixed
+    /**
+     * @return array<string, mixed|array<mixed>>
+     */
+    public function getPayload(): array
     {
         return $this->payload;
-    }
-
-    public function setPayload(mixed $payload): void
-    {
-        $this->payload = $payload;
     }
 }

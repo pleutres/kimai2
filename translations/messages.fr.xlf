@@ -158,8 +158,8 @@
         <target>Durée</target>
       </trans-unit>
       <trans-unit id="BPiZbad" resname="user">
-        <source>user</source>
-        <target>Utilisateur</target>
+        <source>User</source>
+        <target state="needs-translation">Utilisateur</target>
       </trans-unit>
       <trans-unit id="FveKfWM" resname="username">
         <source>username</source>
@@ -326,7 +326,7 @@
       </trans-unit>
       <trans-unit id="Z34ZpjK" resname="profile.api-token">
         <source>profile.api-token</source>
-        <target>API</target>
+        <target state="translated">Accès à l'API</target>
       </trans-unit>
       <trans-unit id="ygtTz8." resname="profile.roles">
         <source>profile.roles</source>
@@ -766,13 +766,13 @@
         <source>globalsOnly</source>
         <target>Uniquement global</target>
       </trans-unit>
-      <trans-unit id="ICpl9sx" resname="appendTags">
-        <source>appendTags</source>
-        <target>Ajouter des mots-clés</target>
+      <trans-unit id="ICpl9sx" resname="append">
+        <source>append</source>
+        <target>Ajouter</target>
       </trans-unit>
-      <trans-unit id="tl01EdS" resname="replaceTags">
-        <source>replaceTags</source>
-        <target>Remplacer les mots-clés</target>
+      <trans-unit id="tl01EdS" resname="replace">
+        <source>replace</source>
+        <target>Remplacer</target>
       </trans-unit>
       <trans-unit id="b43sCwO" resname="help.fixedRate">
         <source>help.fixedRate</source>
@@ -1020,7 +1020,7 @@
       </trans-unit>
       <trans-unit id="O5w1jzb" resname="file">
         <source>file</source>
-        <target>Fichier</target>
+        <target state="translated">File</target>
       </trans-unit>
       <trans-unit id="o0yOFHL" resname="not_invoiced">
         <source>not_invoiced</source>
@@ -1100,7 +1100,7 @@
       </trans-unit>
       <trans-unit id="BXBFJP8" resname="stats.workingTime">
         <source>stats.workingTime</source>
-        <target>Temps de travail</target>
+        <target state="needs-translation">Temps de travail</target>
       </trans-unit>
       <trans-unit id="XQ2.pq2" resname="error.too_many_entries">
         <source>error.too_many_entries</source>
@@ -1204,7 +1204,7 @@
       </trans-unit>
       <trans-unit id="OJ.wI1U" resname="invoiceText">
         <source>invoiceText</source>
-        <target state="translated">Texte de la facture</target>
+        <target state="needs-translation">Texte de la facture</target>
       </trans-unit>
       <trans-unit id="HNFpvnH" resname="globalActivities">
         <source>globalActivities</source>
@@ -1268,7 +1268,7 @@
       </trans-unit>
       <trans-unit id="IDDfzoR" resname="invoiceLabel">
         <source>invoiceLabel</source>
-        <target state="translated">Texte de la facture</target>
+        <target state="needs-translation">Texte de la facture</target>
       </trans-unit>
       <trans-unit id="AeMGtJO" resname="help.visible">
         <source>help.visible</source>
@@ -1292,7 +1292,7 @@
       </trans-unit>
       <trans-unit id="FeFBn_3" resname="profile.2fa">
         <source>profile.2fa</source>
-        <target state="translated">double facteur (TOTP)</target>
+        <target state="translated">double facteur (2FA)</target>
       </trans-unit>
       <trans-unit id="hPY2VcD" resname="profile.2fa_intro">
         <source>profile.2fa_intro</source>
@@ -1481,6 +1481,74 @@
       <trans-unit id="F7xeAn4" resname="invoice_date">
         <source>invoice_date</source>
         <target state="translated">Date de la facture</target>
+      </trans-unit>
+      <trans-unit id="iaJj4va" resname="work_times_account">
+        <source>work_times_account</source>
+        <target state="translated">Compte de temps de travail</target>
+      </trans-unit>
+      <trans-unit id="EYXzfTO" resname="deleted">
+        <source>deleted</source>
+        <target state="translated">Supprimé</target>
+      </trans-unit>
+      <trans-unit id="EX27Gdt" resname="created_by">
+        <source>created_by</source>
+        <target state="translated">Créé par</target>
+      </trans-unit>
+      <trans-unit id="6Hip2aF" resname="created_at">
+        <source>created_at</source>
+        <target state="translated">Créé à</target>
+      </trans-unit>
+      <trans-unit id="eCEGRzN" resname="work_contract">
+        <source>work_contract</source>
+        <target state="translated">Contrat de travail</target>
+      </trans-unit>
+      <trans-unit id="7_d7IB3" resname="evaluation">
+        <source>evaluation</source>
+        <target state="translated">Évaluation</target>
+      </trans-unit>
+      <trans-unit id="1btzNDa" resname="work_times_should">
+        <source>work_times_should</source>
+        <target state="translated">Heures cibles</target>
+      </trans-unit>
+      <trans-unit id="s9NPI3v" resname="work_times_should.none_configured">
+        <source>work_times_should.none_configured</source>
+        <target state="translated">Aucune heure cible n'a été configurée pour cet utilisateur dans les paramètres du contrat de travail.</target>
+      </trans-unit>
+      <trans-unit id="4lrfIsZ" resname="complete_month">
+        <source>complete_month</source>
+        <target state="translated">Mois complet</target>
+      </trans-unit>
+      <trans-unit id="W8XQTkJ" resname="complete_month.help">
+        <source>complete_month.help</source>
+        <target state="translated">Après avoir terminé le mois, l'utilisateur ne pourra plus créer ou modifier des heures pour cette période.</target>
+      </trans-unit>
+      <trans-unit id="eWmotjb" resname="completed_month_pdf">
+        <source>completed_month_pdf</source>
+        <target state="translated">PDF du mois terminé</target>
+      </trans-unit>
+      <trans-unit id="AXr_aHI" resname="completed_month_pdf_note">
+        <source>completed_month_pdf_note</source>
+        <target state="translated">Ce document sert de preuve des heures travaillées.</target>
+      </trans-unit>
+      <trans-unit id="yXrOTI." resname="review">
+        <source>review</source>
+        <target state="translated">Révision</target>
+      </trans-unit>
+      <trans-unit id="mS4SSmt" resname="work_times">
+        <source>work_times</source>
+        <target state="needs-translation">Temps de travail</target>
+      </trans-unit>
+      <trans-unit id="PE2iiaW" resname="work_times_should.help">
+        <source>work_times_should.help</source>
+        <target state="translated">Les valeurs configurées ici sont utilisées pour calculer le compte horaire.</target>
+      </trans-unit>
+      <trans-unit id="YPO294a" resname="absence_other.intro">
+        <source>absence_other.intro</source>
+        <target state="needs-translation">Family events, moving house, weather chaos etc.</target>
+      </trans-unit>
+      <trans-unit id="8yqaKzX" resname="confirmed_by_at">
+        <source>confirmed_by_at</source>
+        <target state="needs-translation">Confirmed by %user% at %date%</target>
       </trans-unit>
     </body>
   </file>

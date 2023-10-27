@@ -17,7 +17,7 @@ final class InvoiceItemDefaultHydrator implements InvoiceItemHydrator
 {
     private InvoiceModel $model;
 
-    public function setInvoiceModel(InvoiceModel $model)
+    public function setInvoiceModel(InvoiceModel $model): void
     {
         $this->model = $model;
     }
@@ -72,6 +72,7 @@ final class InvoiceItemDefaultHydrator implements InvoiceItemHydrator
             'entry.total_plain' => $rate,
             'entry.currency' => $currency,
             'entry.duration' => $item->getDuration(),
+            'entry.duration_format' => $formatter->getFormattedDuration($item->getDuration()),
             'entry.duration_decimal' => $formatter->getFormattedDecimalDuration($item->getDuration()),
             'entry.duration_minutes' => (int) ($item->getDuration() / 60),
             'entry.begin' => $formatter->getFormattedDateTime($begin),
@@ -91,8 +92,12 @@ final class InvoiceItemDefaultHydrator implements InvoiceItemHydrator
                 'entry.user_name' => $user->getUserIdentifier(),
                 'entry.user_title' => $user->getTitle() ?? '',
                 'entry.user_alias' => $user->getAlias() ?? '',
-                'entry.user_display' => $user->getDisplayName() ?? '',
+                'entry.user_display' => $user->getDisplayName(),
             ]);
+
+            foreach ($user->getVisiblePreferences() as $pref) {
+                $values['entry.user_preference.' . $pref->getName()] = $pref->getValue();
+            }
         }
 
         if (null !== $activity) {

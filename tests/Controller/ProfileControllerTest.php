@@ -474,17 +474,36 @@ class ProfileControllerTest extends ControllerBaseTest
         self::assertFalse($user->hasTotpSecret());
 
         $this->request($client, '/profile/' . UserFixtures::USERNAME_USER . '/2fa');
+        $this->assertTrue($client->getResponse()->isSuccessful());
 
         $user = $this->getUserByName(UserFixtures::USERNAME_USER);
         self::assertTrue($user->hasTotpSecret());
 
-        $content = $client->getResponse()->getContent();
-        self::assertNotFalse($content);
-
-        $imgUrl = $this->createUrl('/profile/' . UserFixtures::USERNAME_USER . '/totp.png');
-        $this->assertStringContainsString('<img src="' . $imgUrl . '" alt="TOTP QR Code" style="max-width: 200px; max-height: 200px;" />', $content);
-
         $formUrl = $this->createUrl('/profile/' . UserFixtures::USERNAME_USER . '/2fa');
+        $content = $client->getResponse()->getContent();
+        $this->assertNotFalse($content);
+
+        $this->assertStringContainsString(' data-toggle="tooltip" title="Click to show code" alt="TOTP QR Code" style="max-width: 200px; max-height: 200px;" src="', $content);
+        $this->assertStringContainsString('<form name="user_two_factor" method="post" action="' . $formUrl . '" id="user_two_factor_form">', $content);
+    }
+
+    public function testTwoFactorAsAdmin(): void
+    {
+        $this->assertUrlIsSecuredForRole(User::ROLE_ADMIN, '/profile/' . UserFixtures::USERNAME_USER . '/2fa');
+    }
+
+    public function testTwoFactorAsSuperAdmin(): void
+    {
+        $client = $this->getClientForAuthenticatedUser(User::ROLE_SUPER_ADMIN);
+
+        $this->request($client, '/profile/' . UserFixtures::USERNAME_USER . '/2fa');
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $content = $client->getResponse()->getContent();
+        $this->assertNotFalse($content);
+        $formUrl = $this->createUrl('/profile/' . UserFixtures::USERNAME_USER . '/2fa');
+
+        $this->assertStringContainsString(' data-toggle="tooltip" title="Click to show code" alt="TOTP QR Code" style="max-width: 200px; max-height: 200px;" src="', $content);
         $this->assertStringContainsString('<form name="user_two_factor" method="post" action="' . $formUrl . '" id="user_two_factor_form">', $content);
     }
 
@@ -523,31 +542,55 @@ class ProfileControllerTest extends ControllerBaseTest
         $this->assertUrlIsSecured('/profile/' . UserFixtures::USERNAME_USER . '/2fa_deactivate', 'POST');
     }
 
-    public function testIsTwoFactorImageSecure(): void
+    public function testContractActionIsSecured(): void
     {
-        $this->assertUrlIsSecured('/profile/' . UserFixtures::USERNAME_USER . '/totp.png');
+        $client = $this->getClientForAuthenticatedUser(User::ROLE_TEAMLEAD);
+        $this->request($client, '/profile/' . UserFixtures::USERNAME_USER . '/contract');
+        $this->assertFalse($client->getResponse()->isSuccessful());
     }
 
-    public function testTwoFactorImageFailsOnMissingSecret(): void
+    public function testContractAction(): void
     {
-        $client = $this->getClientForAuthenticatedUser(User::ROLE_USER);
+        $client = $this->getClientForAuthenticatedUser(User::ROLE_SUPER_ADMIN);
+        $this->request($client, '/profile/' . UserFixtures::USERNAME_USER . '/contract');
+        $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $this->request($client, '/profile/' . UserFixtures::USERNAME_USER . '/totp.png');
-        $this->assertRouteNotFound($client);
-    }
+        $user = $this->getUserByRole(User::ROLE_USER);
 
-    public function testTwoFactorImage(): void
-    {
-        $client = $this->getClientForAuthenticatedUser(User::ROLE_USER);
+        $this->assertEquals(0, $user->getWorkHoursMonday());
+        $this->assertEquals(0, $user->getWorkHoursTuesday());
+        $this->assertEquals(0, $user->getWorkHoursWednesday());
+        $this->assertEquals(0, $user->getWorkHoursThursday());
+        $this->assertEquals(0, $user->getWorkHoursFriday());
+        $this->assertEquals(0, $user->getWorkHoursSaturday());
+        $this->assertEquals(0, $user->getWorkHoursSunday());
 
-        $user = $this->getUserByName(UserFixtures::USERNAME_USER);
-        self::assertFalse($user->hasTotpSecret());
+        $form = $client->getCrawler()->filter('form[name=user_contract]')->form();
 
-        // this is required, so the totp secret is stored in the user entity
-        $this->request($client, '/profile/' . UserFixtures::USERNAME_USER . '/2fa');
+        $client->submit($form, [
+            'user_contract[workHoursMonday]' => '1:00',
+            'user_contract[workHoursTuesday]' => '2:00',
+            'user_contract[workHoursWednesday]' => '3:00',
+            'user_contract[workHoursThursday]' => '4:30',
+            'user_contract[workHoursFriday]' => '5:12',
+            'user_contract[workHoursSaturday]' => '6:59',
+            'user_contract[workHoursSunday]' => '0:01',
+        ]);
 
-        $this->request($client, '/profile/' . UserFixtures::USERNAME_USER . '/totp.png');
-        self::assertTrue($client->getResponse()->isSuccessful());
-        self::assertEquals('image/png', $client->getResponse()->headers->get('Content-Type'));
+        $this->assertIsRedirect($client, $this->createUrl('/profile/' . urlencode(UserFixtures::USERNAME_USER) . '/contract'));
+        $client->followRedirect();
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $this->assertHasFlashSuccess($client);
+
+        $user = $this->getUserByRole(User::ROLE_USER);
+
+        $this->assertEquals(3600, $user->getWorkHoursMonday());
+        $this->assertEquals(7200, $user->getWorkHoursTuesday());
+        $this->assertEquals(10800, $user->getWorkHoursWednesday());
+        $this->assertEquals(16200, $user->getWorkHoursThursday());
+        $this->assertEquals(18720, $user->getWorkHoursFriday());
+        $this->assertEquals(25140, $user->getWorkHoursSaturday());
+        $this->assertEquals(60, $user->getWorkHoursSunday());
     }
 }

@@ -14,12 +14,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<TagQuery>
+ */
 final class TagToolbarForm extends AbstractType
 {
     use ToolbarFormTrait;
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $this->addVisibilityChoice($builder);
         $this->addSearchTermInputField($builder);
         $this->addPageSizeChoice($builder);
         $this->addHiddenPagination($builder);

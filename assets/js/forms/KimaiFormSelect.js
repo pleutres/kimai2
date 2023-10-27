@@ -52,6 +52,15 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
         let plugins = ['change_listener'];
 
         const isMultiple = node.multiple !== undefined && node.multiple === true;
+        const isRequired = node.required !== undefined && node.required === true;
+
+        if (isRequired) {
+            plugins.push('no_backspace_delete');
+        }
+
+        if (isMultiple) {
+            plugins.push('remove_button');
+        }
 
         /*
         const isOrdering = false;
@@ -61,13 +70,15 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
         }
         */
 
-        if (isMultiple) {
-            plugins.push('remove_button');
-        }
-
         let options = {
+            // see https://github.com/orchidjs/tom-select/issues/543#issuecomment-1664342257
+            onItemAdd: function(){
+                // remove remaining characters from input after selecting an item
+                this.setTextboxValue('');
+            },
             lockOptgroupOrder: true,
-            allowEmptyOption: true,
+            allowEmptyOption: !isRequired,
+            hidePlaceholder: false,
             plugins: plugins,
             // if there are more than X entries, the other ones are hidden and can only be found
             // by typing some characters to trigger the internal option search
@@ -342,7 +353,13 @@ export default class KimaiFormSelect extends KimaiFormPlugin {
             --end;
         }
 
-        return (start > 0 || end < title.length) ? title.substring(start, end) : title;
+        let result = (start > 0 || end < title.length) ? title.substring(start, end) : title;
+
+        if (result === '' && entity['name'] !== undefined) {
+            return entity['name'];
+        }
+
+        return result;
     }
 
     /**

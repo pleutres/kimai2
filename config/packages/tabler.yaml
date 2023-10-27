@@ -55,6 +55,7 @@ tabler:
         columns: fas fa-table
         comment: far fa-comment
         configuration: fas fa-cog
+        contract: fas fa-balance-scale
         copy: far fa-copy
         create: fas fa-plus
         csv: fas fa-table
@@ -77,6 +78,8 @@ tabler:
         filter: fas fa-filter
         help: far fa-question-circle
         home: fas fa-home
+        info: fas fa-info-circle
+        import: fas fa-file-import
         invoice: fas fa-file-contract
         invoice-template: fas fa-file-signature
         left: fas fa-chevron-left
@@ -97,6 +100,7 @@ tabler:
         password: fas fa-key
         pause: fas fa-pause
         pause-small: far fa-pause-circle
+        pending: fas fa-hourglass-half
         pin: fas fa-thumbtack
         pdf: fas fa-file-pdf
         permissions: fas fa-user-lock
@@ -109,6 +113,8 @@ tabler:
         repeat: fas fa-redo-alt
         reporting: far fa-chart-bar
         report: far fa-chart-bar
+        review: fas fa-user-check
+        rejected: fas fa-ban
         right: fas fa-chevron-right
         right2: fas fa-angle-double-right
         roles: fas fa-user-shield
@@ -136,4 +142,5 @@ tabler:
         weekly-times: fas fa-th
         widget_add: fas fa-folder-plus
         widget_remove: fas fa-folder-minus
+        work_times: fas fa-calculator
         xlsx: fas fa-file-excel

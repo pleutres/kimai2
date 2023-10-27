@@ -31,8 +31,10 @@ class DoctorControllerTest extends ControllerBaseTest
         $client = $this->getClientForAuthenticatedUser(User::ROLE_SUPER_ADMIN);
         $this->assertAccessIsGranted($client, '/doctor');
 
-        $result = $client->getCrawler()->filter('.content .card-header');
-        self::assertCount(5, $result);
+        $result = $client->getCrawler()->filter('.content .accordion-header');
+        $counter = \count($result);
+        // this can contain a warning box, that a new release is available
+        self::assertTrue($counter === 6 || $counter === 5);
     }
 
     public function testFlushLogWithInvalidCsrf()

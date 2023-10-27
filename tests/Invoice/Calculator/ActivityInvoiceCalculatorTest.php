@@ -16,6 +16,7 @@ use App\Entity\Project;
 use App\Entity\Timesheet;
 use App\Entity\User;
 use App\Invoice\Calculator\ActivityInvoiceCalculator;
+use App\Invoice\CalculatorInterface;
 use App\Repository\Query\InvoiceQuery;
 use App\Tests\Invoice\DebugFormatter;
 use App\Tests\Mocks\InvoiceModelFactoryFactory;
@@ -28,12 +29,12 @@ use App\Tests\Mocks\InvoiceModelFactoryFactory;
  */
 class ActivityInvoiceCalculatorTest extends AbstractCalculatorTest
 {
-    public function testEmptyModel()
+    protected function getCalculator(): CalculatorInterface
     {
-        $this->assertEmptyModel(new ActivityInvoiceCalculator());
+        return new ActivityInvoiceCalculator();
     }
 
-    public function testWithMultipleEntries()
+    public function testWithMultipleEntries(): void
     {
         $customer = new Customer('foo');
         $template = new InvoiceTemplate();
@@ -134,13 +135,10 @@ class ActivityInvoiceCalculatorTest extends AbstractCalculatorTest
         $query = new InvoiceQuery();
         $query->addActivity($activity1);
 
-        $model = (new InvoiceModelFactoryFactory($this))->create()->createModel(new DebugFormatter());
-        $model->setCustomer($customer);
-        $model->setTemplate($template);
+        $model = (new InvoiceModelFactoryFactory($this))->create()->createModel(new DebugFormatter(), $customer, $template, $query);
         $model->addEntries($entries);
-        $model->setQuery($query);
 
-        $sut = new ActivityInvoiceCalculator();
+        $sut = $this->getCalculator();
         $sut->setModel($model);
 
         $this->assertEquals('activity', $sut->getId());
@@ -149,16 +147,16 @@ class ActivityInvoiceCalculatorTest extends AbstractCalculatorTest
         $this->assertEquals('EUR', $model->getCurrency());
         $this->assertEquals(2521.12, $sut->getSubtotal());
         $this->assertEquals(6600, $sut->getTimeWorked());
-        $this->assertEquals(5, \count($sut->getEntries()));
 
         $entries = $sut->getEntries();
+        self::assertCount(4, $entries);
         $this->assertEquals(404.38, $entries[0]->getRate());
         $this->assertEquals(2032.74, $entries[1]->getRate());
         $this->assertEquals(84, $entries[2]->getRate());
     }
 
-    public function testDescriptionByActivity()
+    public function testDescriptionByActivity(): void
     {
-        $this->assertDescription(new ActivityInvoiceCalculator(), false, true);
+        $this->assertDescription($this->getCalculator(), false, true);
     }
 }

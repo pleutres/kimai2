@@ -15,8 +15,8 @@ use App\Entity\InvoiceTemplate;
 use App\Entity\Project;
 use App\Entity\Timesheet;
 use App\Entity\User;
-use App\Invoice\Calculator\DateInvoiceCalculator;
 use App\Invoice\Calculator\PriceInvoiceCalculator;
+use App\Invoice\CalculatorInterface;
 use App\Repository\Query\InvoiceQuery;
 use App\Tests\Invoice\DebugFormatter;
 use App\Tests\Mocks\InvoiceModelFactoryFactory;
@@ -30,12 +30,12 @@ use DateTime;
  */
 class PriceInvoiceCalculatorTest extends AbstractCalculatorTest
 {
-    public function testEmptyModel()
+    protected function getCalculator(): CalculatorInterface
     {
-        $this->assertEmptyModel(new DateInvoiceCalculator());
+        return new PriceInvoiceCalculator();
     }
 
-    public function testWithMultipleEntries()
+    public function testWithMultipleEntries(): void
     {
         $customer = new Customer('foo');
         $template = new InvoiceTemplate();
@@ -112,13 +112,10 @@ class PriceInvoiceCalculatorTest extends AbstractCalculatorTest
         $query = new InvoiceQuery();
         $query->setProjects([$project1]);
 
-        $model = (new InvoiceModelFactoryFactory($this))->create()->createModel(new DebugFormatter());
-        $model->setCustomer($customer);
-        $model->setTemplate($template);
+        $model = (new InvoiceModelFactoryFactory($this))->create()->createModel(new DebugFormatter(), $customer, $template, $query);
         $model->addEntries($entries);
-        $model->setQuery($query);
 
-        $sut = new PriceInvoiceCalculator();
+        $sut = $this->getCalculator();
         $sut->setModel($model);
 
         $this->assertEquals('price', $sut->getId());
@@ -136,8 +133,8 @@ class PriceInvoiceCalculatorTest extends AbstractCalculatorTest
         $this->assertEquals(84, $entries[3]->getRate());
     }
 
-    public function testDescriptionByTimesheet()
+    public function testDescriptionByTimesheet(): void
     {
-        $this->assertDescription(new PriceInvoiceCalculator(), false, false);
+        $this->assertDescription($this->getCalculator(), false, false);
     }
 }

@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/kimai/kimai/actions"><img alt="CI Status" src="https://github.com/kimai/kimai/workflows/CI/badge.svg"></a>
+    <a href="https://github.com/kimai/kimai/actions"><img alt="CI Status" src="https://github.com/kimai/kimai/actions/workflows/testing.yaml/badge.svg"></a>
     <a href="https://codecov.io/gh/kimai/kimai"><img alt="Code Coverage" src="https://codecov.io/gh/kimai/kimai/branch/main/graph/badge.svg"></a>
     <a href="https://packagist.org/packages/kimai/kimai"><img alt="Latest stable version" src="https://poser.pugx.org/kimai/kimai/v/stable"></a>
     <a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img alt="License" src="https://poser.pugx.org/kimai/kimai/license"></a>
@@ -23,10 +23,12 @@ and so much more.
 
 ### Versions
 
-There are two versions of Kimai existing:
+There are two [versions](https://www.kimai.org/documentation/versions.html) of Kimai existing:
 
-- [Version 1](https://github.com/kimai/kimai/tree/1.x) — compatible with PHP 7.4, which is in maintenance mode since 2023 
-- [Version 2](https://github.com/kimai/kimai) — stable and "almost released" (waiting for some major plugins, which are not yet migrated) 
+- [Version 2](https://github.com/kimai/kimai) — the current stable release (PHP 8.1+)
+- [Version 1](https://github.com/kimai/kimai/tree/1.x) — EOL since mid of 2023 (PHP 7.4) 
+
+Do **NOT** use Version 1, it won't get any more updates!
 
 ### Links
 
@@ -71,8 +73,6 @@ It is open for changes and input from the community, your [ideas and questions](
 
 Release versions will be created on a regular basis, every couple of weeks latest.
 Every code change, whether it's a new feature or a bugfix, will be done on the `main` branch.
-
-For the time being and until 2.0 is widely adopted, the [1.x branch](https://github.com/kimai/kimai/tree/1.x) will receive bug fixes. 
 
 ## Contributing
 

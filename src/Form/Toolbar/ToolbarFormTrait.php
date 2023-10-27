@@ -133,19 +133,13 @@ trait ToolbarFormTrait
     protected function addVisibilityChoice(FormBuilderInterface $builder, string $label = 'visible'): void
     {
         $builder->add('visibility', VisibilityType::class, [
-            'required' => false,
-            'placeholder' => null,
             'label' => $label,
-            'search' => false
         ]);
     }
 
     protected function addPageSizeChoice(FormBuilderInterface $builder): void
     {
-        $builder->add('pageSize', PageSizeType::class, [
-            'required' => false,
-            'search' => false
-        ]);
+        $builder->add('pageSize', PageSizeType::class);
     }
 
     protected function addUserRoleChoice(FormBuilderInterface $builder): void
@@ -328,11 +322,11 @@ trait ToolbarFormTrait
                 'description' => 'The order for returned items',
             ],
             'label' => 'order',
+            'search' => false,
             'choices' => [
                 'asc' => BaseQuery::ORDER_ASC,
                 'desc' => BaseQuery::ORDER_DESC
             ],
-            'search' => false,
         ]);
     }
 
@@ -344,9 +338,9 @@ trait ToolbarFormTrait
             $all[$label] = $name;
         }
         $builder->add('orderBy', ChoiceType::class, [
+            'search' => false,
             'label' => 'orderBy',
             'choices' => $all,
-            'search' => false,
         ]);
     }
 
@@ -367,9 +361,6 @@ trait ToolbarFormTrait
     {
         $builder->add('state', ChoiceType::class, [
             'label' => 'entryState',
-            'required' => false,
-            'placeholder' => null,
-            'search' => false,
             'choices' => [
                 'all' => TimesheetQuery::STATE_ALL,
                 'entryState.running' => TimesheetQuery::STATE_RUNNING,
@@ -382,9 +373,6 @@ trait ToolbarFormTrait
     {
         $builder->add('exported', ChoiceType::class, [
             'label' => 'exported',
-            'required' => false,
-            'placeholder' => null,
-            'search' => false,
             'choices' => [
                 'all' => TimesheetQuery::STATE_ALL,
                 'yes' => TimesheetQuery::STATE_EXPORTED,
@@ -395,10 +383,6 @@ trait ToolbarFormTrait
 
     protected function addBillableChoice(FormBuilderInterface $builder): void
     {
-        $builder->add('billable', BillableSearchType::class, [
-            'required' => false,
-            'placeholder' => null,
-            'search' => false,
-        ]);
+        $builder->add('billable', BillableSearchType::class);
     }
 }

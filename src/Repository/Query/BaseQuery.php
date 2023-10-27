@@ -35,6 +35,7 @@ class BaseQuery
         'order' => self::ORDER_ASC,
         'searchTerm' => null,
     ];
+    private bool $isApiCall = false;
     private int $page = 1;
     private int $pageSize = self::DEFAULT_PAGESIZE;
     private string $orderBy = 'id';
@@ -75,6 +76,11 @@ class BaseQuery
         $this->teams[$team->getId()] = $team;
 
         return $this;
+    }
+
+    public function hasTeams(): bool
+    {
+        return \count($this->teams) > 0;
     }
 
     /**
@@ -381,5 +387,15 @@ class BaseQuery
     public function isBookmarkSearch(): bool
     {
         return $this->bookmarkSearch;
+    }
+
+    public function setIsApiCall(bool $isApiCall): void
+    {
+        $this->isApiCall = $isApiCall;
+    }
+
+    public function isApiCall(): bool
+    {
+        return $this->isApiCall;
     }
 }

@@ -39,17 +39,22 @@ class Tag
     #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: false)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 100, normalizer: 'trim')]
-    #[Assert\Regex(pattern: '/,/', match: false, message: 'Tag name cannot contain comma')]
+    #[Assert\Regex(pattern: '/,/', message: 'Tag name cannot contain comma', match: false)]
     #[Serializer\Expose]
     #[Serializer\Groups(['Default'])]
     private ?string $name = null;
+    #[ORM\Column(name: 'visible', type: 'boolean', nullable: false, options: ['default' => true])]
+    #[Assert\NotNull]
+    #[Serializer\Expose]
+    #[Serializer\Groups(['Default'])]
+    private bool $visible = true;
 
     use ColorTrait;
 
     /**
      * @var Collection<Timesheet>
      */
-    #[ORM\ManyToMany(targetEntity: 'App\Entity\Timesheet', mappedBy: 'tags', fetch: 'EXTRA_LAZY')]
+    #[ORM\ManyToMany(targetEntity: Timesheet::class, mappedBy: 'tags', fetch: 'EXTRA_LAZY')]
     private Collection $timesheets;
 
     public function __construct()
@@ -72,6 +77,16 @@ class Tag
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(bool $visible): void
+    {
+        $this->visible = $visible;
     }
 
     public function addTimesheet(Timesheet $timesheet): void

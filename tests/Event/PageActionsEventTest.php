@@ -33,6 +33,7 @@ class PageActionsEventTest extends TestCase
         $this->assertSame($user, $sut->getUser());
         $this->assertEquals([], $sut->getActions());
         $this->assertEquals(['actions' => [], 'view' => 'bar'], $sut->getPayload());
+        $this->assertNull($sut->getLocale());
 
         $sut = new PageActionsEvent($user, ['hello' => 'world'], 'foo', 'bar');
         $this->assertSame($user, $sut->getUser());
@@ -66,6 +67,12 @@ class PageActionsEventTest extends TestCase
         $this->assertEquals(['foo' => ['url' => 'bar']], $sut->getActions());
         $sut->replaceAction('foo', ['url' => 'xyz']);
         $this->assertEquals(['foo' => ['url' => 'xyz']], $sut->getActions());
+
+        $sut->setLocale('de');
+        $this->assertEquals('de', $sut->getLocale());
+
+        $sut->setLocale(null);
+        $this->assertNull($sut->getLocale());
     }
 
     public function testSubmenu()
@@ -89,13 +96,15 @@ class PageActionsEventTest extends TestCase
         $sut->addCreate('foo5', true);
         $sut->addCreate('foo6', false);
         $sut->addQuickExport('foo7');
+        $sut->addEdit('trölölö');
 
         $expected = [
             'divider0' => null,
             'columns' => ['modal' => '#foo2', 'title' => 'modal.columns.title'],
             'create' => ['url' => 'foo5', 'class' => 'modal-ajax-form', 'title' => 'create', 'accesskey' => 'a'],
             'download' => ['url' => 'foo7', 'class' => 'toolbar-action', 'title' => 'export'],
-            'trash' => ['url' => 'foo3', 'class' => 'modal-ajax-form text-red', 'translation_domain' => 'actions'],
+            'edit' => ['url' => 'trölölö', 'class' => 'modal-ajax-form', 'translation_domain' => 'actions', 'title' => 'edit'],
+            'trash' => ['url' => 'foo3', 'class' => 'modal-ajax-form text-red', 'translation_domain' => 'actions', 'title' => 'trash'],
         ];
         $this->assertEquals(\count($expected), $sut->countActions());
 

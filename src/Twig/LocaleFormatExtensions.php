@@ -26,7 +26,6 @@ use Twig\TwigTest;
 
 final class LocaleFormatExtensions extends AbstractExtension implements LocaleAwareInterface
 {
-    private ?bool $fdowSunday = null;
     private ?LocaleFormatter $formatter = null;
     private ?string $locale = null;
 
@@ -34,9 +33,6 @@ final class LocaleFormatExtensions extends AbstractExtension implements LocaleAw
     {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters(): array
     {
         return [
@@ -44,7 +40,8 @@ final class LocaleFormatExtensions extends AbstractExtension implements LocaleAw
             new TwigFilter('day_name', [$this, 'dayName']),
             new TwigFilter('date_short', [$this, 'dateShort']),
             new TwigFilter('date_time', [$this, 'dateTime']),
-            new TwigFilter('date_full', [$this, 'dateTime']), // deprecated: needs to be kept for invoice and export templates
+            // cannot be deleted right now, needs to be kept for invoice and export templates
+            new TwigFilter('date_full', [$this, 'dateTime'], ['deprecated' => true, 'alternative' => 'date_time']),
             new TwigFilter('date_format', [$this, 'dateFormat']),
             new TwigFilter('date_weekday', [$this, 'dateWeekday']),
             new TwigFilter('time', [$this, 'time']),
@@ -74,9 +71,6 @@ final class LocaleFormatExtensions extends AbstractExtension implements LocaleAw
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [
@@ -116,29 +110,21 @@ final class LocaleFormatExtensions extends AbstractExtension implements LocaleAw
         return $this->locale;
     }
 
-    public function isWeekend(\DateTimeInterface|string|null $dateTime): bool
+    public function isWeekend(\DateTimeInterface|string|null $dateTime, ?User $user = null): bool
     {
-        if (!$dateTime instanceof \DateTime) {
+        if (!$dateTime instanceof \DateTimeInterface) {
             return false;
         }
 
-        $day = (int) $dateTime->format('w');
+        $day = (int) $dateTime->format('N');
 
-        if ($this->fdowSunday === null) {
-            /** @var User|null $user */
-            $user = $this->security->getUser();
-            if ($user !== null) {
-                $this->fdowSunday = $user->isFirstDayOfWeekSunday();
-            } else {
-                $this->fdowSunday = false;
-            }
+        /** @var User|null $tmp */
+        $tmp = $user ?? $this->security->getUser();
+        if ($tmp !== null && $tmp->hasWorkHourConfiguration()) {
+            return !$tmp->isWorkDay($dateTime);
         }
 
-        if ($this->fdowSunday) {
-            return ($day === 5 || $day === 6);
-        }
-
-        return ($day === 0 || $day === 6);
+        return ($day === 6 || $day === 7);
     }
 
     public function dateShort(\DateTimeInterface|string|null $date): string
@@ -211,6 +197,7 @@ final class LocaleFormatExtensions extends AbstractExtension implements LocaleAw
             'twentyFourHours' => $this->localeService->is24Hour($this->locale),
             'updateBrowserTitle' => (bool) $user->getPreferenceValue('update_browser_title'),
             'timezone' => $user->getTimezone(),
+            'user' => ['id' => $user->getId(), 'name' => $user->getDisplayName(), 'admin' => $user->isAdmin(), 'superAdmin' => $user->isSuperAdmin()],
         ];
     }
 

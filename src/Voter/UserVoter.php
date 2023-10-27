@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 final class UserVoter extends Voter
 {
     private const ALLOWED_ATTRIBUTES = [
+        'access_user',
         'view',
         'edit',
         'roles',
@@ -33,6 +34,8 @@ final class UserVoter extends Voter
         'api-token',
         'hourly-rate',
         'view_team_member',
+        'contract',
+        'supervisor',
     ];
 
     public function __construct(private RolePermissionManager $permissionManager)
@@ -60,6 +63,18 @@ final class UserVoter extends Voter
             return false;
         }
 
+        if (!($subject instanceof User)) {
+            return false;
+        }
+
+        if ($attribute === 'contract') {
+            return $this->permissionManager->hasRolePermission($user, 'contract_other_profile');
+        }
+
+        if ($attribute === 'access_user') {
+            return $user->canSeeUser($subject);
+        }
+
         if ($attribute === 'view_team_member') {
             if ($subject->getId() !== $user->getId()) {
                 return false;
@@ -83,9 +98,8 @@ final class UserVoter extends Voter
         }
 
         if ($attribute === '2fa') {
-            // two factor only works for internal users and
-            // can only be activated by the logged-in user for himself
-            return $subject->isInternalUser() && $subject->getId() === $user->getId();
+            // can only be activated by the logged-in user for himself or by a super-admin
+            return $subject->getId() === $user->getId() || $user->isSuperAdmin();
         }
 
         $permission = $attribute;

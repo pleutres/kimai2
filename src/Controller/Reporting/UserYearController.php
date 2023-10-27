@@ -11,12 +11,16 @@ namespace App\Controller\Reporting;
 
 use App\Configuration\SystemConfiguration;
 use App\Entity\User;
+use App\Export\Spreadsheet\Writer\BinaryFileResponseWriter;
+use App\Export\Spreadsheet\Writer\XlsxWriter;
 use App\Model\DateStatisticInterface;
 use App\Model\MonthlyStatistic;
 use App\Reporting\YearByUser\YearByUser;
 use App\Reporting\YearByUser\YearByUserForm;
 use DateTime;
+use DateTimeInterface;
 use Exception;
+use PhpOffice\PhpSpreadsheet\Reader\Html;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,6 +40,21 @@ final class UserYearController extends AbstractUserReportController
     public function yearByUser(Request $request, SystemConfiguration $systemConfiguration): Response
     {
         return $this->render('reporting/report_by_user_year.html.twig', $this->getData($request, $systemConfiguration));
+    }
+
+    #[Route(path: '/year_export', name: 'report_user_year_export', methods: ['GET', 'POST'])]
+    public function export(Request $request, SystemConfiguration $systemConfiguration): Response
+    {
+        $data = $this->getData($request, $systemConfiguration);
+
+        $content = $this->renderView('reporting/report_by_user_year_export.html.twig', $data);
+
+        $reader = new Html();
+        $spreadsheet = $reader->loadFromString($content);
+
+        $writer = new BinaryFileResponseWriter(new XlsxWriter(), 'kimai-export-user-yearly');
+
+        return $writer->getFileResponse($spreadsheet);
     }
 
     private function getData(Request $request, SystemConfiguration $systemConfiguration): array
@@ -75,6 +94,7 @@ final class UserYearController extends AbstractUserReportController
             $values->setDate(clone $defaultDate);
         }
 
+        /** @var \DateTimeInterface $start */
         $start = $values->getDate();
         // there is a potential edge case bug for financial years:
         // the last month will be skipped, if the financial year started on a different day than the first
@@ -82,10 +102,10 @@ final class UserYearController extends AbstractUserReportController
 
         $selectedUser = $values->getUser();
 
-        $previous = clone $start;
+        $previous = DateTime::createFromInterface($start);
         $previous->modify('-1 year');
 
-        $next = clone $start;
+        $next = DateTime::createFromInterface($start);
         $next->modify('+1 year');
 
         $data = $this->prepareReport($start, $end, $selectedUser);
@@ -102,15 +122,16 @@ final class UserYearController extends AbstractUserReportController
             'current' => $start,
             'next' => $next,
             'previous' => $previous,
+            'export_route' => 'report_user_year_export',
         ];
     }
 
-    protected function getStatisticDataRaw(DateTime $begin, DateTime $end, User $user): array
+    protected function getStatisticDataRaw(DateTimeInterface $begin, DateTimeInterface $end, User $user): array
     {
         return $this->statisticService->getMonthlyStatisticsGrouped($begin, $end, [$user]);
     }
 
-    protected function createStatisticModel(DateTime $begin, DateTime $end, User $user): DateStatisticInterface
+    protected function createStatisticModel(DateTimeInterface $begin, DateTimeInterface $end, User $user): DateStatisticInterface
     {
         return new MonthlyStatistic($begin, $end, $user);
     }

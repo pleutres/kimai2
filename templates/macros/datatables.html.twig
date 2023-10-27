@@ -15,6 +15,7 @@
     {{- datatable_column_class(dataTable.getTableName(), column) -}}
 {% endmacro %}
 
+{# compare templates/page_setup.html.twig block table_actions #}
 {% macro actions(dataTable) %}
     {% set btnClass = '' %}
     {% set bgClass = '' %}
@@ -252,7 +253,7 @@
             </table>
         </div>
     </div>
-    {% if (route is not empty and entries is not null) or multi_update_form is not null%}
+    {% if (route is not empty and entries is not null) or multi_update_form is not null %}
     <div class="card-footer d-flex align-items-center">
         {% if multi_update_form is not null %}
             {{ form_start(multi_update_form, {'attr': {'id': 'multi_update_form', 'style': 'display:none', 'data-question': 'update_multiple'|trans}}) }}
@@ -262,7 +263,7 @@
             {{ form_end(multi_update_form) }}
         {% endif %}
         {% if route is not empty and entries is not null %}
-            <p class="d-none d-sm-block m-0 text-muted multi_update_form_hide">
+            <p class="d-none d-sm-block m-0 text-body-secondary multi_update_form_hide">
                 {{ 'pagination'|trans({'%start%': entries.getCurrentPageOffsetStart(), '%end%': entries.getCurrentPageOffsetEnd(), '%total%': entries.getNbResults()}) }}
             </p>
             {% set options = { 'css_container_class': 'pagination m-0 ms-auto d-print-none' } %}

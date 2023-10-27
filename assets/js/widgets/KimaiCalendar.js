@@ -224,15 +224,23 @@ export default class KimaiCalendar {
                 }
 
                 const element = mouseEnterInfo.el;
-                let popover = Popover.getInstance(element);
+                const popoverTitle = DATES.getFormattedDate(event.start) + ' | ' + DATES.formatTime(event.start) + ' - ' + (event.end ? DATES.formatTime(event.end) : '');
+                const popoverContent = this.renderEventPopoverContent(event);
 
-                if (popover === null) {
+                let popover = Popover.getInstance(element);
+                if (popover !== null) {
+                    // see https://github.com/kimai/kimai/issues/4043
+                    popover.setContent({
+                        '.popover-header': popoverTitle,
+                        '.popover-body': popoverContent
+                    });
+                } else {
                     // https://getbootstrap.com/docs/5.0/components/popovers/#options
                     popover = new Popover(element, {
-                        title: DATES.getFormattedDate(event.start) + ' | ' + DATES.formatTime(event.start) + ' - ' + (event.end ? DATES.formatTime(event.end) : ''),
+                        title: popoverTitle,
                         placement: 'top',
                         html: true,
-                        content: this.renderEventPopoverContent(event),
+                        content: popoverContent,
                         trigger: 'focus',
                     });
                 }
@@ -454,8 +462,14 @@ export default class KimaiCalendar {
                 calendarSource = {...calendarSource, ...{
                     id: 'kimai-' + source.id,
                     events: (fetchInfo, successCallback, failureCallback) => {
-                        let url = source.url.replace('{from}', DATES.formatForAPI(fetchInfo.start));
-                        url = url.replace('{to}', DATES.formatForAPI(fetchInfo.end));
+                        const targetFrom = DATES.formatForAPI(fetchInfo.start);
+                        const targetTo = DATES.formatForAPI(fetchInfo.end);
+
+                        let url = source.url;
+                        url = url.replace('{from}', targetFrom);
+                        url = url.replace('__FROM__', targetFrom);
+                        url = url.replace('{to}', targetTo);
+                        url = url.replace('__TO__', targetTo);
 
                         API.get(url, {}, result => {
                             let apiEvents = [];
@@ -471,6 +485,29 @@ export default class KimaiCalendar {
                     id: 'google-' + source.id,
                     name: 'google',
                     editable: false,
+                }};
+            } else if (source.type === 'json') {
+                calendarSource = {...calendarSource, ...{
+                    id: 'json-' + source.id,
+                    editable: false,
+                    events: (fetchInfo, successCallback, failureCallback) => {
+                        const targetFrom = DATES.formatForAPI(fetchInfo.start);
+                        const targetTo = DATES.formatForAPI(fetchInfo.end);
+
+                        let url = source.url;
+                        url = url.replace('{from}', targetFrom);
+                        url = url.replace('__FROM__', targetFrom);
+                        url = url.replace('{to}', targetTo);
+                        url = url.replace('__TO__', targetTo);
+
+                        API.get(url, {}, result => {
+                            let apiEvents = [];
+                            for (const record of result) {
+                                apiEvents.push(record);
+                            }
+                            successCallback(apiEvents);
+                        }, failureCallback);
+                    },
                 }};
             } else if (source.type === 'ical') {
                 calendarSource = {...calendarSource, ...{
@@ -620,7 +657,7 @@ export default class KimaiCalendar {
                     <li>` + this.options['translations']['activity'] + `: ` + escaper.escapeForHtml(eventObj.activity) + `</li>
                 </ul>` +
                 (eventObj.description !== null || eventObj.tags.length > 0 ? '<hr>' : '') +
-                (eventObj.description ? '<p>' + escaper.escapeForHtml(eventObj.description) + '</p>' : '') + tags + `
+                (eventObj.description ? '<div>' + escaper.escapeForHtml(eventObj.description) + '</div>' : '') + tags + `
             </div>`;
     }
 

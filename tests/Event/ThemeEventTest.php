@@ -18,15 +18,15 @@ use PHPUnit\Framework\TestCase;
  */
 class ThemeEventTest extends TestCase
 {
-    public function testEmpty()
+    public function testEmpty(): void
     {
         $sut = new ThemeEvent();
         $this->assertNull($sut->getUser());
-        $this->assertNull($sut->getPayload());
+        $this->assertIsArray($sut->getPayload());
         $this->assertEquals('', $sut->getContent());
     }
 
-    public function testDefaultValues()
+    public function testDefaultValues(): void
     {
         $user = new User();
         $user->setAlias('foo');
@@ -36,16 +36,12 @@ class ThemeEventTest extends TestCase
         $this->assertSame($user, $sut->getUser());
     }
 
-    public function testGetterAndSetter()
+    public function testGetterAndSetter(): void
     {
         $user = new User();
         $user->setAlias('foo');
 
-        $payload = [null, '', 'test', new \stdClass()];
-
-        $sut = new ThemeEvent($user);
-        $sut->setPayload($payload);
-        $this->assertEquals($payload, $sut->getPayload());
+        $payload = ['foo' => null, '' => '', 'test' => 'test', 'class' => new \stdClass()];
 
         $sut = new ThemeEvent($user, $payload);
         $this->assertEquals($payload, $sut->getPayload());
@@ -56,5 +52,19 @@ class ThemeEventTest extends TestCase
 
         $sut->addContent('<script>');
         $this->assertEquals('foo<script>', $sut->getContent());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testDeprecatedStuff(): void
+    {
+        $user = new User();
+        $user->setAlias('foo');
+
+        $payload = ['foo' => null, '' => '', 'test' => 'test', 'class' => new \stdClass()];
+
+        $sut = new ThemeEvent($user, $payload);
+        $this->assertEquals($payload, $sut->getPayload());
     }
 }
